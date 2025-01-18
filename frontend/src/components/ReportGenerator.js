@@ -51,8 +51,6 @@ const ReportGenerator = () => {
 
       // Логика для добавления данных в листы и чередования цветов с границами
       data.forEach((row, rowIndex) => {
-        console.log(`[INFO] Обработка строки данных:`, row);
-
         const newRowData = {
           Size: row.Size,
           Model: row.Model,
@@ -66,7 +64,6 @@ const ReportGenerator = () => {
 
           // Если количество меньше 5, выделяем строку красным цветом
           if (row.Quantity < 5) {
-            console.log(`[INFO] Выделяем строку с низким количеством (менее 5):`, row);
             newRow.eachCell((cell) => {
               cell.font = { bold: true };
               cell.fill = {

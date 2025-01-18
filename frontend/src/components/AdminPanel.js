@@ -10,30 +10,24 @@ const AdminPanel = () => {
     const [password, setPasswordAdminPanel] = useState('');
     const [error, setError] = useState('');
     const [pdfFile, setPdfFile] = useState(null);
-    let [comback_honest_signModel, set_Number_Comback_honest_signModel] = useState('');
-    let [comback_honest_signSize, set_Number_Comback_honest_signSize] = useState('');
-    let [comback_honest_signCrypto, set_Number_Comback_honest_signCrypto] = useState('');
     const [windowAdmin, setWindowAdmin] = useState(false);
     const [CheckStatus, setStatusAdmin] = useState(false)
     const [deliveryNumber, setDeliveryNumber] = useState('');
 
-    // Добавленные сотсония const [deliveryNumber, setDeliveryNumber] = useState('');
     const [deliveryMessage, setDeliveryMessage] = useState(''); // Сообщение для пользователя
     const [confirmCreateDelivery, setConfirmCreateDelivery] = useState(false); // Флаг для отображения подтверждения создания
-    
+
     // доступные принтеры и места печати
-    const [printers, setPrinters] = useState([]);
     const [places, setPlaces] = useState(["Лермонтово", "Пятигорск", "Тест"]);
     const [placePrint, setPlacePrint] = useState('');
 
     // 
     const [printItems, setPrintItems] = useState([]);
-    const [selectedButton, setSelectedButton] = useState('');
 
     // Фильтрация напечатанных знаков 
     const [brandFilter, setBrandFilter] = useState('');
     const [modelFilter, setModelFilter] = useState('');
-    const [sizeFilter, setSizeFilter] = useState('');  
+    const [sizeFilter, setSizeFilter] = useState('');
 
     const filteredItems = printItems.filter(item =>
         item.Brand.toLowerCase().includes(brandFilter.toLowerCase()) &&
@@ -44,7 +38,7 @@ const AdminPanel = () => {
             const [dayMonth, time] = dateString.split(" ");
             const [day, month] = dayMonth.split(".");
             const [hours, minutes, seconds] = time.split(":");
-            
+
             const date = new Date();
             date.setDate(parseInt(day));
             date.setMonth(parseInt(month) - 1);
@@ -63,49 +57,17 @@ const AdminPanel = () => {
         if (savedPlace) {
             setPlacePrint(savedPlace);
         }
-
         const printerForHonestSign = localStorage.getItem('printerForHonestSign');
-        
+
         if (printerForHonestSign) {
             setprinterForHonestSign(printerForHonestSign);
         }
-
         const printerForBarcode = localStorage.getItem('printerForBarcode');
-
         if (printerForBarcode) {
             setPrinterForBarcode(printerForBarcode);
         }
     }, []);
 
-    // useEffect(() => {
-    //     console.log('Отправлен запрос!');
-    //     fetch('http://localhost:6501/api/printers')
-    //         .then((res) => res.json())
-    //         .then((data) => setPrinters(data))
-    //         .catch((error) => console.error('Ошибка при получении принтеров:', error));
-    // }, []);
-
-    // Загрузка данных из localStorage при первой загрузке компонента
-    // useEffect(() => {
-    //     const savedPrintItems = JSON.parse(localStorage.getItem('printItems')) || [];
-    //     setPrintItems(savedPrintItems);
-    // }, []);
-
-    // const addPrintItem = (item) => {
-    //     const updatedPrintItems = [...printItems, item];
-    //     // setPrintItems(updatedPrintItems);
-    //     localStorage.setItem('printItems', JSON.stringify(updatedPrintItems)); // Сохраняем в localStorage
-    // };
-
-    // Пример данных с сервера
-    const exampleServerData = {
-        model: '096-7',
-        size: '36-37',
-        quantity: 10,
-        clockTime: "25.10 10:00",
-        name: "Boss",
-    };
-    
     const OpenWindowAdmin = (e) => {
         setWindowAdmin(prevState => !prevState);
     }
@@ -120,20 +82,20 @@ const AdminPanel = () => {
             setError('')
             setStatusAdmin(prevState => !prevState);
 
-        const url1 = new URL('http://localhost:6501/api/printedHonestSign');
-        url1.searchParams.append('placePrint', localStorage.getItem('placePrint'));
-        fetch(url1)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Ошибка сети!');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setPrintItems(data)
-            })
-            .catch((error) => console.error('Ошибка при получении данных:', error));
-        
+            const url1 = new URL('http://localhost:6501/api/printedHonestSign');
+            url1.searchParams.append('placePrint', localStorage.getItem('placePrint'));
+            fetch(url1)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка сети!');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    setPrintItems(data)
+                })
+                .catch((error) => console.error('Ошибка при получении данных:', error));
+
 
             const url = new URL('http://localhost:6501/api/InfoAboutAllHonestSign');
             url.searchParams.append('placePrint', localStorage.getItem('placePrint'));
@@ -141,70 +103,38 @@ const AdminPanel = () => {
             url.searchParams.append('deliveryNumber', deliveryNumber)
 
             fetch(url)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Ошибка сети');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                const brandGet = {};
-                data.forEach(item => {
-                    if (!brandGet[item.Brand]) {
-                        brandGet[item.Brand] = { totalQuantity: 0, models: [] };
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка сети');
                     }
-                    brandGet[item.Brand].totalQuantity += item.quantity;
-                    brandGet[item.Brand].models.push({
-                        model: item.Model,
-                        size: item.Size,
-                        quantity: item.quantity,
-                        deliverynumber: item.deliverynumber
+                    return response.json();
+                })
+                .then((data) => {
+                    const brandGet = {};
+                    data.forEach(item => {
+                        if (!brandGet[item.Brand]) {
+                            brandGet[item.Brand] = { totalQuantity: 0, models: [] };
+                        }
+                        brandGet[item.Brand].totalQuantity += item.quantity;
+                        brandGet[item.Brand].models.push({
+                            model: item.Model,
+                            size: item.Size,
+                            quantity: item.quantity,
+                            deliverynumber: item.deliverynumber
+                        });
                     });
-                });
-                setInfoAboutHonestSing(brandGet);
-            })
-            .catch((error) => console.error('Ошибка при получении данных:', error));
+                    setInfoAboutHonestSing(brandGet);
+                })
+                .catch((error) => console.error('Ошибка при получении данных:', error));
         } else {
             setError('Неправильный логин или пароль');
         }
     };
 
-    const Fetch_Comback_Honest_Sign = async (e) => {
-        e.preventDefault();
-        if (brend == 'Armbest'){
-            comback_honest_signModel = 'Multimodel'
-        }
-        const dataAboutSign = {
-            model: comback_honest_signModel,
-            size: comback_honest_signSize,
-            crypto: comback_honest_signCrypto,
-            brand: brend,
-            placePrint: document.querySelector('.placePrintValue').value
-        }
-        try {
-            document.querySelector('.modal-background-loader').style.display = 'flex'
-            const response = await fetch('http://localhost:6501/api/FindHonestSign', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body:  JSON.stringify(dataAboutSign),
-            });
-
-            if (response.ok) {
-                alert('PDF успешно загружен');
-            } else {
-                alert('Ошибка при загрузке PDF');
-            }
-            document.querySelector('.modal-background-loader').style.display = 'none'
-        } catch (err) {
-            document.querySelector('.modal-background-loader').style.display = 'none'
-            console.error('Ошибка:', err);
-        }
-    }
-
     const getAllHonestSign = async (e) => {
         e.preventDefault();
-        const conf = confirm('Вы уверены, что хотите вернуть весь честный знак для '+ brend + " с поставки №" + deliveryNumber);
-        if (!conf){
+        const conf = confirm('Вы уверены, что хотите вернуть весь честный знак для ' + brend + " с поставки №" + deliveryNumber);
+        if (!conf) {
             return;
         }
         const dataAboutSign = {
@@ -215,10 +145,10 @@ const AdminPanel = () => {
         try {
             const response = await fetch('http://localhost:6501/api/getAllHonestSign', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body:  JSON.stringify(dataAboutSign),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataAboutSign),
             })
-            
+
             document.querySelector('.modal-background-loader').style.display = 'flex'
             if (response.ok) {
                 // Читаем данные PDF как Blob
@@ -247,7 +177,7 @@ const AdminPanel = () => {
 
         setError('')
         let question;
-        if (deliveryNumber.trim() == ''){
+        if (deliveryNumber.trim() == '') {
             alert('Введите номер поставки');
             return;
         }
@@ -263,7 +193,7 @@ const AdminPanel = () => {
             return;
         }
         if (!pdfFile) {
-            setError('Пожалуйста, выберите PDF-файл'); 
+            setError('Пожалуйста, выберите PDF-файл');
             return;
         }
 
@@ -293,36 +223,6 @@ const AdminPanel = () => {
         }
     };
 
-    const AddKyzToArmbest = (e) => {
-        e.preventDefault();
-        setBrend('Armbest');
-        setSelectedButton('Armbest');
-    };
-
-    const AddKyzToBestShoes = (e) => {
-        e.preventDefault();
-        setBrend('BestShoes');
-        setSelectedButton('BestShoes');
-    };
-
-    const AddKyzToBest26 = (e) => {
-        e.preventDefault();
-        setBrend('Best26');
-        setSelectedButton('Best26');
-    };
-
-    const AddKyzToOzonArmbest = (e) => {
-        e.preventDefault();
-        setBrend('Ozon Armbest');
-        setSelectedButton('Ozon Armbest');
-    };
-
-    const AddKyzToOzonBestShoes = (e) => {
-        e.preventDefault();
-        setBrend('Ozon BestShoes');
-        setSelectedButton('Ozon BestShoes');
-    };
-
     const handlePlacePrint = (event) => {
         const selectedPlace = event.target.value;
         localStorage.setItem('placePrint', selectedPlace);
@@ -343,26 +243,26 @@ const AdminPanel = () => {
 
     const handleRowButtonClick = async (item) => {
         const conf = confirm("Вы точно хотите вернуть ЧЗ: ", item);
-        if (!conf){
+        if (!conf) {
             return;
         }
         console.log("Данные строки:", item);
         const { Brand, user, Model, Size, date } = item;
         try {
             const response = await fetch('http://localhost:6501/api/returnKyz', {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                selectedBrand: Brand,
-                user,
-                placePrint,
-                date,
-                Model,
-                Size,
-            }),
-        });
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    selectedBrand: Brand,
+                    user,
+                    placePrint,
+                    date,
+                    Model,
+                    Size,
+                }),
+            });
             const data = await response.json();
             if (response.ok) {
                 console.log('Ответ от сервера:', data);
@@ -374,7 +274,7 @@ const AdminPanel = () => {
             console.error('Ошибка:', err);
         }
     };
-     
+
     const [activeTab, setActiveTab] = useState('remaining-signs');
     const [InfoAboutHonestSing, setInfoAboutHonestSing] = useState([]);
     const [expandedBrand, setExpandedBrand] = useState(null);
@@ -387,28 +287,22 @@ const AdminPanel = () => {
     // Фильтрация не напечатанных знаков 
     const [modelFilterWaiting, setModelFilterWaiting] = useState('');
     const [sizeFilterWaiting, setSizeFilterWaiting] = useState('');
-    const [expandedBrandWaiting, setExpandedBrandWaiting] = useState(null);
     const [deliveryNumberWaiting, setdeliveryNumberWaiting] = useState();
 
     const filteredDataWaiting = Object.entries(InfoAboutHonestSing).reduce((acc, [brand, data]) => {
         const filteredModelsWaiting = data.models.filter(model =>
-          (!modelFilterWaiting || model.model.toLowerCase().includes(modelFilterWaiting.toLowerCase())) &&
-          (!sizeFilterWaiting || model.size.toLowerCase().includes(sizeFilterWaiting.toLowerCase())) &&
-          (!deliveryNumberWaiting || model.deliverynumber?.toLowerCase().includes(deliveryNumberWaiting.toLowerCase()))
+            (!modelFilterWaiting || model.model.toLowerCase().includes(modelFilterWaiting.toLowerCase())) &&
+            (!sizeFilterWaiting || model.size.toLowerCase().includes(sizeFilterWaiting.toLowerCase())) &&
+            (!deliveryNumberWaiting || model.deliverynumber?.toLowerCase().includes(deliveryNumberWaiting.toLowerCase()))
         );
-    
+
         if (filteredModelsWaiting.length > 0) {
-          acc[brand] = { ...data, models: filteredModelsWaiting };
+            acc[brand] = { ...data, models: filteredModelsWaiting };
         }
         return acc;
-      }, {});
-    
-      // Функция для переключения раскрытия бренда
-      const toggleBrandWaiting = (brand) => {
-        setExpandedBrandWaiting(expandedBrandWaiting === brand ? null : brand);
-      };
+    }, {});
 
-      const checkDelivery = async () => {
+    const checkDelivery = async () => {
         if (!deliveryNumber.trim()) {
             setDeliveryMessage('Введите номер поставки.');
             return;
@@ -423,7 +317,7 @@ const AdminPanel = () => {
                 },
                 body: JSON.stringify({ deliverynumber: Number(deliveryNumber) }),
             });
-            
+
             if (response.ok) {
                 const result = await response.json();
                 if (result.exists) {
@@ -451,7 +345,7 @@ const AdminPanel = () => {
                 },
                 body: JSON.stringify({ deliverynumber: Number(deliveryNumber) }),
             });
-    
+
             if (response.ok) {
                 setDeliveryMessage(`Поставка с номером ${deliveryNumber} успешно создана.`);
                 setConfirmCreateDelivery(false); // Скрыть кнопку подтверждения
@@ -464,150 +358,138 @@ const AdminPanel = () => {
         }
     };
 
-    const handleButtonClick = (company) => {
-        setSelectedButton(company);
-    };
-
-    const handleGenerateReport = () => {
-        const reportButton = document.getElementById('ButtonLoadKyz');
-        if (reportButton) {
-            reportButton.click(); // Имитируем клик по кнопке
-        }
-    };
-      
-    return(
+    return (
         <div className="admin-wrapper">
-        <button className='OpenPanelAmin open-panel-admin btn-submit' onClick={OpenWindowAdmin}>Панель администратора</button>
-        <div className={`admin-container ${windowAdmin ? 'panelOn' : 'panelOff'}`}>
-        
-        <section className={CheckStatus ? "Admin" : "NonAdmin"} style={{
-            width: '400px',
-            padding: '20px',
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-            backgroundColor: '#f9f9f9',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            fontFamily: 'Arial, sans-serif'
-            }}>
-            <div className="category-block">
-                <div className="tabs">
-                    <button
-                    className={`tab-button ${activeTab === 'remaining-signs' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('remaining-signs')}
-                    >
-                    Количество оставшихся знаков
-                    </button>
-                    <button
-                    className={`tab-button ${activeTab === 'info-add-return' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('info-add-return')}
-                    >
-                    Информация о добавлении и возврате знаков
-                    </button>
-                </div>
+            <button className='OpenPanelAmin open-panel-admin btn-submit' onClick={OpenWindowAdmin}>Панель администратора</button>
+            <div className={`admin-container ${windowAdmin ? 'panelOn' : 'panelOff'}`}>
 
-                {activeTab === 'remaining-signs' && (
-                    <div className="content">
-                        <div className="filters" style={{ marginBottom: '15px', display: 'flex', gap: '10px' }}>
-                            <input
-                            type="text"
-                            placeholder="Модель"
-                            value={modelFilterWaiting}
-                            onChange={(e) => setModelFilterWaiting(e.target.value)}
-                            style={{
-                                padding: '8px 12px',
-                                borderRadius: '5px',
-                                border: '1px solid #ccc',
-                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                                width: '100px',
-                                fontSize: '14px',
-                                outline: 'none',
-                                transition: 'border-color 0.2s ease-in-out',
-                            }}
-                            />
-                            <input
-                            type="text"
-                            placeholder="Размер"
-                            value={sizeFilterWaiting}
-                            onChange={(e) => setSizeFilterWaiting(e.target.value)}
-                            style={{
-                                padding: '8px 12px',
-                                borderRadius: '5px',
-                                border: '1px solid #ccc',
-                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                                width: '100px',
-                                fontSize: '14px',
-                                outline: 'none',
-                                transition: 'border-color 0.2s ease-in-out',
-                            }}
-
-                            />
-                            <input
-                            type="text"
-                            placeholder="Поставка"
-                            value={deliveryNumberWaiting}
-                            onChange={(e) => setdeliveryNumberWaiting(e.target.value)}
-                            style={{
-                                padding: '8px 12px',
-                                borderRadius: '5px',
-                                border: '1px solid #ccc',
-                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                                width: '100px',
-                                fontSize: '14px',
-                                outline: 'none',
-                                transition: 'border-color 0.2s ease-in-out',
-                            }}
-
-                            />
+                <section className={CheckStatus ? "Admin" : "NonAdmin"} style={{
+                    width: '400px',
+                    padding: '20px',
+                    border: '1px solid #ccc',
+                    borderRadius: '8px',
+                    backgroundColor: '#f9f9f9',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    fontFamily: 'Arial, sans-serif'
+                }}>
+                    <div className="category-block">
+                        <div className="tabs">
+                            <button
+                                className={`tab-button ${activeTab === 'remaining-signs' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('remaining-signs')}
+                            >
+                                Количество оставшихся знаков
+                            </button>
+                            <button
+                                className={`tab-button ${activeTab === 'info-add-return' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('info-add-return')}
+                            >
+                                Информация о добавлении и возврате знаков
+                            </button>
                         </div>
-                        <ul className="firm-list">
-                        {Object.entries(filteredDataWaiting).map(([brand, data]) => (
-                            <li key={brand}>
-                            <div onClick={() => toggleBrand(brand)}>
-                                {brand} <span>Всего: {data.totalQuantity} шт.</span>
-                            </div>
-                            {expandedBrand === brand && (
-                                <ul className="model-list">
-                                {data.models.map((model, index) => (
-                                    <li key={index}>
-                                        <span>{model.model}</span> 
-                                        <span>{model.size}</span> 
-                                        <span>{model.deliverynumber} пос.</span>
-                                        <span>{model.quantity} шт.</span>
-                                    </li>
-                                ))}
+
+                        {activeTab === 'remaining-signs' && (
+                            <div className="content">
+                                <div className="filters" style={{ marginBottom: '15px', display: 'flex', gap: '10px' }}>
+                                    <input
+                                        type="text"
+                                        placeholder="Модель"
+                                        value={modelFilterWaiting}
+                                        onChange={(e) => setModelFilterWaiting(e.target.value)}
+                                        style={{
+                                            padding: '8px 12px',
+                                            borderRadius: '5px',
+                                            border: '1px solid #ccc',
+                                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                                            width: '100px',
+                                            fontSize: '14px',
+                                            outline: 'none',
+                                            transition: 'border-color 0.2s ease-in-out',
+                                        }}
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Размер"
+                                        value={sizeFilterWaiting}
+                                        onChange={(e) => setSizeFilterWaiting(e.target.value)}
+                                        style={{
+                                            padding: '8px 12px',
+                                            borderRadius: '5px',
+                                            border: '1px solid #ccc',
+                                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                                            width: '100px',
+                                            fontSize: '14px',
+                                            outline: 'none',
+                                            transition: 'border-color 0.2s ease-in-out',
+                                        }}
+
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Поставка"
+                                        value={deliveryNumberWaiting}
+                                        onChange={(e) => setdeliveryNumberWaiting(e.target.value)}
+                                        style={{
+                                            padding: '8px 12px',
+                                            borderRadius: '5px',
+                                            border: '1px solid #ccc',
+                                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                                            width: '100px',
+                                            fontSize: '14px',
+                                            outline: 'none',
+                                            transition: 'border-color 0.2s ease-in-out',
+                                        }}
+                                    />
+                                </div>
+                                <ul className="firm-list">
+                                    {Object.entries(filteredDataWaiting).map(([brand, data]) => (
+                                        <li key={brand}>
+                                            <div onClick={() => toggleBrand(brand)}>
+                                                {brand} <span>Всего: {data.totalQuantity} шт.</span>
+                                            </div>
+                                            {expandedBrand === brand && (
+                                                <ul className="model-list">
+                                                    {data.models.map((model, index) => (
+                                                        <li key={index}>
+                                                            <span>{model.model}</span>
+                                                            <span>{model.size}</span>
+                                                            <span>{model.deliverynumber} пос.</span>
+                                                            <span>{model.quantity} шт.</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </li>
+                                    ))}
                                 </ul>
-                            )}
-                            </li>
-                        ))}
-                        </ul>
-                    </div>
-                )}
+                            </div>
+                        )}
 
-                {activeTab === 'info-add-return' && (
-                    <div className="content">
-                    <p>Здесь будет информация о добавлении и возврате знаков.</p>
+                        {activeTab === 'info-add-return' && (
+                            <div className="content">
+                                <p>Здесь будет информация о добавлении и возврате знаков.</p>
+                            </div>
+                        )}
                     </div>
-                )}
-                </div>
-        </section>
+                </section>
 
-        <div className={CheckStatus ? "Admin" : "NonAdmin"} style={{
-            width: '400px',
-            padding: '20px',
-            border: '1px solid #ccc',
-            borderRadius: '8px',
-            backgroundColor: '#f9f9f9',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            fontFamily: 'Arial, sans-serif'
-            }}>
-        
-            <label htmlFor="dropdown" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
-                Выберите место:
-            </label>
-            <select 
+                <div className={CheckStatus ? "Admin" : "NonAdmin"} style={{
+                    width: '400px',
+                    padding: '20px',
+                    border: '1px solid #ccc',
+                    borderRadius: '8px',
+                    backgroundColor: '#f9f9f9',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    fontFamily: 'Arial, sans-serif'
+                }}>
+
+                    <label htmlFor="placePrint" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
+                        Выберите место:
+                    </label>
+                    <select
                         className='placePrintValue'
-                        id="dropdown" 
-                        value={placePrint} 
+                        id="placePrint"
+                        value={placePrint}
                         onChange={handlePlacePrint}
                         style={{
                             width: '100%',
@@ -616,20 +498,21 @@ const AdminPanel = () => {
                             border: '1px solid #ddd',
                             marginBottom: '15px',
                             cursor: 'pointer'
-                        }}>
+                        }}
+                    >
                         {places.map((place, index) => (
                             <option key={index} value={place}>{place}</option>
                         ))}
                     </select>
                     {placePrint && <p style={{ color: 'green', marginTop: '-10px', marginBottom: '15px' }}>Вы выбрали: {placePrint}</p>}
 
-                    <label htmlFor="dropdown" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
+                    <label htmlFor="printerForBarcode" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
                         Выберите принтер для баркодов:
                     </label>
                     <select
                         className='printForBarcode'
-                        id="dropdown" 
-                        value={printerForBarcode} 
+                        id="printerForBarcode"
+                        value={printerForBarcode}
                         onChange={handlePrinterForBarcode}
                         style={{
                             width: '100%',
@@ -638,18 +521,17 @@ const AdminPanel = () => {
                             border: '1px solid #ddd',
                             marginBottom: '15px',
                             cursor: 'pointer'
-                        }}>
-                       
+                        }}
+                    >
                     </select>
                     {printerForBarcode && <p style={{ color: 'green', marginTop: '-10px', marginBottom: '15px' }}>Вы выбрали: {printerForBarcode}</p>}
-
-                    <label htmlFor="dropdown" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
+                    <label htmlFor="printerForHonestSign" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
                         Выберите принтер для честного знака:
                     </label>
                     <select
                         className='printForHonestSign'
-                        id="dropdown" 
-                        value={printerForHonestSign} 
+                        id="printerForHonestSign"  // Уникальный id
+                        value={printerForHonestSign}
                         onChange={handleprinterForHonestSign}
                         style={{
                             width: '100%',
@@ -658,13 +540,13 @@ const AdminPanel = () => {
                             border: '1px solid #ddd',
                             marginBottom: '15px',
                             cursor: 'pointer'
-                        }}>
-                        
+                        }}
+                    >
                     </select>
                     {printerForHonestSign && <p style={{ color: 'green', marginTop: '-10px' }}>Вы выбрали: {printerForHonestSign}</p>}
 
                     {/* Фильтры */}
-                    <label htmlFor="dropdown" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
+                    <label htmlFor="placePrint" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
                         Фильтр:
                     </label>
 
@@ -720,12 +602,12 @@ const AdminPanel = () => {
                     </div>
 
                     <div style={{
-                            maxHeight: '510px', // Фиксированная высота для контейнера с таблицей
-                            overflowY: 'auto',  // Прокрутка по вертикали при превышении высоты
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                            marginTop: '15px'
-                        }}>
+                        maxHeight: '510px', // Фиксированная высота для контейнера с таблицей
+                        overflowY: 'auto',  // Прокрутка по вертикали при превышении высоты
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        marginTop: '15px'
+                    }}>
 
                         <h3 style={{
                             paddingLeft: '15px',
@@ -749,8 +631,7 @@ const AdminPanel = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredItems 
-                                    .map((item, index) => (
+                                {filteredItems.map((item, index) => (
                                     <tr key={index}>
                                         <td style={tableCellStyle}>{item.Brand}</td>
                                         <td style={tableCellStyle}>{item.Model}</td>
@@ -758,72 +639,89 @@ const AdminPanel = () => {
                                         <td style={tableCellStyle}>{item.quantity}</td>
                                         <td style={tableCellStyle}>{item.date}</td>
                                         <td style={tableCellStyle}>{item.user}</td>
-                                        <button className='buttonReturnSign' onClick={() => handleRowButtonClick(item)}>X</button>
+                                        <td style={tableCellStyle}> {/* Добавляем <td> для кнопки */}
+                                            <button
+                                                className="buttonReturnSign"
+                                                onClick={() => handleRowButtonClick(item)}
+                                            >
+                                                X
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
+
                         </table>
                     </div>
                 </div>
-            <section className='admin-panel'>
-                <h2 className="admin-title">Вход в панель администратора</h2>
-                <form onSubmit={handleLogin} className="login-form">
-                    <div className="form-group">
-                        <label>Логин</label>
-                        <input 
-                            type="text" 
-                            value={username}
-                            placeholder="Введите логин"
-                            onChange={(e) => setUsernameAdminPanel(e.target.value)} 
-                        />
+                <section className='admin-panel'>
+                    <h2 className="admin-title">Вход в панель администратора</h2>
+                    <form onSubmit={handleLogin} className="login-form">
+                        <div className="form-group">
+                            <label htmlFor="username" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
+                                Логин
+                            </label>
+                            <input
+                                id="username" // Уникальный id
+                                type="text"
+                                value={username}
+                                placeholder="Введите логин"
+                                onChange={(e) => setUsernameAdminPanel(e.target.value)}
+                                autoComplete="username" // Используется camelCase
+                            />
+
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
+                                Пароль
+                            </label>
+                            <input
+                                id="password" // Уникальный id
+                                type="password"
+                                value={password}
+                                placeholder="Введите пароль"
+                                autoComplete="current-password" // Используется camelCase
+                                onChange={(e) => setPasswordAdminPanel(e.target.value)}
+                            />
+
+                        </div>
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
+                        <button type="submit" className="btn-submit">Войти</button>
+                    </form>
+                    <div className={`${CheckStatus ? 'Admin' : 'NonAdmin'} admin-functions`}>
+                        <button className="btn-action" onClick={getAllHonestSign}>Вернуть честный знак для Маркетплейса</button>
+                        <article className="add-section">
+                            <h2 className="admin-title">Добавление честного знака</h2>
+                            <ReportGenerator />
+                            <form onSubmit={addNewKyz} className="upload-form">
+                                <input
+                                    type="file"
+                                    accept="application/pdf"
+                                    onChange={handleFileChange}
+                                />
+
+                                {error && <p style={{ color: 'red' }}>{error}</p>}
+                                <input
+                                    type="number"
+                                    value={deliveryNumber}
+                                    onChange={(e) => setDeliveryNumber(e.target.value)}
+                                    placeholder="Введите номер поставки"
+                                />
+                                <button onClick={checkDelivery}>Проверить</button>
+
+                                {deliveryMessage && <p>{deliveryMessage}</p>}
+
+                                {confirmCreateDelivery && (
+                                    <button onClick={createDelivery}>
+                                        Создать поставку {deliveryNumber}
+                                    </button>
+                                )}
+                                <button type="submit" className="btn-submit">Добавить</button>
+                            </form>
+                        </article>
                     </div>
-                    <div className="form-group">
-                        <label>Пароль</label>
-                        <input 
-                            type="password" 
-                            value={password}
-                            placeholder="Введите пароль"
-                            autoComplete=""
-                            onChange={(e) => setPasswordAdminPanel(e.target.value)} 
-                        />
-                    </div>
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                    <button type="submit" className="btn-submit">Войти</button>
-                </form>
-                <div className={`${CheckStatus ? 'Admin' : 'NonAdmin'} admin-functions`}>
-                <button className="btn-action" onClick={getAllHonestSign}>Вернуть честный знак для Маркетплейса</button>
-                <article className="add-section">
-                <h2 className="admin-title">Добавление честного знака</h2>
-                <ReportGenerator />
-                <form onSubmit={addNewKyz} className="upload-form">
-                        <input 
-                            type="file"
-                            accept="application/pdf"
-                            onChange={handleFileChange} 
-                        />
-
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                    <input
-                        type="number"
-                        value={deliveryNumber}
-                        onChange={(e) => setDeliveryNumber(e.target.value)}
-                        placeholder="Введите номер поставки"
-                    />
-                    <button onClick={checkDelivery}>Проверить</button>
-
-                    {deliveryMessage && <p>{deliveryMessage}</p>}
-
-                    {confirmCreateDelivery && (
-                        <button onClick={createDelivery}>
-                            Создать поставку {deliveryNumber}
-                        </button>
-                    )}
-                    <button type="submit" className="btn-submit">Добавить</button>
-                </form>
-                </article>
-                </div>
-            </section>
-        </div>
+                </section>
+            </div>
         </div>
     );
 }

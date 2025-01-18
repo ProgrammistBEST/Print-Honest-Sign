@@ -20,7 +20,6 @@ const SignDisplay = () => {
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
     const handleOpenModalInfo = () => setIsModalInfoOpen(true);
     const handleCloseModalInfo = () => setIsModalInfoOpen(false);
-    
 
     useEffect(() => {
         fetchInitialData();
