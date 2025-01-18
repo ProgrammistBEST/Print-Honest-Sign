@@ -1,0 +1,253 @@
+/* Контейнер для чекбоксов */
+.checkbox-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Стили для каждого чекбокса */
+.checkbox-item {
+    display: flex;
+    align-items: center;
+}
+
+/* Прячем стандартный чекбокс */
+.checkbox-item input[type="checkbox"] {
+    display: none;
+}
+
+/* Стили для кастомного чекбокса */
+.custom-checkbox {
+    display: inline-block;
+    padding-left: 25px;
+    position: relative;
+    cursor: pointer;
+    font-size: 32px;
+    font-weight: 700;
+    user-select: none;
+}
+
+/* Псевдоэлемент для кастомного чекбокса */
+.custom-checkbox::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* Состояние выбранного чекбокса */
+.checkbox-item input[type="checkbox"]:checked + .custom-checkbox::before {
+    background-color: #1890ff; /* Синий цвет для активного чекбокса */
+    border-color: #1890ff;
+}
+
+/* Галочка при выбранном состоянии */
+.checkbox-item input[type="checkbox"]:checked + .custom-checkbox::after {
+    content: '✔';
+    position: absolute;
+    left: 3px;
+    top: -2px;
+    font-size: 18px;
+    color: white;
+}
+
+/* Кнопка "Далее" */
+.next-button {
+    padding: 10px 20px;
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Кнопка "Далее" при наведении */
+.next-button:hover {
+    background-color: #40a9ff;
+}
+/* Grid для модели обуви и списка размеров */
+.model-grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr; /* Слева номер модели, справа размеры */
+    align-items: center;
+    gap: 10px; /* Отступ между колонками */
+    margin-bottom: 20px;
+}
+
+/* Стили для названия модели обуви */
+.model-name {
+    text-align: right;
+    font-size: 52px;
+    font-weight: bold;
+}
+
+/* Стили для списка размеров */
+.size-list {
+    display: flex;
+    gap: 10px; /* Отступы между элементами */
+    list-style: none; /* Убираем стандартные маркеры списка */
+    padding: 0;
+    margin: 0;
+}
+
+/* Стили для отдельного размера */
+.size-item {
+    background-color: #f0f0f0;
+    color: rgb(0, 128, 255);
+    font-weight: 900;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    text-align: center;
+    min-width: 40px; /* Минимальная ширина для единообразия */
+    border: 1px solid #ccc;
+}
+
+/* Пример при наведении на размер (опционально) */
+.size-item:hover {
+    background-color: #1890ff;
+    color: white;
+    border-color: #1890ff;
+    cursor: pointer;
+}
+/* Стили для выбора бренда */
+.brand-select {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.brand-select button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 400px;
+    font-weight: 900;
+    font-size: 30px;
+    margin: 10px;
+}
+
+.brand-select button.active-brand {
+    background-color: #1890ff;
+    color: white;
+}
+
+/* Стили для списка моделей и размеров */
+.model-grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.model-name {
+    font-size: 40px;
+    font-weight: bold;
+    margin-right: 16px;
+}
+
+.size-list {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.size-item {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 22px;
+    text-align: center;
+    min-width: 40px;
+    max-width: 80px;
+    border: 1px solid #ccc;
+    color: black;
+}
+.size-item::placeholder{
+    color: rgb(108, 108, 108);
+    font-weight: 100;
+}
+
+.size-item:hover {
+    background-color: #1890ff;
+    color: white;
+    cursor: pointer;
+}
+
+.size-input {
+    display: flex;
+    flex-direction: column; /* Размещаем элементы по вертикали */
+    margin-bottom: 10px;
+}
+  
+.size-label {
+color: rgb(6, 148, 6); /* Зеленый цвет текста */
+font-weight: 900; /* Жирный шрифт */
+font-size: 18px;
+margin-bottom: 5px; /* Расстояние между label и input */
+}
+  
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.Modelslist {
+    border: 1px solid black;
+    margin-bottom: 12px;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(30px, auto)); /* Максимум 5 колонок */
+    /* grid-template-rows: repeat(10, minmax(30px, auto)); Количество строк */
+    gap: 10px; /* Отступы между элементами */
+    max-height: calc(10 * 50px + 9 * 10px); /* Максимальная высота для 10 строк */
+    overflow-y: auto; /* Скролл, если количество элементов больше 50 */
+    padding: 10px;
+}
+.headerForChooseSizeArea {
+    margin: 20px 0 21px 0;
+    font-size: 36px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.textLoader {
+    font-size: 45px;
+}
+
+.inputChooseUser {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* .exitUserButton {
+    position: relative;
+    right: 200px;
+    float: right;
+    font-size: 30px;
+    margin-top: -93px;
+} */
+.loginButton:hover {
+    background-color: #1890ff;
+}
