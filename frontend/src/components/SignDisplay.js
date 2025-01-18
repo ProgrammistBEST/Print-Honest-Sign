@@ -18,9 +18,8 @@ const SignDisplay = () => {
 
     // Модальное окно информации
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
-    const handleOpenModalInfo = () => setIsModalInfoOpen(true);
-    const handleCloseModalInfo = () => setIsModalInfoOpen(false);
-    
+    // const handleOpenModalInfo = () => setIsModalInfoOpen(true);
+    // const handleCloseModalInfo = () => setIsModalInfoOpen(false);
 
     useEffect(() => {
         fetchInitialData();
@@ -212,6 +211,12 @@ const SignDisplay = () => {
 
     return (
         <main>
+            {/* <Modal
+                isOpen={true} 
+                onClose={false} 
+                successCount={150} 
+                failureCount={5}
+            /> */}
             {isModalOpen && (
                 <div style={modalOverlayStyle}>
                     <div style={modalContentStyle}>
@@ -222,6 +227,7 @@ const SignDisplay = () => {
                             placeholder="Введите номер упаковщика"
                             style={inputStyle}
                         />
+                        
                         <input
                             type="number"
                             value={numberdelivery}
@@ -241,12 +247,7 @@ const SignDisplay = () => {
             <h1>{user}</h1>
             <h2>Номер поставки: {numberdelivery}</h2>
             <h2>Выберите бренд</h2>
-            <Modal
-                isOpen={isModalInfoOpen} 
-                onClose={handleCloseModalInfo} 
-                successCount={150} 
-                failureCount={5}
-            />
+
             <div className="brand-select">
                 {brands.map((brand) => (
                     <button
@@ -257,7 +258,7 @@ const SignDisplay = () => {
                         {brand.nameBrand}
                     </button>
                 ))}
-                <button onClick={exitUser}  className='exitUserButton'>Выйти</button>
+                <button onClick={exitUser} className='exitUserButton'>Выйти</button>
             </div>
             {selectedBrand && (
                 <div>
