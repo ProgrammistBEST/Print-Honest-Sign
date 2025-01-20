@@ -13,16 +13,11 @@ const SignDisplay = () => {
     const [numberdelivery, setNumberDelivery] = useState('');
     const [numbersdeliveries, setNumbersDeliveries] = useState('');
     const [warning, setWarning] = useState('');
-
+    const [isInfoPrintedSigns, setInfoPrintedSigns] = useState('')
     // Модальное окно информации
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
-    const [isInfoPrintedSigns, setInfoPrintedSigns] = useState('')
-
-    // Функции модуля
-    const handleCloseInfoModal = () => {
-        setIsModalInfoOpen(false);
-    }
-
+    const handleCloseModalInfo = () => setIsModalInfoOpen(false);
+    const isDataFetched = useRef(false); // Используем useRef для контроля вызова
     useEffect(() => {
         if (!isDataFetched.current) {
             fetchInitialData();
@@ -249,7 +244,7 @@ const SignDisplay = () => {
             {/* Модуль вывода информации о печати честного знака */}
             <Modal
                 isOpen={isModalInfoOpen} 
-                onClose={handleCloseInfoModal} 
+                onClose={handleCloseModalInfo} 
                 info={isInfoPrintedSigns}
             />
 
