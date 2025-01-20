@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import '../css/CheckboxStyles.css';
 import Modal from './modal/modal.js';
 
 const SignDisplay = () => {
-    const [data, setData] = useState([]);
     const [selectedBrand, setSelectedBrand] = useState(null);
     const [selectedModels, setSelectedModels] = useState([]);
     const [showSizes, setShowSizes] = useState(false);
-    const [showButtonPrint, setshowButtonPrint] = useState(false);
     const [brands, setBrands] = useState([]);
     const [query, setQuery] = useState('');
     const [user, setUser] = useState('');
@@ -26,8 +24,11 @@ const SignDisplay = () => {
     }
 
     useEffect(() => {
-        fetchInitialData();
-    }, []);
+        if (!isDataFetched.current) {
+            fetchInitialData();
+            isDataFetched.current = true; // Устанавливаем флаг, чтобы предотвратить повторный вызов
+        }
+    }, []); // Пустой массив зависимостей гарантирует, что useEffect выполнится только один раз при монтировании
 
     const fetchInitialData = async () => {
         try {

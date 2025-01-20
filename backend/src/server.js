@@ -47,7 +47,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
     try {
       const [waitingRows] = await pool.query(
         `SELECT Brand, Model, Size, COUNT(*) AS quantity,
-              DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user 
+              DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber 
            FROM delivery_bestshoes_lermontovo 
            WHERE Status = 'Used' 
              AND Locked = 1 
@@ -57,7 +57,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_armbest_lermontovo
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -67,7 +67,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_best26_lermontovo
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -77,7 +77,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_bestshoes_ozon_lermontovo
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -87,7 +87,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_armbest_ozon_lermontovo
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -97,7 +97,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_best26_ozon_lermontovo
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -116,7 +116,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
 
       const [waitingRows] = await pool.query(
         `SELECT Brand, Model, Size, COUNT(*) AS quantity,
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user 
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber 
            FROM delivery_bestshoes_pyatigorsk 
            WHERE Status = 'Used' 
              AND Locked = 1 
@@ -126,7 +126,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_armbest_pyatigorsk
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -136,7 +136,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_best26_pyatigorsk
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -146,7 +146,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_bestshoes_ozon_pyatigorsk
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -156,7 +156,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_armbest_ozon_pyatigorsk
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -166,7 +166,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
           UNION ALL
         
           SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
           FROM delivery_best26_ozon_pyatigorsk
           WHERE Status = 'Used' 
             AND Locked = 1 
@@ -184,7 +184,7 @@ app.get('/api/printedHonestSign', async (req, res) => {
     try {
       const [waitingRows] = await pool.query(
         `SELECT Brand, Model, Size, COUNT(*) AS quantity,
-              DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user 
+              DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
            FROM delivery_test 
            WHERE Status = 'Used' 
              AND Locked = 1 
@@ -1030,6 +1030,7 @@ app.post('/addDelivery', async (req, res) => {
       res.status(500).send({ error: 'Ошибка добавления поставки' });
   }
 })
+
 app.post('/api/checkDelivery', async (req, res) => {
   console.log('/api/checkDelivery')
   const { deliverynumber } = req.body;
