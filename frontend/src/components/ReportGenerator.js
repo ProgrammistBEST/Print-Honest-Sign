@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import ExcelJS from 'exceljs';
 
-const ReportGenerator = () => {
-  const [selectedCompany, setSelectedCompany] = useState('');
+const ReportGenerator = ({ setSelectedCompany }) => {
+  const [selectedCompany, setSelectedCompanyState] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCompanySelection = (company) => {
-    console.log(`[INFO] Выбрана компания: ${company}`);
-    setSelectedCompany(company);
+    setSelectedCompanyState(company);  // Обновляем локальное состояние
+    setSelectedCompany(company);  // Передаем выбранную компанию в родительский компонент
   };
 
   const generateReport = async () => {

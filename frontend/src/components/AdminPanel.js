@@ -183,6 +183,7 @@ const AdminPanel = () => {
         }
 
         if (brend === 'Armbest' || brend === 'BestShoes' || brend === 'Best26' || brend === 'OZON') {
+            console.log('brend:', brend)
             question = confirm('Согласны добавить КИЗ на ', brend, 'в поставку №', deliveryNumber);
             // Логика перехода в панель администратора
         } else if (brend == '') {
@@ -357,7 +358,12 @@ const AdminPanel = () => {
             console.error(error);
         }
     };
-
+    const handleCompanySelection = (company) => {
+        console.log(`[INFO] Выбрана компания: ${company}`);
+        setBrend(company);  // Устанавливаем компанию в стейт родительского компонента
+      };
+    
+    
     return (
         <div className="admin-wrapper">
             <button className='OpenPanelAmin open-panel-admin btn-submit' onClick={OpenWindowAdmin}>Панель администратора</button>
@@ -692,7 +698,7 @@ const AdminPanel = () => {
                         <button className="btn-action" onClick={getAllHonestSign}>Вернуть честный знак для Маркетплейса</button>
                         <article className="add-section">
                             <h2 className="admin-title">Добавление честного знака</h2>
-                            <ReportGenerator />
+                            <ReportGenerator setSelectedCompany={handleCompanySelection} />
                             <form onSubmit={addNewKyz} className="upload-form">
                                 <input
                                     type="file"
