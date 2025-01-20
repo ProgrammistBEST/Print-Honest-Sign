@@ -133,7 +133,7 @@ const AdminPanel = () => {
 
     const getAllHonestSign = async (e) => {
         e.preventDefault();
-        const conf = confirm('Вы уверены, что хотите вернуть весь честный знак для ' + brend + " с поставки №" + deliveryNumber);
+        const conf = confirm(`Вы уверены, что хотите вернуть весь честный знак для ${brend} с поставки №" ${deliveryNumber}`);
         if (!conf) {
             return;
         }
@@ -184,7 +184,7 @@ const AdminPanel = () => {
 
         if (brend === 'Armbest' || brend === 'BestShoes' || brend === 'Best26' || brend === 'OZON') {
             console.log('brend:', brend)
-            question = confirm('Согласны добавить КИЗ на ', brend, 'в поставку №', deliveryNumber);
+            question = confirm(`Согласны добавить КИЗ на, ${brend}, в поставку №, ${deliveryNumber}`);
             // Логика перехода в панель администратора
         } else if (brend == '') {
             alert('Выберите фирму на которую хотите добавить честный знак и попробуйте еще раз.')
@@ -279,7 +279,6 @@ const AdminPanel = () => {
     const [activeTab, setActiveTab] = useState('remaining-signs');
     const [InfoAboutHonestSing, setInfoAboutHonestSing] = useState([]);
     const [expandedBrand, setExpandedBrand] = useState(null);
-    const [brandData, setBrandData] = useState({});
 
     const toggleBrand = (brend) => {
         setExpandedBrand(expandedBrand === brend ? null : brend);
@@ -361,9 +360,9 @@ const AdminPanel = () => {
     const handleCompanySelection = (company) => {
         console.log(`[INFO] Выбрана компания: ${company}`);
         setBrend(company);  // Устанавливаем компанию в стейт родительского компонента
-      };
-    
-    
+    };
+
+
     return (
         <div className="admin-wrapper">
             <button className='OpenPanelAmin open-panel-admin btn-submit' onClick={OpenWindowAdmin}>Панель администратора</button>
@@ -480,7 +479,7 @@ const AdminPanel = () => {
                 </section>
 
                 <div className={CheckStatus ? "Admin" : "NonAdmin"} style={{
-                    width: '400px',
+                    width: '470px',
                     padding: '20px',
                     border: '1px solid #ccc',
                     borderRadius: '8px',
@@ -628,12 +627,13 @@ const AdminPanel = () => {
                         }}>
                             <thead>
                                 <tr>
-                                    <th style={tableHeaderStyle}>Бренд.</th>
+                                    <th style={tableHeaderStyle}>Бренд</th>
                                     <th style={tableHeaderStyle}>Мод.</th>
                                     <th style={tableHeaderStyle}>Раз.</th>
                                     <th style={tableHeaderStyle}>Шт.</th>
                                     <th style={tableHeaderStyle}>Время</th>
                                     <th style={tableHeaderStyle}>Отв.</th>
+                                    <th style={tableHeaderStyle}>Пост.</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -645,7 +645,8 @@ const AdminPanel = () => {
                                         <td style={tableCellStyle}>{item.quantity}</td>
                                         <td style={tableCellStyle}>{item.date}</td>
                                         <td style={tableCellStyle}>{item.user}</td>
-                                        <td style={tableCellStyle}> {/* Добавляем <td> для кнопки */}
+                                        <td style={tableCellStyle}>{item.deliverynumber}</td>
+                                        <td style={tableCellStyle}>
                                             <button
                                                 className="buttonReturnSign"
                                                 onClick={() => handleRowButtonClick(item)}
