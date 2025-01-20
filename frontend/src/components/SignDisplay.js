@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../css/CheckboxStyles.css';
-import Modal from '../components/modal';
+import Modal from './modal/modal.js';
 
 const SignDisplay = () => {
     const [data, setData] = useState([]);
@@ -18,8 +18,12 @@ const SignDisplay = () => {
 
     // Модальное окно информации
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
-    // const handleOpenModalInfo = () => setIsModalInfoOpen(true);
-    // const handleCloseModalInfo = () => setIsModalInfoOpen(false);
+    const [isInfoPrintedSigns, setInfoPrintedSigns] = useState('')
+
+    // Функции модуля
+    const handleCloseInfoModal = () => {
+        setIsModalInfoOpen(false);
+    }
 
     useEffect(() => {
         fetchInitialData();
@@ -191,9 +195,12 @@ const SignDisplay = () => {
                 console.log('Ошиибка');
                 throw new Error('Network response was not ok');
             }
-            console.log('Статус ответа:', response);
             const result = await response.json();
-            console.log('Данные с сервера:', result);
+            console.log('Данные с сервера:', result.data);
+            console.log('Данные с сервера2:', result);
+
+            setIsModalInfoOpen(true);
+            setInfoPrintedSigns(result.data)
             setTimeout(() => {
                 document.querySelector('.modal-background-loader').style.display = 'none';
             }, 2000);
@@ -211,12 +218,6 @@ const SignDisplay = () => {
 
     return (
         <main>
-            {/* <Modal
-                isOpen={true} 
-                onClose={false} 
-                successCount={150} 
-                failureCount={5}
-            /> */}
             {isModalOpen && (
                 <div style={modalOverlayStyle}>
                     <div style={modalContentStyle}>
@@ -243,6 +244,13 @@ const SignDisplay = () => {
                     </div>
                 </div>
             )}
+
+            {/* Модуль вывода информации о печати честного знака */}
+            <Modal
+                isOpen={isModalInfoOpen} 
+                onClose={handleCloseInfoModal} 
+                info={isInfoPrintedSigns}
+            />
 
             <h1>{user}</h1>
             <h2>Номер поставки: {numberdelivery}</h2>

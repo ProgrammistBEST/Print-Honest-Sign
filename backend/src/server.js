@@ -422,10 +422,12 @@ app.post('/kyz', async (req, res) => {
       // console.log('imagesBarckodePDF: ', imagesBarckodePDF);
       // console.log('pdfPaths: ', pdfPaths);
         printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
-        res.json({ success: true, data: waitingRows });
+        res.json({ success: true, data: { successfulSign, shortageInfo } });
       // printPDF(mergedPdfPathBarcodes, 'barcode', printerForBarcode);
     } else {
-      console.error('Произошла ошибка');
+        console.error('Произошла ошибка!');
+        console.log(successfulSign, shortageInfo)
+        res.json({ success: false, data: { successfulSign, shortageInfo } });
     }
 
     if (!res.headersSent) {
@@ -433,8 +435,6 @@ app.post('/kyz', async (req, res) => {
     }
 
   } catch (error) {
-    console.error('Произошла ошибка:', error);
-
     if (!res.headersSent) {
       return res.status(500).send('Произошла ошибка при выполнении операции.');
     }
