@@ -13,7 +13,7 @@ const SignDisplay = () => {
     const [numberdelivery, setNumberDelivery] = useState('');
     const [numbersdeliveries, setNumbersDeliveries] = useState('');
     const [warning, setWarning] = useState('');
-
+    const [isInfoPrintedSigns, setInfoPrintedSigns] = useState('')
     // Модальное окно информации
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
     const handleCloseModalInfo = () => setIsModalInfoOpen(false);
@@ -244,7 +244,7 @@ const SignDisplay = () => {
             {/* Модуль вывода информации о печати честного знака */}
             <Modal
                 isOpen={isModalInfoOpen} 
-                onClose={handleCloseInfoModal} 
+                onClose={handleCloseModalInfo} 
                 info={isInfoPrintedSigns}
             />
 
