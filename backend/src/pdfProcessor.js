@@ -179,7 +179,7 @@ async function processPDF(fileBuffer, fileName, brandData,deliveryNumber, placeP
     // });
 
     const pdfBytes = new Uint8Array(fileBuffer);
-    const pageSize = 150;
+    const pageSize = 50;
     let startPage = 0;
 
     while (startPage < extractedTexts.length) {
@@ -188,7 +188,9 @@ async function processPDF(fileBuffer, fileName, brandData,deliveryNumber, placeP
         let Crypto = linesArray.filter(line => line.startsWith('(01)')).join('\n');
         let Size = '';
         let Model = '';
-        io.emit('upload_status', `Processing pages ${startPage + 1} to ${startPage + pageSize}`);
+        const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
+
+          io.emit('upload_status', { progress, message: `Загружено ${startPage} из ${extractedTexts.length}` });
 
         if (linesArray.length > 1 && brandData == 'Armbest') {
           const secondLine = linesArray[4] || '';
@@ -249,12 +251,12 @@ async function processPDF(fileBuffer, fileName, brandData,deliveryNumber, placeP
     //   // bot.telegram.sendMessage(chatId, message);
     //   console.log(message)
       // });
-      io.emit('upload_status', 'Processing complete');
+      io.emit('upload_status', { progress: 100, message: 'Загрузка завершена!' });
 
   } catch (err) {
       console.error('Ошибка при обработке PDF и сохранении данных в базу данных:', err);
-      io.emit('upload_status', `Error: ${err.message}`);
-  }
+      io.emit('upload_status', { progress: 0, message: `Ошибка: ${err.message}` });
+    }
 }
 
 // Экспорт функции processPDF

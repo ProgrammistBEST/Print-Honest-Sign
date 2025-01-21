@@ -211,7 +211,6 @@ app.get('/api/printedHonestSign', async (req, res) => {
         `,
         []
       );
-      console.log('Данные из таблицы тест', waitingRows);
       res.json(waitingRows);
     } catch (error) {
       res.status(500).json({ error: 'Ошибка' });
