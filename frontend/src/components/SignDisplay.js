@@ -28,8 +28,8 @@ const SignDisplay = () => {
     const fetchInitialData = async () => {
         try {
             const [brandsResponse, deliveriesResponse] = await Promise.all([
-                fetch('http://localhost:6501/getBrandsData'),
-                fetch('http://localhost:6501/getNumbersDeliveries')
+                fetch(`http://${window.location.hostname}:6501/getBrandsData`),
+                fetch(`http://${window.location.hostname}:6501/getNumbersDeliveries`)
             ]);
 
             const brandsData = await brandsResponse.json();
@@ -77,7 +77,7 @@ const SignDisplay = () => {
             }
             setWarning('');
             try {
-                const response = await fetch('http://localhost:6501/api/CheckUser', {
+                const response = await fetch(`http://${window.location.hostname}:6501/api/CheckUser`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -168,7 +168,7 @@ const SignDisplay = () => {
         console.log(document.querySelector('.placePrintValue').value)
 
         try {
-            const response = await fetch('http://localhost:6501/kyz', {
+            const response = await fetch(`http://${window.location.hostname}:6501/kyz`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
