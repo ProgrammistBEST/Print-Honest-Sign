@@ -17,13 +17,13 @@ const SignDisplay = () => {
     // Модальное окно информации
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
     const handleCloseModalInfo = () => setIsModalInfoOpen(false);
-    const isDataFetched = useRef(false); // Используем useRef для контроля вызова
+    const isDataFetched = useRef(false);
     useEffect(() => {
         if (!isDataFetched.current) {
             fetchInitialData();
-            isDataFetched.current = true; // Устанавливаем флаг, чтобы предотвратить повторный вызов
+            isDataFetched.current = true;
         }
-    }, []); // Пустой массив зависимостей гарантирует, что useEffect выполнится только один раз при монтировании
+    }, []);
 
     const fetchInitialData = async () => {
         try {
@@ -246,6 +246,8 @@ const SignDisplay = () => {
                 isOpen={isModalInfoOpen} 
                 onClose={handleCloseModalInfo} 
                 info={isInfoPrintedSigns}
+                type={''}
+
             />
 
             <h1>{user}</h1>

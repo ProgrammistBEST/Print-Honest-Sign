@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../css/AdminPanel.css';
 import ReportGenerator from './ReportGenerator';
+import Modal from './modal/modal';
+
+// Socket
+const socket = io('http://localhost:6502');
 
 const AdminPanel = () => {
     const [username, setUsernameAdminPanel] = useState('');
@@ -20,14 +24,23 @@ const AdminPanel = () => {
     // доступные принтеры и места печати
     const [places, setPlaces] = useState(["Лермонтово", "Пятигорск", "Тест"]);
     const [placePrint, setPlacePrint] = useState('');
-
-    // 
     const [printItems, setPrintItems] = useState([]);
 
     // Фильтрация напечатанных знаков 
     const [brandFilter, setBrandFilter] = useState('');
     const [modelFilter, setModelFilter] = useState('');
     const [sizeFilter, setSizeFilter] = useState('');
+
+    // Статус загрузки честного знака
+    const [statusUploadSign, setStatusUploadSign] = useState('');
+    const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
+    const handleCloseModalInfo = () => setIsModalInfoOpen(false);
+
+    socket.on('upload_status', ({ progress, message }) => {
+        let status = { progress, message };
+        console.log('Upload Status:', message);
+        setStatusUploadSign(status);
+    });
 
     const filteredItems = printItems.filter(item =>
         item.Brand.toLowerCase().includes(brandFilter.toLowerCase()) &&
@@ -198,13 +211,14 @@ const AdminPanel = () => {
             return;
         }
 
-        document.querySelector('.modal-background-loader').style.display = 'flex'
         const formData = new FormData();
         formData.append('file', pdfFile);
         console.log(brend)
         formData.append('brandData', JSON.stringify(brend));
         formData.append('deliveryNumber', JSON.stringify(deliveryNumber));
         formData.append('placePrint', JSON.stringify(placePrint));
+
+        setIsModalInfoOpen(true);
 
         try {
             const response = await fetch('http://localhost:6501/uploadNewKyz', {
@@ -217,9 +231,7 @@ const AdminPanel = () => {
             } else {
                 alert('Ошибка при загрузке PDF');
             }
-            document.querySelector('.modal-background-loader').style.display = 'none'
         } catch (err) {
-            document.querySelector('.modal-background-loader').style.display = 'none'
             console.error('Ошибка:', err);
         }
     };
@@ -365,6 +377,7 @@ const AdminPanel = () => {
 
     return (
         <div className="admin-wrapper">
+
             <button className='OpenPanelAmin open-panel-admin btn-submit' onClick={OpenWindowAdmin}>Панель администратора</button>
             <div className={`admin-container ${windowAdmin ? 'panelOn' : 'panelOff'}`}>
 
@@ -477,6 +490,13 @@ const AdminPanel = () => {
                         )}
                     </div>
                 </section>
+                {/* Модуль вывода информации о печати честного знака */}
+                <Modal
+                    isOpen={isModalInfoOpen} 
+                    onClose={handleCloseModalInfo} 
+                    info={statusUploadSign}
+                    type={'statusUploadSigns'}
+                />
 
                 <div className={CheckStatus ? "Admin" : "NonAdmin"} style={{
                     width: '470px',
@@ -661,6 +681,7 @@ const AdminPanel = () => {
                         </table>
                     </div>
                 </div>
+                
                 <section className='admin-panel'>
                     <h2 className="admin-title">Вход в панель администратора</h2>
                     <form onSubmit={handleLogin} className="login-form">
