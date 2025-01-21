@@ -1,7 +1,8 @@
 // Библиотека
 const express = require('express');
 const app = express();
-const port = 6501;
+const portExpress = 6501;
+const portSocket = 6502;
 const fs = require('fs');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
@@ -18,6 +19,23 @@ const stringSimilarity = require('string-similarity');
 const { getPrinters } = require('pdf-to-printer');
 const mysql = require('mysql2');
 const iconv = require('iconv-lite');
+
+// Для работы с сокетами
+const http = require('http');
+const socketIo = require('socket.io');
+const server = http.createServer();
+
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+io.on('connection', (socket) => {
+    console.log('Client connected');
+});
+
 
 app.use(cors()); // Разрешает все источники
 app.use(express.json());
@@ -829,7 +847,7 @@ app.post('/uploadNewKyz', upload.single('file'), async (req, res) => {
     const placePrint = JSON.parse(req.body.placePrint);
     console.log("req.body: ",req.body);
 
-    await processPDF(fileBuffer, fileName, brandData ,deliveryNumber, placePrint);
+    await processPDF(fileBuffer, fileName, brandData ,deliveryNumber, placePrint, io);
     res.status(200).send({ message: 'Файл успешно загружен.' });
 
   } catch (err) {
@@ -1178,6 +1196,10 @@ function getCurrentTimestamp() {
 }
 
 // Запуск сервера
-app.listen(port, () => {
-  console.log(`Server is running on port https://localhost:${port}`);
+app.listen(portExpress, () => {
+  console.log(`Express is running on port https://localhost:${portExpress}`);
+});
+
+server.listen(portSocket, () => {
+    console.log(`WebSocket is running on port https://localhost:${portSocket}`);
 });
