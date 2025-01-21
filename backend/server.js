@@ -19,6 +19,9 @@ const stringSimilarity = require('string-similarity');
 const { getPrinters } = require('pdf-to-printer');
 const mysql = require('mysql2');
 const iconv = require('iconv-lite');
+const { getInfoAboutAllHonestSign } = require('./controllers/infoHSController.js'); // Импортируем функцию
+const { getPrintedHonestSign } = require('./controllers/printedHSController.js'); // Импортируем функцию
+const { kyz } = require('./controllers/kyzController.js'); // Импортируем функцию
 
 // Для работы с сокетами
 const http = require('http');
@@ -33,7 +36,7 @@ const io = socketIo(server, {
 });
 
 io.on('connection', (socket) => {
-    console.log('Client connected');
+  console.log('Client connected');
 });
 
 
@@ -57,182 +60,10 @@ app.get('/api/printers', async (req, res) => {
   }
 });
 
-app.get('/api/printedHonestSign', async (req, res) => {
-
-  const selectedPlace = req.query.placePrint;
-    console.log('selectedPlace:', selectedPlace)
-  if (selectedPlace == 'Лермонтово') {
-    try {
-      const [waitingRows] = await pool.query(
-        `SELECT Brand, Model, Size, COUNT(*) AS quantity,
-              DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber 
-           FROM delivery_bestshoes_lermontovo 
-           WHERE Status = 'Used' 
-             AND Locked = 1 
-             AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-           GROUP BY Model, Size, user, DATE(Date)
-           
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_armbest_lermontovo
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_best26_lermontovo
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_bestshoes_ozon_lermontovo
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_armbest_ozon_lermontovo
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_best26_ozon_lermontovo
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-           `,
-        []
-      );
-      res.json(waitingRows);
-    } catch (error) {
-      res.status(500).json({ error: 'Ошибка' });
-    }
-  
-  } else if (selectedPlace == 'Пятигорск') {
-      try {
-
-      const [waitingRows] = await pool.query(
-        `SELECT Brand, Model, Size, COUNT(*) AS quantity,
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber 
-           FROM delivery_bestshoes_pyatigorsk 
-           WHERE Status = 'Used' 
-             AND Locked = 1 
-             AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-           GROUP BY Model, Size, user, DATE(Date)
-           
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_armbest_pyatigorsk
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_best26_pyatigorsk
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_bestshoes_ozon_pyatigorsk
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_armbest_ozon_pyatigorsk
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, COUNT(*) AS quantity, 
-                DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-          FROM delivery_best26_ozon_pyatigorsk
-          WHERE Status = 'Used' 
-            AND Locked = 1 
-            AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-          GROUP BY Model, Size, user, DATE(Date)
-           `,
-        []
-        );
-      res.json(waitingRows);
-    } catch (error) {
-      res.status(500).json({ error: 'Ошибка' });
-    }
-
-  } else if (selectedPlace == 'Тест') {
-    try {
-      const [waitingRows] = await pool.query(
-        `SELECT Brand, Model, Size, COUNT(*) AS quantity,
-              DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-           FROM delivery_test 
-           WHERE Status = 'Used' 
-             AND Locked = 1 
-             AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-           GROUP BY Model, Size, user, DATE(Date)
-        `,
-        []
-      );
-      res.json(waitingRows);
-    } catch (error) {
-      res.status(500).json({ error: 'Ошибка' });
-    }
-  }
-});
-
-// Функция для поиска папки с точным совпадением до первого подчёркивания
-function findExactFolder(basePath, targetArticle) {
-  const folders = fs.readdirSync(basePath).filter(f => fs.statSync(path.join(basePath, f)).isDirectory());
-
-  // Регулярное выражение для точного совпадения до первого символа подчёркивания
-  const regex = new RegExp(`^${targetArticle}_`); // Ищем папку, которая начинается с targetArticle и сразу за ней идёт подчёркивание
-
-  const matchingFolders = folders.filter(folder => regex.test(folder));
-
-  if (matchingFolders.length > 0) {
-    return matchingFolders[0]; // Возвращаем первое найденное точное совпадение
-  }
-
-  return null; // Если совпадений нет
-}
+// Роуты
+app.get('/api/printedHonestSign', getPrintedHonestSign); // Используем функцию для маршрута
+app.get('/api/InfoAboutAllHonestSign', getInfoAboutAllHonestSign); // Используем функцию для маршрута
+app.get('/kyz', kyz); // Используем функцию для маршрута
 
 async function mergePDFs(pdfPaths) {
   const mergedPdf = await PDFDocument.create(); // Создаём новый PDF-документ
@@ -277,324 +108,186 @@ function extractSizeFromPath(filePath) {
   return match ? parseInt(match[1], 10) : null; // Возвращаем число или null, если не найдено
 }
 
-app.post('/kyz', async (req, res) => {
+// app.post('/kyz', async (req, res) => {
 
-  let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode, numberdelivery } = req.body;
-  let mainBrand;
-    let tableName;
-    
-  if (placePrint == 'Тест') {
-    if (selectedBrand === 'Ozon (Armbest)') {
-      selectedBrand = 'Ozon Armbest'
-      tableName = 'delivery_test';
-    } else if (selectedBrand === 'Ozon (BestShoes)') {
-      selectedBrand = 'Ozon BestShoes'
-      tableName = 'delivery_test';
-    } else if (selectedBrand === 'Armbest (Новая)') {
-      selectedBrand = 'Armbest'
-      tableName = 'delivery_test';
-    } else if (selectedBrand === 'BestShoes (Старая)') {
-      selectedBrand = 'BestShoes'
-      tableName = 'delivery_test';
-    } else if (selectedBrand === 'Best26 (Арташ)') {
-      selectedBrand = 'Best26'
-      tableName = 'delivery_test';
-    }
-  } else if (selectedBrand === 'Ozon (Armbest)') {
-    selectedBrand = 'Ozon Armbest';
-    mainBrand = 'ARMBEST';
+//   let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode, numberdelivery } = req.body;
+//   let mainBrand;
+//   let tableName;
 
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_armbest_ozon_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_armbest_ozon_lermontovo';
-    }
+//   if (placePrint == 'Тест') {
+//     if (selectedBrand === 'Ozon (Armbest)') {
+//       selectedBrand = 'Ozon Armbest'
+//       tableName = 'delivery_test';
+//     } else if (selectedBrand === 'Ozon (BestShoes)') {
+//       selectedBrand = 'Ozon BestShoes'
+//       tableName = 'delivery_test';
+//     } else if (selectedBrand === 'Armbest (Новая)') {
+//       selectedBrand = 'Armbest'
+//       tableName = 'delivery_test';
+//     } else if (selectedBrand === 'BestShoes (Старая)') {
+//       selectedBrand = 'BestShoes'
+//       tableName = 'delivery_test';
+//     } else if (selectedBrand === 'Best26 (Арташ)') {
+//       selectedBrand = 'Best26'
+//       tableName = 'delivery_test';
+//     }
+//   } else if (selectedBrand === 'Ozon (Armbest)') {
+//     selectedBrand = 'Ozon Armbest';
+//     mainBrand = 'ARMBEST';
 
-  } else if (selectedBrand == 'Ozon (BestShoes)') {
-    selectedBrand = 'OZON';
-    mainBrand = 'BESTSHOES';
+//     if (placePrint == 'Пятигорск') {
+//       tableName = 'delivery_armbest_ozon_pyatigorsk';
+//     } else if (placePrint == 'Лермонтово') {
+//       tableName = 'delivery_armbest_ozon_lermontovo';
+//     }
 
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_bestshoes_ozon_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_bestshoes_ozon_lermontovo';
-    }
+//   } else if (selectedBrand == 'Ozon (BestShoes)') {
+//     selectedBrand = 'OZON';
+//     mainBrand = 'BESTSHOES';
 
-  } else if (selectedBrand == 'Armbest (Новая)') {
-    tableName = 'delivery_armbest_pyatigorsk';
-    selectedBrand = 'Armbest';
+//     if (placePrint == 'Пятигорск') {
+//       tableName = 'delivery_bestshoes_ozon_pyatigorsk';
+//     } else if (placePrint == 'Лермонтово') {
+//       tableName = 'delivery_bestshoes_ozon_lermontovo';
+//     }
 
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_armbest_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_armbest_lermontovo';
-    }
+//   } else if (selectedBrand == 'Armbest (Новая)') {
+//     tableName = 'delivery_armbest_pyatigorsk';
+//     selectedBrand = 'Armbest';
 
-  } else if (selectedBrand == 'BestShoes (Старая)' || selectedBrand == 'BestShoes') {
-    selectedBrand = 'BestShoes';
+//     if (placePrint == 'Пятигорск') {
+//       tableName = 'delivery_armbest_pyatigorsk';
+//     } else if (placePrint == 'Лермонтово') {
+//       tableName = 'delivery_armbest_lermontovo';
+//     }
 
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_bestshoes_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_bestshoes_lermontovo';
-    }
+//   } else if (selectedBrand == 'BestShoes (Старая)' || selectedBrand == 'BestShoes') {
+//     selectedBrand = 'BestShoes';
 
-  } else if (selectedBrand == 'Best26 (Арташ)') {
-    selectedBrand = 'Best26';
+//     if (placePrint == 'Пятигорск') {
+//       tableName = 'delivery_bestshoes_pyatigorsk';
+//     } else if (placePrint == 'Лермонтово') {
+//       tableName = 'delivery_bestshoes_lermontovo';
+//     }
 
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_best26_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_best26_lermontovo';
-    }
-    
-  }
+//   } else if (selectedBrand == 'Best26 (Арташ)') {
+//     selectedBrand = 'Best26';
 
-  const imagesBarckodePDF = [];
-  const pdfPaths = [];
-    const shortageInfo = [];
-    const successfulSign = [];
+//     if (placePrint == 'Пятигорск') {
+//       tableName = 'delivery_best26_pyatigorsk';
+//     } else if (placePrint == 'Лермонтово') {
+//       tableName = 'delivery_best26_lermontovo';
+//     }
 
-  console.log(filledInputs)
+//   }
 
-  try {
-    const allPromises = filledInputs.map(async (input) => {
-      const size = input.size;
-      let model = input.model;
-      const count = Number(input.value);
-      const generalArticle = general_article(input.model);
-      let article = input.model.replace(/\s+/g, ''); // убираем все пробелы
-      let brand;
-      let closestFolder
-      console.log(size, model, count)
-      if (['Armbest'].includes(selectedBrand)) {
-        model = 'Multimodel';
-      }
-        console.log(tableName);
-    console.log(selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode, numberdelivery);
-      const [waitingRows] = await pool.query(
-        `SELECT * FROM \`${tableName}\` WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" AND \`Model\` = ? AND deliverynumber = ? AND \`Locked\` = 0 LIMIT ?`,
-        [size, selectedBrand, model, numberdelivery, count]
-        );
-        console.log(size, selectedBrand, model, numberdelivery, count)
+//   const imagesBarckodePDF = [];
+//   const pdfPaths = [];
+//   const shortageInfo = [];
+//   const successfulSign = [];
 
-      const dateToday = getFormattedDateTime();
+//   console.log(filledInputs)
 
-      // Если недостаточно записей
-      if (waitingRows.length < count) {
-        console.log(`Недостаточно ЧЗ для модели ${model}, размера ${size}, бренда ${selectedBrand}. Требуется: ${count}, доступно: ${waitingRows.length}`);
-        shortageInfo.push({
-          model,
-          size,
-          brand: selectedBrand,
-          required: count,
-          available: waitingRows.length
-        });
-        return;
-      } else {
-          successfulSign.push({
-            model,
-            size,
-            brand: selectedBrand,
-            required: count,
-            available: waitingRows.length  
-          })
-          
-      }
+//   try {
+//     const allPromises = filledInputs.map(async (input) => {
+//       const size = input.size;
+//       let model = input.model;
+//       const count = Number(input.value);
+//       const generalArticle = general_article(input.model);
+//       let article = input.model.replace(/\s+/g, ''); // убираем все пробелы
+//       let brand;
+//       let closestFolder
+//       console.log(size, model, count)
+//       if (['Armbest'].includes(selectedBrand)) {
+//         model = 'Multimodel';
+//       }
+//       console.log(tableName);
+//       console.log(selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode, numberdelivery);
+//       const [waitingRows] = await pool.query(
+//         `SELECT * FROM \`${tableName}\` WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" AND \`Model\` = ? AND deliverynumber = ? AND \`Locked\` = 0 LIMIT ?`,
+//         [size, selectedBrand, model, numberdelivery, count]
+//       );
+//       console.log(size, selectedBrand, model, numberdelivery, count)
 
-      // Обновление записей и сохранение PDF
-    const updatePromises = waitingRows.slice(0, count).map(async (row) => {
-        if (waitingRows.length < 1) {
-          return
-        }
-        // Если PDF существует, сохраняем его
-        if (row.PDF) {
-          const randomNumbers = Math.floor(1000 + Math.random() * 9000); // 4 случайные цифры
-          const pdfPath = path.join(__dirname, `output${row.id}-${row.Model}[${randomNumbers}]${row.Size}.pdf`);
-          fs.writeFileSync(pdfPath, row.PDF);
-            pdfPaths.push(pdfPath); // Добавляем путь в массив
-          // imagesBarckodePDF.push(filePath);
-        }
-        await pool.query(
-          `UPDATE \`${tableName}\` SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ? WHERE \`id\` = ? AND \`Model\` = ? AND \`color\` = ? AND \`Crypto\` = ? AND \`Brand\` = ? AND \`Size\` = ? AND \`Status\` = ? AND \`Locked\` = 0 AND deliverynumber = ?`,
-          ['Used', dateToday, user, row.id, row.Model, row.color, row.Crypto, row.Brand, row.Size, 'Waiting', numberdelivery]
-        );
-      });
-      await Promise.all(updatePromises);
-    });
+//       const dateToday = getFormattedDateTime();
 
-    await Promise.all(allPromises);
+//       // Если недостаточно записей
+//       if (waitingRows.length < count) {
+//         console.log(`Недостаточно ЧЗ для модели ${model}, размера ${size}, бренда ${selectedBrand}. Требуется: ${count}, доступно: ${waitingRows.length}`);
+//         shortageInfo.push({
+//           model,
+//           size,
+//           brand: selectedBrand,
+//           required: count,
+//           available: waitingRows.length
+//         });
+//         return;
+//       } else {
+//         successfulSign.push({
+//           model,
+//           size,
+//           brand: selectedBrand,
+//           required: count,
+//           available: waitingRows.length
+//         })
 
-    // Проверка на нехватку ЧЗ
-    if (shortageInfo.length > 0) {
-      console.log('Нехватка ЧЗ:', shortageInfo);
-    }
+//       }
 
-    // Сортировка и обработка PDF
-    if (pdfPaths.length > 0) {
-      pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
-      const mergedPdfPath = await mergePDFs(pdfPaths);
-      const mergedPdfPathBarcodes = await mergePDFs2(imagesBarckodePDF);
+//       // Обновление записей и сохранение PDF
+//       const updatePromises = waitingRows.slice(0, count).map(async (row) => {
+//         if (waitingRows.length < 1) {
+//           return
+//         }
+//         // Если PDF существует, сохраняем его
+//         if (row.PDF) {
+//           const randomNumbers = Math.floor(1000 + Math.random() * 9000); // 4 случайные цифры
+//           const pdfPath = path.join(__dirname, `output${row.id}-${row.Model}[${randomNumbers}]${row.Size}.pdf`);
+//           fs.writeFileSync(pdfPath, row.PDF);
+//           pdfPaths.push(pdfPath); // Добавляем путь в массив
+//           // imagesBarckodePDF.push(filePath);
+//         }
+//         await pool.query(
+//           `UPDATE \`${tableName}\` SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ? WHERE \`id\` = ? AND \`Model\` = ? AND \`color\` = ? AND \`Crypto\` = ? AND \`Brand\` = ? AND \`Size\` = ? AND \`Status\` = ? AND \`Locked\` = 0 AND deliverynumber = ?`,
+//           ['Used', dateToday, user, row.id, row.Model, row.color, row.Crypto, row.Brand, row.Size, 'Waiting', numberdelivery]
+//         );
+//       });
+//       await Promise.all(updatePromises);
+//     });
 
-      // console.log('imagesBarckodePDF: ', imagesBarckodePDF);
-      // console.log('pdfPaths: ', pdfPaths);
-        printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
-        res.json({ success: true, data: { successfulSign, shortageInfo } });
-      // printPDF(mergedPdfPathBarcodes, 'barcode', printerForBarcode);
-    } else {
-        console.error('Произошла ошибка!');
-        console.log(successfulSign, shortageInfo)
-        res.json({ success: false, data: { successfulSign, shortageInfo } });
-    }
+//     await Promise.all(allPromises);
 
-    if (!res.headersSent) {
-      return res.send('Отправилось в печать!');
-    }
+//     // Проверка на нехватку ЧЗ
+//     if (shortageInfo.length > 0) {
+//       console.log('Нехватка ЧЗ:', shortageInfo);
+//     }
 
-  } catch (error) {
-    if (!res.headersSent) {
-      return res.status(500).send('Произошла ошибка при выполнении операции.');
-    }
-  }
-});
+//     // Сортировка и обработка PDF
+//     if (pdfPaths.length > 0) {
+//       pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
+//       const mergedPdfPath = await mergePDFs(pdfPaths);
+//       const mergedPdfPathBarcodes = await mergePDFs2(imagesBarckodePDF);
 
-app.get('/api/InfoAboutAllHonestSign', async (req, res) => {
+//       // console.log('imagesBarckodePDF: ', imagesBarckodePDF);
+//       // console.log('pdfPaths: ', pdfPaths);
+//       printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
+//       res.json({ success: true, data: { successfulSign, shortageInfo } });
+//       // printPDF(mergedPdfPathBarcodes, 'barcode', printerForBarcode);
+//     } else {
+//       console.error('Произошла ошибка!');
+//       console.log(successfulSign, shortageInfo)
+//       res.json({ success: false, data: { successfulSign, shortageInfo } });
+//     }
 
-  const selectedPlace = req.query.placePrint;
-  const brand = req.query.brand;
-  const deliveryNumber = req.query.brand;
+//     if (!res.headersSent) {
+//       return res.send('Отправилось в печать!');
+//     }
 
-  
-  console.log(selectedPlace)
-  if (selectedPlace === 'Лермонтово') {
-    try {
-      const [waitingRows] = await pool.query(
-        `SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_bestshoes_lermontovo 
-          WHERE Status = 'Waiting' 
-            AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_armbest_lermontovo
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_best26_lermontovo
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_bestshoes_ozon_lermontovo
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_armbest_ozon_lermontovo
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-
-          UNION ALL
-      
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_best26_ozon_lermontovo
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-           `,
-        []
-      );
-      res.json(waitingRows);
-    } catch (error) {
-      res.status(500).json({ error: 'Ошибка' });
-    }
-  
-  } else if (selectedPlace === 'Пятигорск') {
-    try {
-      const [waitingRows] = await pool.query(
-        `SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-           FROM delivery_bestshoes_pyatigorsk 
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-           
-          UNION ALL
-        
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_armbest_pyatigorsk
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_best26_pyatigorsk
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_bestshoes_ozon_pyatigorsk
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_armbest_ozon_pyatigorsk
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-
-          UNION ALL
-        
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM delivery_best26_ozon_pyatigorsk
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size, deliverynumber
-           `,
-        []
-      );
-      res.json(waitingRows);
-    } catch (error) {
-        console.error('Ошибка запроса:', error);
-        res.status(500).json({ error: 'Ошибка сервера', details: error.message });
-    }
-  } else if (selectedPlace === 'Тест') {
-    try {
-      const [waitingRows] = await pool.query(
-        `SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-           FROM delivery_test 
-           WHERE Status = 'Waiting' 
-             AND Locked = 0
-           GROUP BY Model, Size
-        `,
-        []
-      );
-      res.json(waitingRows);
-    } catch (error) {
-      res.status(500).json({ error: 'Ошибка' });
-    }
-  }
-});
+//   } catch (error) {
+//     if (!res.headersSent) {
+//       return res.status(500).send('Произошла ошибка при выполнении операции.');
+//     }
+//   }
+// });
 
 // Получение ЧЗ для финального скачивания документов
 app.post('/api/getlineToFinishDocument', (req, res) => {
@@ -705,11 +398,6 @@ app.post('/api/getAllHonestSign', async (req, res) => {
           copiedPages.forEach((page) => {
             mergedPdf.addPage(page);
           });
-
-          // await pool.execute(
-          //   'DELETE FROM honestsignfordeliverytest WHERE Locked = 0 AND Status = "Waiting" AND Brand = ?',
-          //   [brand]
-          // );
           console.log(row.Model + "`" + row.Size + "`");
         }
       }
@@ -838,15 +526,15 @@ app.post('/uploadNewKyz', upload.single('file'), async (req, res) => {
     if (!req.file) {
       return res.status(400).send({ message: 'Файл не загружен.' });
     }
-    
+
     const fileName = req.file.originalname;
     const fileBuffer = req.file.buffer;
     const brandData = JSON.parse(req.body.brandData);
     const deliveryNumber = JSON.parse(req.body.deliveryNumber);
     const placePrint = JSON.parse(req.body.placePrint);
-    console.log("req.body: ",req.body);
+    console.log("req.body: ", req.body);
 
-    await processPDF(fileBuffer, fileName, brandData ,deliveryNumber, placePrint, io);
+    await processPDF(fileBuffer, fileName, brandData, deliveryNumber, placePrint, io);
     res.status(200).send({ message: 'Файл успешно загружен.' });
 
   } catch (err) {
@@ -868,56 +556,6 @@ app.get('/api/getdeliveryinfo/:id', (req, res) => {
     res.status(200).json(row);
   });
 });
-
-// Перенос KYZ, которые старше 3 дней в таблицу DeleteKYZ
-const transferAndDeleteOldRecords = async () => {
-  const connection = await pool.getConnection();
-
-  try {
-    // Начало транзакции
-    await connection.beginTransaction();
-
-    // Подготовка SQL-запроса для вставки данных в таблицу DeleteKYZ
-    const insertStmt = `
-            INSERT INTO removedhonestsign (id, Status, Locked, Color, Model, Size, PDF, Crypto, Brand, Date) 
-            SELECT id, Status, Locked, Color, Model, Size, PDF, Crypto, Brand, Date
-            FROM honestsignfordeliverytest 
-            WHERE Status = 'Used' AND Date <= DATE_SUB(NOW(), INTERVAL 3 DAY)
-        `;
-
-    await connection.query(insertStmt);
-    // Подготовка SQL-запроса для удаления данных из таблицы HonestSign
-    const deleteStmt = `
-            DELETE FROM honestsignfordeliverytest 
-            WHERE Status = 'Used' AND Date <= DATE_SUB(NOW(), INTERVAL 3 DAY)
-        `;
-
-    await connection.query(deleteStmt);
-
-    // Фиксация транзакции в случае успеха
-    await connection.commit();
-    console.log('Old records transferred and deleted successfully.');
-
-    const deletequery = `
-            DELETE FROM removedhonestsign 
-            WHERE Date <= DATE_SUB(NOW(), INTERVAL 29 DAY)
-        `
-    await connection.query(deletequery);
-    await connection.commit();
-    console.log('Very Old records deleted successfully.');
-
-
-  } catch (err) {
-    console.error('Error during transferring and deleting old records:', err);
-    // Откат транзакции в случае ошибки
-    await connection.rollback();
-  } finally {
-    // Освобождение соединения
-    connection.release();
-  }
-};
-
-// transferAndDeleteOldRecords();
 
 // Получить размер
 app.get('/api/getWbSizeArmbest', (req, res) => {
@@ -962,19 +600,19 @@ app.get('/api/getWbSizeBestShoes', (req, res) => {
 let activeRequests = {};
 
 app.use((req, res, next) => {
-    const requestKey = `${req.ip}-${req.originalUrl}`;
-    
-    if (activeRequests[requestKey]) {
-        return res.status(429).send('Запрос уже обрабатывается, дождитесь завершения.');
-    }
+  const requestKey = `${req.ip}-${req.originalUrl}`;
 
-    activeRequests[requestKey] = true;
+  if (activeRequests[requestKey]) {
+    return res.status(429).send('Запрос уже обрабатывается, дождитесь завершения.');
+  }
 
-    res.on('finish', () => {
-        delete activeRequests[requestKey];
-    });
+  activeRequests[requestKey] = true;
 
-    next();
+  res.on('finish', () => {
+    delete activeRequests[requestKey];
+  });
+
+  next();
 });
 
 app.get('/getBrandsData', async (req, res) => {
@@ -1043,8 +681,8 @@ app.post('/addDelivery', async (req, res) => {
     await pool.query('INSERT INTO honestsignfordeliverytest (deliverynumber) VALUES (?)', [deliverynumber])
     res.status(200).send({ message: 'Поставка добавлена успешно' });
   } catch (error) {
-      console.error('Ошибка добавления поставки:', error);
-      res.status(500).send({ error: 'Ошибка добавления поставки' });
+    console.error('Ошибка добавления поставки:', error);
+    res.status(500).send({ error: 'Ошибка добавления поставки' });
   }
 })
 
@@ -1053,15 +691,15 @@ app.post('/api/checkDelivery', async (req, res) => {
   const { deliverynumber } = req.body;
   console.log(deliverynumber)
   try {
-      const [rows] = await pool.query('SELECT 1 FROM honestsignfordeliverytest WHERE deliverynumber = ?', [deliverynumber]);
-      if (rows.length > 0) {
-          res.status(200).send({ exists: true });
-      } else {
-          res.status(200).send({ exists: false });
-      }
+    const [rows] = await pool.query('SELECT 1 FROM honestsignfordeliverytest WHERE deliverynumber = ?', [deliverynumber]);
+    if (rows.length > 0) {
+      res.status(200).send({ exists: true });
+    } else {
+      res.status(200).send({ exists: false });
+    }
   } catch (error) {
-      console.error('Ошибка проверки поставки:', error);
-      res.status(500).send({ error: 'Ошибка проверки поставки' });
+    console.error('Ошибка проверки поставки:', error);
+    res.status(500).send({ error: 'Ошибка проверки поставки' });
   }
 });
 
@@ -1089,33 +727,33 @@ app.get('/getApiById', async (req, res) => {
   const { id, company_name, category } = req.query; // Извлечение параметров запроса
 
   try {
-      const today = new Date(); // Текущая дата
+    const today = new Date(); // Текущая дата
 
-      // Запрос для получения токена и даты истечения подписки
-      const [rows] = await db.query(
-          `SELECT token, expiration_date FROM apitokens 
+    // Запрос для получения токена и даты истечения подписки
+    const [rows] = await db.query(
+      `SELECT token, expiration_date FROM apitokens 
            WHERE id = ? AND company_name = ? AND category = ?`,
-          [id, company_name, category]
-      );
+      [id, company_name, category]
+    );
 
-      if (rows.length > 0) {
-          const { token, expiration_date } = rows[0];
+    if (rows.length > 0) {
+      const { token, expiration_date } = rows[0];
 
-          // Преобразуем expiration_date в объект Date
-          const expirationDate = new Date(expiration_date);
+      // Преобразуем expiration_date в объект Date
+      const expirationDate = new Date(expiration_date);
 
-          // Проверяем дату истечения подписки
-          if (expirationDate > today) {
-              res.json({ token });
-          } else {
-              res.status(404).json({ error: 'Подписка истекла' });
-          }
+      // Проверяем дату истечения подписки
+      if (expirationDate > today) {
+        res.json({ token });
       } else {
-          res.status(404).json({ error: 'Информация не найдена' });
+        res.status(404).json({ error: 'Подписка истекла' });
       }
+    } else {
+      res.status(404).json({ error: 'Информация не найдена' });
+    }
   } catch (err) {
-      console.error('Ошибка выполнения запроса:', err.message);
-      res.status(500).json({ error: 'Ошибка выполнения запроса' });
+    console.error('Ошибка выполнения запроса:', err.message);
+    res.status(500).json({ error: 'Ошибка выполнения запроса' });
   }
 });
 
@@ -1200,5 +838,5 @@ app.listen(portExpress, () => {
 });
 
 server.listen(portSocket, () => {
-    console.log(`WebSocket is running on port https://localhost:${portSocket}`);
+  console.log(`WebSocket is running on port https://localhost:${portSocket}`);
 });
