@@ -1,32 +1,10 @@
-const sqlite3 = require('sqlite3');
-// const { pool } = require('./connectdb.js');
 // Импортируем библиотеки в глобальной области видимости
 const pdfjsLibPromise = import('pdfjs-dist/legacy/build/pdf.mjs');
 const pdfLib = require('pdf-lib');
 const { PDFDocument } = pdfLib;
-const mysql = require('mysql2/promise');
 
 // Настройки для подключения к базе данных
-const pool = mysql.createPool({
-  host: '192.168.100.170',  // хост базы данных
-  user: 'root',  // имя пользователя базы данных
-  password: 'root',  // пароль от базы данных
-  database: 'storagesigns',  // название базы данных
-  waitForConnections: true,
-  connectionLimit: 10,  // максимальное количество соединений
-//   queueLimit: 0 // сколько запросов можно поместить в очередь
-});
-
-// Проверка соединения и логирование результата
-pool.getConnection()
-.then((connection) => {
-    console.log('1 Успешное подключение к базе данных MySQL: storagesigns');
-    connection.release();  // Не забудьте освободить соединение обратно в пул
-})
-.catch((err) => {
-    console.error('Ошибка при подключении к базе данных', err.message);
-});
-module.exports = pool;
+const { pool } = require('../config/connectdb.js');
 
 // Извлечение текста из PDF
 async function extractTextFromPDF(data) {
@@ -58,11 +36,11 @@ async function saveAllDataToDB(connection, fileName, pageDataList, brandData, de
   console.log('Brand, placePrint: ', Brand, placePrint)
   let DateNow = new Date();
   DateNow = DateNow.getFullYear() + '-' +
-                     ('0' + (DateNow.getMonth() + 1)).slice(-2) + '-' +
-                     ('0' + DateNow.getDate()).slice(-2) + ' ' +
-                     ('0' + DateNow.getHours()).slice(-2) + ':' +
-                     ('0' + DateNow.getMinutes()).slice(-2) + ':' +
-                     ('0' + DateNow.getSeconds()).slice(-2);
+    ('0' + (DateNow.getMonth() + 1)).slice(-2) + '-' +
+    ('0' + DateNow.getDate()).slice(-2) + ' ' +
+    ('0' + DateNow.getHours()).slice(-2) + ':' +
+    ('0' + DateNow.getMinutes()).slice(-2) + ':' +
+    ('0' + DateNow.getSeconds()).slice(-2);
 
   let tableName;
 
@@ -134,7 +112,7 @@ async function saveAllDataToDB(connection, fileName, pageDataList, brandData, de
 
   const insertQuery = `INSERT INTO ${tableName} (Model, Color, PDF, Size, Crypto, Brand, Date, Status, deliverynumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   const checkQuery = `SELECT 1 FROM ${tableName} WHERE Model = ? AND Color = ? AND Size = ? AND Crypto = ? AND Brand = ? AND deliverynumber = ?`;
-  
+
   for (let { pageData, Crypto, Size, Model } of pageDataList) {
 
     if (Model === '' || Model === ' ') {
@@ -167,7 +145,7 @@ async function createSinglePagePDF(pdfBytes, pageIndex) {
 }
 
 // Функция обработки PDF
-async function processPDF(fileBuffer, fileName, brandData,deliveryNumber, placePrint, io) {
+async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, placePrint) {
   try {
     const data = new Uint8Array(fileBuffer);
     const { extractedTexts, pdf } = await extractTextFromPDF(data);
@@ -179,7 +157,7 @@ async function processPDF(fileBuffer, fileName, brandData,deliveryNumber, placeP
     // });
 
     const pdfBytes = new Uint8Array(fileBuffer);
-    const pageSize = 50;
+    const pageSize = 150;
     let startPage = 0;
 
     while (startPage < extractedTexts.length) {
@@ -188,9 +166,6 @@ async function processPDF(fileBuffer, fileName, brandData,deliveryNumber, placeP
         let Crypto = linesArray.filter(line => line.startsWith('(01)')).join('\n');
         let Size = '';
         let Model = '';
-        const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
-
-          io.emit('upload_status', { progress, message: `Загружено ${startPage} из ${extractedTexts.length}` });
 
         if (linesArray.length > 1 && brandData == 'Armbest') {
           const secondLine = linesArray[4] || '';
@@ -213,8 +188,8 @@ async function processPDF(fileBuffer, fileName, brandData,deliveryNumber, placeP
           }
         } else if (linesArray.length > 1 && brandData == 'BestShoes') {
           const secondLine = linesArray[4] || '';
-            const thirdLine = linesArray[2] || '';
-            const modelLine = linesArray[0] || '';
+          const thirdLine = linesArray[2] || '';
+          const modelLine = linesArray[0] || '';
           if (isValidSize(secondLine)) {
             Size = secondLine;
             Model = modelLine;
@@ -235,10 +210,10 @@ async function processPDF(fileBuffer, fileName, brandData,deliveryNumber, placeP
           }
         }
 
-          
+
         // Создаем новый PDF-документ с одной страницей
         const pageBytes = await createSinglePagePDF(pdfBytes, startPage + pageIndex);
-        return { pageData: pageBytes, pageNumber: startPage + pageIndex + 1, Crypto, Size, Model};
+        return { pageData: pageBytes, pageNumber: startPage + pageIndex + 1, Crypto, Size, Model };
       }));
       // Записываем данные в базу данных
       await saveAllDataToDB(pool, fileName, pageDataList, brandData, deliveryNumber, placePrint);
@@ -250,16 +225,13 @@ async function processPDF(fileBuffer, fileName, brandData,deliveryNumber, placeP
     //   let message = `Для ${brandData} добавлено ${extractedTexts.length} шт. честного знака.`;
     //   // bot.telegram.sendMessage(chatId, message);
     //   console.log(message)
-      // });
-      io.emit('upload_status', { progress: 100, message: 'Загрузка завершена!' });
-
+    // });
   } catch (err) {
-      console.error('Ошибка при обработке PDF и сохранении данных в базу данных:', err);
-      io.emit('upload_status', { progress: 0, message: `Ошибка: ${err.message}` });
-    }
+    console.error('Ошибка при обработке PDF и сохранении данных в базу данных:', err);
+  }
 }
 
 // Экспорт функции processPDF
 module.exports = {
-    processPDF
+  processPDF
 };
