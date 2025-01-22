@@ -30,6 +30,7 @@ const AdminPanel = () => {
     const [brandFilter, setBrandFilter] = useState('');
     const [modelFilter, setModelFilter] = useState('');
     const [sizeFilter, setSizeFilter] = useState('');
+    const [deliveryFilter, setDeliveryFilter] = useState('');
 
     // Статус загрузки честного знака
     const [statusUploadSign, setStatusUploadSign] = useState('');
@@ -45,7 +46,8 @@ const AdminPanel = () => {
     const filteredItems = printItems.filter(item =>
         item.Brand.toLowerCase().includes(brandFilter.toLowerCase()) &&
         item.Model.toLowerCase().includes(modelFilter.toLowerCase()) &&
-        item.Size.toLowerCase().includes(sizeFilter.toLowerCase())
+        item.Size.toLowerCase().includes(sizeFilter.toLowerCase()) &&
+        item.deliverynumber.toLowerCase().includes(deliveryFilter.toLowerCase())
     ).sort((a, b) => {
         const parseDate = (dateString) => {
             const [dayMonth, time] = dateString.split(" ");
@@ -492,8 +494,8 @@ const AdminPanel = () => {
                 </section>
                 {/* Модуль вывода информации о печати честного знака */}
                 <Modal
-                    isOpen={isModalInfoOpen} 
-                    onClose={handleCloseModalInfo} 
+                    isOpen={isModalInfoOpen}
+                    onClose={handleCloseModalInfo}
                     info={statusUploadSign}
                     type={'statusUploadSigns'}
                 />
@@ -624,6 +626,22 @@ const AdminPanel = () => {
                                 transition: 'border-color 0.2s ease-in-out',
                             }}
                         />
+                        <input
+                            type="text"
+                            placeholder="Поставка"
+                            value={deliveryFilter}
+                            onChange={(e) => setDeliveryFilter(e.target.value)}
+                            style={{
+                                padding: '8px 12px',
+                                borderRadius: '5px',
+                                border: '1px solid #ccc',
+                                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                                width: '100px',
+                                fontSize: '14px',
+                                outline: 'none',
+                                transition: 'border-color 0.2s ease-in-out',
+                            }}
+                        />
                     </div>
 
                     <div style={{
@@ -681,7 +699,7 @@ const AdminPanel = () => {
                         </table>
                     </div>
                 </div>
-                
+
                 <section className='admin-panel'>
                     <h2 className="admin-title">Вход в панель администратора</h2>
                     <form onSubmit={handleLogin} className="login-form">

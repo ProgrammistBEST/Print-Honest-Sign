@@ -29,7 +29,6 @@ const kyz = async (req, res) => {
     const shortageInfo = [];
     const successfulSign = [];
     const pdfPaths = [];
-    const imagesBarckodePDF = [];
   
     try {
       const allPromises = filledInputs.map(async (input) => {

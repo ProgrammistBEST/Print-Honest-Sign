@@ -86,22 +86,6 @@ async function mergePDFs(pdfPaths) {
   return mergedPdfPath; // Возвращаем путь к объединённому PDF
 }
 
-async function mergePDFs2(pdfPaths) {
-  const mergedPdf = await PDFDocument.create(); // Создаём новый PDF-документ
-
-  for (const pdfPath of pdfPaths) {
-    const pdfBytes = fs.readFileSync(pdfPath); // Читаем содержимое каждого PDF-файла
-    const pdfDoc = await PDFDocument.load(pdfBytes); // Загружаем PDF-документ
-    const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices()); // Копируем страницы
-    copiedPages.forEach((page) => mergedPdf.addPage(page)); // Добавляем страницы в новый PDF
-  }
-
-  const mergedPdfBytes = await mergedPdf.save(); // Сохраняем объединённый PDF
-  const mergedPdfPath = path.join(__dirname, 'mergedBarcodes.pdf'); // Путь к объединённому файлу
-  fs.writeFileSync(mergedPdfPath, mergedPdfBytes); // Записываем объединённый файл на диск
-  return mergedPdfPath; // Возвращаем путь к объединённому PDF
-}
-
 function extractSizeFromPath(filePath) {
   const match = filePath.match(/\[\](\d+)\.pdf$/); // Ищем число после "[]", перед ".pdf"
   return match ? parseInt(match[1], 10) : null; // Возвращаем число или null, если не найдено
@@ -148,7 +132,7 @@ app.post('/api/SaveDataKyzToDB', (req, res) => {
 });
 
 app.post('/api/CheckUser', async (req, res) => {
-  const { user, numberdelivery } = req.body;
+  const { user } = req.body;
   try {
     // Выполняем запрос к базе данных MySQL
     const [rows] = await userPool.execute(
