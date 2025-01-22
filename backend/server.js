@@ -22,6 +22,9 @@ const iconv = require('iconv-lite');
 const { getInfoAboutAllHonestSign } = require('./controllers/infoHSController.js'); // Импортируем функцию
 const { getPrintedHonestSign } = require('./controllers/printedHSController.js'); // Импортируем функцию
 const { kyz } = require('./controllers/kyzController.js'); // Импортируем функцию
+app.use(cors());
+app.use(express.json());
+const util = require('util');
 
 // Для работы с сокетами
 const http = require('http');
@@ -39,10 +42,6 @@ io.on('connection', (socket) => {
   console.log('Client connected');
 });
 
-
-app.use(cors()); // Разрешает все источники
-app.use(express.json());
-const util = require('util'); // Убедитесь, что util импортирован, если вы планируете использовать promisify
 
 // Настройка multer для загрузки файлов
 const storage = multer.memoryStorage();

@@ -145,7 +145,7 @@ async function createSinglePagePDF(pdfBytes, pageIndex) {
 }
 
 // Функция обработки PDF
-async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, placePrint) {
+async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, placePrint, io) {
   try {
     const data = new Uint8Array(fileBuffer);
     const { extractedTexts, pdf } = await extractTextFromPDF(data);
@@ -157,7 +157,7 @@ async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, place
     // });
 
     const pdfBytes = new Uint8Array(fileBuffer);
-    const pageSize = 150;
+    const pageSize = 25;
     let startPage = 0;
 
     while (startPage < extractedTexts.length) {
@@ -166,6 +166,9 @@ async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, place
         let Crypto = linesArray.filter(line => line.startsWith('(01)')).join('\n');
         let Size = '';
         let Model = '';
+        const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
+        io.emit('upload_status', { progress, message: `Загружено ${startPage} из ${extractedTexts.length}` });
+
 
         if (linesArray.length > 1 && brandData == 'Armbest') {
           const secondLine = linesArray[4] || '';
@@ -226,8 +229,11 @@ async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, place
     //   // bot.telegram.sendMessage(chatId, message);
     //   console.log(message)
     // });
+    io.emit('upload_status', { progress: 100, message: 'Загрузка завершена!' });
+
   } catch (err) {
     console.error('Ошибка при обработке PDF и сохранении данных в базу данных:', err);
+    io.emit('upload_status', { progress: 0, message: `Ошибка: ${err.message}` });
   }
 }
 
