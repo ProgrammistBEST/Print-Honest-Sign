@@ -169,7 +169,6 @@ async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, place
         const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
         io.emit('upload_status', { progress, message: `Загружено ${startPage} из ${extractedTexts.length}` });
 
-
         if (linesArray.length > 1 && brandData == 'Armbest') {
           const secondLine = linesArray[4] || '';
           if (isValidSize(secondLine)) {

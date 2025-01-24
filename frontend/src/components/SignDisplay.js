@@ -18,10 +18,18 @@ const SignDisplay = () => {
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
     const handleCloseModalInfo = () => setIsModalInfoOpen(false);
     const isDataFetched = useRef(false);
+    const [isAccess, setSetAccess] = useState(false);
+
+
     useEffect(() => {
         if (!isDataFetched.current) {
-            fetchInitialData();
-            isDataFetched.current = true;
+            const password = prompt('Введите пароль администратора')
+            if (password == '1234') {
+                fetchInitialData();
+                isDataFetched.current = true;    
+            } else {
+                return;
+            }
         }
     }, []);
 
@@ -202,6 +210,7 @@ const SignDisplay = () => {
             }, 2000);
         } catch (error) {
             setTimeout(() => {
+                console.log('Error: ', error)
                 document.querySelector('.modal-background-loader').style.display = 'none';
             }, 2000);
 
@@ -246,7 +255,7 @@ const SignDisplay = () => {
                 isOpen={isModalInfoOpen} 
                 onClose={handleCloseModalInfo} 
                 info={isInfoPrintedSigns}
-                type={''}
+                type={'printedSigns'}
 
             />
 
