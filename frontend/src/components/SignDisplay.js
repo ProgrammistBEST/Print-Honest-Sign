@@ -202,6 +202,7 @@ const SignDisplay = () => {
             }, 2000);
         } catch (error) {
             setTimeout(() => {
+                console.log('Error: ', error)
                 document.querySelector('.modal-background-loader').style.display = 'none';
             }, 2000);
 
@@ -246,7 +247,7 @@ const SignDisplay = () => {
                 isOpen={isModalInfoOpen} 
                 onClose={handleCloseModalInfo} 
                 info={isInfoPrintedSigns}
-                type={''}
+                type={'printedSigns'}
 
             />
 
