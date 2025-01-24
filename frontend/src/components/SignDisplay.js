@@ -18,10 +18,18 @@ const SignDisplay = () => {
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
     const handleCloseModalInfo = () => setIsModalInfoOpen(false);
     const isDataFetched = useRef(false);
+    const [isAccess, setSetAccess] = useState(false);
+
+
     useEffect(() => {
         if (!isDataFetched.current) {
-            fetchInitialData();
-            isDataFetched.current = true;
+            const password = prompt('Введите пароль администратора')
+            if (password == '1234') {
+                fetchInitialData();
+                isDataFetched.current = true;    
+            } else {
+                return;
+            }
         }
     }, []);
 
