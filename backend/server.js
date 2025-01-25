@@ -13,7 +13,6 @@ const { processPDF } = require('./utils/pdfProcessor.js');
 const { exec } = require('child_process');
 const { PDFDocument } = require('pdf-lib');
 const { pool, userPool } = require('./config/connectdb.js');
-// const { execSync } = require('child_process');
 const { general_article, get_article } = require('./models/scriptsArticles.js');
 const stringSimilarity = require('string-similarity');
 const { getPrinters } = require('pdf-to-printer');
@@ -25,6 +24,7 @@ const { getPrintedHonestSign } = require('./controllers/printedHSController.js')
 app.use(cors());
 app.use(express.json());
 const util = require('util');
+const execCommand = util.promisify(exec);
 
 // Для работы с сокетами
 const http = require('http');
@@ -48,7 +48,8 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Обслуживание статических файлов!
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+// app.use(express.static(path.join(__dirname, '../frontend/public')));
+// app.use('/frontend', express.static(path.join(__dirname, './frontend')));
 
 app.get('/api/printers', async (req, res) => {
   try {
@@ -73,15 +74,16 @@ async function mergePDFs(pdfPaths) {
     copiedPages.forEach((page) => mergedPdf.addPage(page)); // Добавляем страницы в новый PDF
   }
 
-  const mergedPdfBytes = await mergedPdf.save(); // Сохраняем объединённый PDF
-  const mergedPdfPath = path.join(__dirname, getCurrentTimestamp() + 'merged.pdf'); // Путь к объединённому файлу
-  fs.writeFileSync(mergedPdfPath, mergedPdfBytes); // Записываем объединённый файл на диск
+    const mergedPdfBytes = await mergedPdf.save(); // Сохраняем объединённый PDF
+
+  const mergedPdfPath = path.join(__dirname, '../frontend/public/pdfs', getCurrentTimestamp() + 'merged.pdf'); // Путь к объединённому файлу
+    fs.writeFileSync(mergedPdfPath, mergedPdfBytes); // Записываем объединённый файл на диск
 
   // Удаляем использованные PDF-файлы
   for (const pdfPath of pdfPaths) {
     fs.unlinkSync(pdfPath); // Синхронное удаление файла
   }
-
+  console.log(mergedPdfPath)
   return mergedPdfPath; // Возвращаем путь к объединённому PDF
 }
 
@@ -562,11 +564,14 @@ app.post('/kyz', async (req, res) => {
       await Promise.all(allPromises);
   
       if (pdfPaths.length > 0) {
-        pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
-        const mergedPdfPath = await mergePDFs(pdfPaths);
-  
-        printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
-        res.json({ success: true, data: { successfulSign, shortageInfo } });
+          pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
+        let mergedPdfPath = await mergePDFs(pdfPaths);
+          // printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
+          mergedPdfPath = mergedPdfPath.split('\\').pop();
+          console.log(mergedPdfPath)
+          const pdfUrl = `http://localhost:6500/pdfs/${mergedPdfPath}`;
+
+        res.json({ success: true, data: { successfulSign, shortageInfo }, mergedPdfPath: pdfUrl });
       } else {
         res.json({ success: false, data: { successfulSign, shortageInfo } });
       }
@@ -610,22 +615,33 @@ app.post('/api/checkDelivery', async (req, res) => {
 
 // Функция для печати PDF файла
 async function printPDF(filePath, type, placePrint) {
-  const resolvedPath = path.resolve(filePath);
+
+    if (!placePrint) {
+        console.error('Ошибка: Не указан принтер!');
+        return;
+    }
+    
+    const resolvedPath = path.resolve(filePath);
   let command = '';
   if (type == 'barcode') {
     command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
   } else if (type == 'honestSign') {
-    command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
-  }
-  try {
-    const { stdout, stderr } = await execCommand(command);
-    if (stderr) {
-      console.warn('Предупреждение при печати:', stderr);
+    command = `'C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe' /h /t "${resolvedPath}" "${placePrint}" "" ""`;
+}
+    console.log('resolvedPath: ', resolvedPath)
+    console.log('command: ',command)
+    console.log('type: ',type)
+    console.log('filePath: ',filePath)
+
+    try {
+        const { stdout, stderr } = await execCommand(command);
+        if (stderr) {
+            console.warn('Предупреждение при печати:', stderr);
+        }
+        console.log('Печать завершена успешно');
+    } catch (err) {
+        console.error('Произошла ошибка при печати:', err);
     }
-    console.log('Печать завершена успешно');
-  } catch (err) {
-    console.error('Произошла ошибка, но она игнорируется, так как печать завершена');
-  }
 }
 
 app.get('/getApiById', async (req, res) => {

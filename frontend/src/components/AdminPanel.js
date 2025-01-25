@@ -239,20 +239,17 @@ const AdminPanel = () => {
     };
 
     const handlePlacePrint = (event) => {
-        const selectedPlace = event.target.value;
-        localStorage.setItem('placePrint', selectedPlace);
+        localStorage.setItem('placePrint', event.target.value);
         setPlacePrint(event.target.value);
     };
 
     const handlePrinterForBarcode = (event) => {
-        const printerForBarcode = event.target.value;
-        localStorage.setItem('printerForBarcode', printerForBarcode);
+        localStorage.setItem('printerForBarcode', event.target.value);
         setPrinterForBarcode(event.target.value);
     };
 
     const handleprinterForHonestSign = (event) => {
-        const printerForHonestSign = event.target.value;
-        localStorage.setItem('printerForHonestSign', printerForHonestSign);
+        localStorage.setItem('printerForHonestSign', event.target.value);
         setprinterForHonestSign(event.target.value);
     };
 
@@ -550,6 +547,8 @@ const AdminPanel = () => {
                             cursor: 'pointer'
                         }}
                     >
+                    <option value="Баркод">Баркод</option>
+                    <option value="EPSON2AF3CE (L3250 Series)">EPSON2AF3CE (L3250 Series)</option>
                     </select>
                     {printerForBarcode && <p style={{ color: 'green', marginTop: '-10px', marginBottom: '15px' }}>Вы выбрали: {printerForBarcode}</p>}
                     <label htmlFor="printerForHonestSign" style={{ fontWeight: 'bold', marginBottom: '5px', display: 'block' }}>
@@ -569,6 +568,8 @@ const AdminPanel = () => {
                             cursor: 'pointer'
                         }}
                     >
+                    <option value="Баркод">Баркод</option>
+                    <option value="EPSON2AF3CE (L3250 Series)">EPSON2AF3CE (L3250 Series)</option>
                     </select>
                     {printerForHonestSign && <p style={{ color: 'green', marginTop: '-10px' }}>Вы выбрали: {printerForHonestSign}</p>}
 
