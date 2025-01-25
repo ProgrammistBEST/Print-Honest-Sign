@@ -212,11 +212,12 @@ async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, place
           }
         }
 
-
         // Создаем новый PDF-документ с одной страницей
         const pageBytes = await createSinglePagePDF(pdfBytes, startPage + pageIndex);
         return { pageData: pageBytes, pageNumber: startPage + pageIndex + 1, Crypto, Size, Model };
+    
       }));
+    
       // Записываем данные в базу данных
       await saveAllDataToDB(pool, fileName, pageDataList, brandData, deliveryNumber, placePrint);
       // Перемещаемся к следующей порции страниц
