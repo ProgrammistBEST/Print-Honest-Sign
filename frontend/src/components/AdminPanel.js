@@ -748,6 +748,9 @@ const AdminPanel = () => {
                                 />
 
                                 {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                                <button type="submit" className="btn-submit">Добавить</button>
+                            </form>
                                 <input
                                     type="number"
                                     value={deliveryNumber}
@@ -755,7 +758,6 @@ const AdminPanel = () => {
                                     placeholder="Введите номер поставки"
                                 />
                                 <button onClick={checkDelivery}>Проверить</button>
-
                                 {deliveryMessage && <p>{deliveryMessage}</p>}
 
                                 {confirmCreateDelivery && (
@@ -763,8 +765,6 @@ const AdminPanel = () => {
                                         Создать поставку {deliveryNumber}
                                     </button>
                                 )}
-                                <button type="submit" className="btn-submit">Добавить</button>
-                            </form>
                         </article>
                     </div>
                 </section>

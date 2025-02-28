@@ -24,7 +24,7 @@ const SignDisplay = () => {
     useEffect(() => {
         if (!isDataFetched.current) {
             const password = prompt('Введите пароль администратора')
-            if (password == '1234') {
+            if (password == '2694') {
                 fetchInitialData();
                 isDataFetched.current = true;    
             } else {
