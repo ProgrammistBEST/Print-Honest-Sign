@@ -42,8 +42,8 @@ const ReportGenerator = ({ setSelectedCompany }) => {
       const worksheetShortage = workbook.addWorksheet('Нехватка');
 
       worksheetThereIs.columns = [
-        { header: 'Размер', key: 'Size', width: 20 },
         { header: 'Модель', key: 'Model', width: 20 },
+        { header: 'Размер', key: 'Size', width: 20 },
         { header: 'Поставка', key: 'DeliveryNumber', width: 20 }, // Добавляем колонку для поставки
         { header: 'Количество', key: 'Quantity', width: 20 },
       ];
