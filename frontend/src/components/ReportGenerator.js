@@ -20,7 +20,7 @@ const ReportGenerator = ({ setSelectedCompany }) => {
     console.log(`[INFO] Начато формирование отчета для компании: ${selectedCompany}`);
     setIsLoading(true);
 
-    const url = `http://localhost:6501/api/report?brand=${encodeURIComponent(selectedCompany)}`;
+    const url = `http://${window.location.hostname}:6501/api/report?brand=${encodeURIComponent(selectedCompany)}`;
     console.log(`[INFO] Отправка запроса на сервер: ${url}`);
 
     try {
