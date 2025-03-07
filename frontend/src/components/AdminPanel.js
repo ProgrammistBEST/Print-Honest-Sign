@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../css/AdminPanel.css';
 import ReportGenerator from './ReportGenerator';
 import Modal from './modal/modal';
+import { useLocation } from 'react-router-dom';
 
 // Socket
 const socket = io(`http://${window.location.hostname}:6502`);
@@ -15,6 +16,16 @@ const AdminPanel = () => {
     const [error, setError] = useState('');
     const [pdfFile, setPdfFile] = useState(null);
     const [windowAdmin, setWindowAdmin] = useState(false);
+
+    const location = useLocation(); // Получаем текущий маршрут
+    // Используем useEffect для автоматического открытия формы при загрузке
+    useEffect(() => {
+        if (location.pathname === '/admin') {
+            setWindowAdmin(true); // Открываем форму, если маршрут /admin
+        } else {
+            setWindowAdmin(false); // Скрываем форму для других маршрутов
+        }
+    }, [location]); // Зависимость от location гарантирует обновление при изменении маршрута
     const [CheckStatus, setStatusAdmin] = useState(false)
     const [deliveryNumber, setDeliveryNumber] = useState('');
 
