@@ -182,12 +182,12 @@ app.post('/api/FindHonestSign', async (req, res) => {
 
 app.post('/api/getAllHonestSign', async (req, res) => {
   console.log(req.body);
-  const { brand, deliveryNumber } = req.body;
+  const { brand } = req.body;
 
   try {
     const [rows] = await pool.execute(
-      'SELECT * FROM honestsignfordeliverytest WHERE Locked = 0 AND Status = "Waiting" AND Brand = ? AND deliverynumber = ?',
-      [brand, deliveryNumber]
+      'SELECT * FROM honestsignfordeliverytest WHERE Locked = 0 AND Status = "Waiting" AND Brand = ?',
+      [brand]
     );
     console.log(rows)
     if (rows.length > 0) {
@@ -333,11 +333,11 @@ app.post('/uploadNewKyz', upload.single('file'), async (req, res) => {
     const fileName = req.file.originalname;
     const fileBuffer = req.file.buffer;
     const brandData = JSON.parse(req.body.brandData);
-    const deliveryNumber = JSON.parse(req.body.deliveryNumber);
+    // const deliveryNumber = JSON.parse(req.body.deliveryNumber);
     const placePrint = JSON.parse(req.body.placePrint);
     console.log("req.body: ", req.body);
 
-    await processPDF(fileBuffer, fileName, brandData, deliveryNumber, placePrint, io);
+    await processPDF(fileBuffer, fileName, brandData, placePrint, io);
     res.status(200).send({ message: 'Файл успешно загружен.' });
 
   } catch (err) {
@@ -476,7 +476,7 @@ app.get('/getNumbersDeliveries', async (req, res) => {
 });
 
 app.post('/kyz', async (req, res) => {
-    const { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode, numberdelivery } = req.body;
+    const { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
   
     const brandMappings = {
       'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
@@ -515,13 +515,16 @@ app.post('/kyz', async (req, res) => {
         const [waitingRows] = await pool.query(
           `SELECT * FROM \`${tableName}\` 
            WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" 
-             AND \`Model\` = ? AND deliverynumber = ? AND \`Locked\` = 0 
+             AND \`Model\` = ? AND \`Locked\` = 0 
            LIMIT ?`,
-          [size, normalizedBrand, formattedModel, numberdelivery, count]
+          [size, normalizedBrand, formattedModel, count]
         );
-  
+        console.log('Executing query with params:', size, normalizedBrand, formattedModel, count);
         const dateToday = getFormattedDateTime();
-  
+        console.log('waitingRows:', waitingRows);
+        if (waitingRows.length < count) {
+          console.log('Shortage detected for model:', model, 'size:', size);
+        }
         if (waitingRows.length < count) {
           shortageInfo.push({
             model,
@@ -553,8 +556,8 @@ app.post('/kyz', async (req, res) => {
              SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ? 
              WHERE \`id\` = ? AND \`Model\` = ? AND \`color\` = ? AND \`Crypto\` = ? 
                AND \`Brand\` = ? AND \`Size\` = ? AND \`Status\` = ? 
-               AND \`Locked\` = 0 AND deliverynumber = ?`,
-            ['Used', dateToday, user, row.id, row.Model, row.color, row.Crypto, row.Brand, row.Size, 'Waiting', numberdelivery]
+               AND \`Locked\` = 0`,
+            ['Used', dateToday, user, row.id, row.Model, row.color, row.Crypto, row.Brand, row.Size, 'Waiting']
           );
         });
   

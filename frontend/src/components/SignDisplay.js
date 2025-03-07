@@ -19,8 +19,6 @@ const SignDisplay = () => {
     const handleCloseModalInfo = () => setIsModalInfoOpen(false);
     const isDataFetched = useRef(false);
     const [isAccess, setSetAccess] = useState(false);
-
-
     useEffect(() => {
         if (!isDataFetched.current) {
             const password = prompt('Введите пароль администратора')
@@ -79,10 +77,10 @@ const SignDisplay = () => {
 
     const handleLogin = async () => {
         if (user.trim() !== '') {
-            if (numberdelivery.trim() == '') {
-                setWarning('Ошибка: Не введен номер поставки.');
-                return
-            }
+            // if (numberdelivery.trim() == '') {
+            //     setWarning('Ошибка: Не введен номер поставки.');
+            //     return
+            // }
             setWarning('');
             try {
                 const response = await fetch(`http://${window.location.hostname}:6501/api/CheckUser`, {
@@ -92,7 +90,7 @@ const SignDisplay = () => {
                     },
                     body: JSON.stringify({
                         user: user,
-                        numberdelivery: numberdelivery
+                        // numberdelivery: numberdelivery
                     })
                 });
 
@@ -103,14 +101,14 @@ const SignDisplay = () => {
                 }
 
                 const data = await response.json();
-                if (numbersdeliveries.includes(Number(numberdelivery))) {
+                // if (numbersdeliveries.includes(Number(numberdelivery))) {
                     setIsModalOpen(false);
                     setUser(data[0].name);
-                } else {
-                    document.querySelector('.ErrorSection').classList.add('OnFlex')
-                    console.log('Такой поставки нет', numberdelivery, numbersdeliveries)
-                    document.querySelector('.ErrorMessage').textContent = 'Вы ввели неправильный номер поставки'
-                }
+                // } else {
+                //     document.querySelector('.ErrorSection').classList.add('OnFlex')
+                //     console.log('Такой поставки нет', numberdelivery, numbersdeliveries)
+                //     document.querySelector('.ErrorMessage').textContent = 'Вы ввели неправильный номер поставки'
+                // }
             } catch (error) {
                 document.querySelector('.ErrorSection').classList.add('OnFlex')
                 console.log('Вы ввели неправильный номер')
@@ -273,7 +271,7 @@ const SignDisplay = () => {
                             placeholder="Введите номер упаковщика"
                             style={inputStyle}
                         />
-                        
+{/*                         
                         <input
                             type="number"
                             value={numberdelivery}
@@ -281,7 +279,7 @@ const SignDisplay = () => {
                             placeholder="Введите номер поставки"
                             style={inputStyle}
                             className="placeHolderNumberDelivery"
-                        />
+                        /> */}
                         {warning && <p style={{ color: 'red' }}>{warning}</p>}
                         <button onClick={handleLogin} style={buttonStyle} className='loginButton'>
                             Войти
@@ -300,7 +298,7 @@ const SignDisplay = () => {
             />
 
             <h1>{user}</h1>
-            <h2>Номер поставки: {numberdelivery}</h2>
+            {/* <h2>Номер поставки: {numberdelivery}</h2> */}
             <h2>Выберите бренд</h2>
 
             <div className="brand-select">

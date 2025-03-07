@@ -6,7 +6,7 @@ node_modules/
 /.pnp
 .pnp.js
 /.png
-/.pdf
+/frontend/public/pdfs/
 # testing
 /coverage
 

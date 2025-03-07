@@ -1,7 +1,7 @@
 const { pool } = require('../config/connectdb');
 
 const kyz = async (req, res) => {
-    const { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode, numberdelivery } = req.body;
+    const { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
   
     const brandMappings = {
       'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
@@ -39,9 +39,9 @@ const kyz = async (req, res) => {
         const [waitingRows] = await pool.query(
           `SELECT * FROM \`${tableName}\` 
            WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" 
-             AND \`Model\` = ? AND deliverynumber = ? AND \`Locked\` = 0 
+             AND \`Model\` = ? AND \`Locked\` = 0 
            LIMIT ?`,
-          [size, normalizedBrand, formattedModel, numberdelivery, count]
+          [size, normalizedBrand, formattedModel, count]
         );
   
         const dateToday = getFormattedDateTime();
@@ -77,8 +77,8 @@ const kyz = async (req, res) => {
              SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ? 
              WHERE \`id\` = ? AND \`Model\` = ? AND \`color\` = ? AND \`Crypto\` = ? 
                AND \`Brand\` = ? AND \`Size\` = ? AND \`Status\` = ? 
-               AND \`Locked\` = 0 AND deliverynumber = ?`,
-            ['Used', dateToday, user, row.id, row.Model, row.color, row.Crypto, row.Brand, row.Size, 'Waiting', numberdelivery]
+               AND \`Locked\` = 0`,
+            ['Used', dateToday, user, row.id, row.Model, row.color, row.Crypto, row.Brand, row.Size, 'Waiting']
           );
         });
   
