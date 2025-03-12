@@ -20,9 +20,11 @@ const mysql = require('mysql2');
 const iconv = require('iconv-lite');
 const { getInfoAboutAllHonestSign } = require('./controllers/infoHSController.js'); // Импортируем функцию
 const { getPrintedHonestSign } = require('./controllers/printedHSController.js'); // Импортируем функцию
+const { compareFiles } = require('./utils/compareFiles.js'); // Импортируем функцию
 // const { kyz } = require('./controllers/kyzController.js'); // Импортируем функцию
 app.use(cors());
 app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 const util = require('util');
 const execCommand = util.promisify(exec);
 
@@ -63,6 +65,7 @@ app.get('/api/printers', async (req, res) => {
 // Роуты
 app.get('/api/printedHonestSign', getPrintedHonestSign); // Используем функцию для маршрута
 app.get('/api/InfoAboutAllHonestSign', getInfoAboutAllHonestSign); // Используем функцию для маршрута
+app.post('/api/compare', upload.single('file'), compareFiles); // Используем функцию для маршрута
 
 async function mergePDFs(pdfPaths) {
   const mergedPdf = await PDFDocument.create(); // Создаём новый PDF-документ

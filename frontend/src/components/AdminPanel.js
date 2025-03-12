@@ -3,6 +3,7 @@ import '../css/AdminPanel.css';
 import ReportGenerator from './ReportGenerator';
 import Modal from './modal/modal';
 import { useLocation } from 'react-router-dom';
+import CompareFiles from './CompareFiles';
 
 // Socket
 const socket = io(`http://${window.location.hostname}:6502`);
@@ -712,6 +713,7 @@ const AdminPanel = () => {
                     </div>
                 </div>
 
+                {/* Секция входа на AdminPanel */}
                 <section className='admin-panel'>
                     <h2 className="admin-title">Вход в панель администратора</h2>
                     <form onSubmit={handleLogin} className="login-form">
@@ -775,7 +777,8 @@ const AdminPanel = () => {
                                     <button onClick={createDelivery}>
                                         Создать поставку {deliveryNumber}
                                     </button>
-                                )}
+                                )}  
+                            <CompareFiles selectedCompany={brend} placePrint={placePrint}/>
                         </article>
                     </div>
                 </section>

@@ -46,8 +46,8 @@
 
 .admin-title {
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
+    margin-bottom: 20px 0; 
+    /* font-size: 24px !important; */
     color: #333;
 }
 
