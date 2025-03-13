@@ -10,8 +10,8 @@ const SignDisplay = () => {
     const [query, setQuery] = useState('');
     const [user, setUser] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(true);
-    const [numberdelivery, setNumberDelivery] = useState('');
-    const [numbersdeliveries, setNumbersDeliveries] = useState('');
+    // const [numberdelivery, setNumberDelivery] = useState('');
+    // const [numbersdeliveries, setNumbersDeliveries] = useState('');
     const [warning, setWarning] = useState('');
     const [isInfoPrintedSigns, setInfoPrintedSigns] = useState('')
     // Модальное окно информации
@@ -35,14 +35,14 @@ const SignDisplay = () => {
         try {
             const [brandsResponse, deliveriesResponse] = await Promise.all([
                 fetch(`http://${window.location.hostname}:6501/getBrandsData`),
-                fetch(`http://${window.location.hostname}:6501/getNumbersDeliveries`)
+                // fetch(`http://${window.location.hostname}:6501/getNumbersDeliveries`)
             ]);
 
             const brandsData = await brandsResponse.json();
-            const deliveriesData = await deliveriesResponse.json();
+            // const deliveriesData = await deliveriesResponse.json();
 
             setBrands(brandsData);
-            setNumbersDeliveries(deliveriesData.map(item => Number(item.deliverynumber)));
+            // setNumbersDeliveries(deliveriesData.map(item => Number(item.deliverynumber)));
         } catch (error) {
             console.error('Ошибка получения данных:', error);
         }
@@ -187,7 +187,7 @@ const SignDisplay = () => {
                     placePrint: document.querySelector('.placePrintValue').value,
                     printerForHonestSign: document.querySelector('.printForHonestSign').value,
                     printerForBarcode: document.querySelector('.printForBarcode').value,
-                    numberdelivery: numberdelivery,
+                    // numberdelivery: numberdelivery,
                 })
             });
 

@@ -28,7 +28,7 @@ const AdminPanel = () => {
         }
     }, [location]); // Зависимость от location гарантирует обновление при изменении маршрута
     const [CheckStatus, setStatusAdmin] = useState(false)
-    const [deliveryNumber, setDeliveryNumber] = useState('');
+    // const [deliveryNumber, setDeliveryNumber] = useState('');
 
     const [deliveryMessage, setDeliveryMessage] = useState(''); // Сообщение для пользователя
     const [confirmCreateDelivery, setConfirmCreateDelivery] = useState(false); // Флаг для отображения подтверждения создания
@@ -127,7 +127,7 @@ const AdminPanel = () => {
             const url = new URL(`http://${window.location.hostname}:6501/api/InfoAboutAllHonestSign`);
             url.searchParams.append('placePrint', localStorage.getItem('placePrint'));
             url.searchParams.append('brand', brend);
-            url.searchParams.append('deliveryNumber', deliveryNumber)
+            // url.searchParams.append('deliveryNumber', deliveryNumber)
 
             fetch(url)
                 .then((response) => {
@@ -160,13 +160,13 @@ const AdminPanel = () => {
 
     const getAllHonestSign = async (e) => {
         e.preventDefault();
-        const conf = confirm(`Вы уверены, что хотите вернуть весь честный знак для ${brend} с поставки №" ${deliveryNumber}`);
+        const conf = confirm(`Вы уверены, что хотите вернуть весь честный знак для ${brend}`); //  с поставки №" ${deliveryNumber}
         if (!conf) {
             return;
         }
         const dataAboutSign = {
             brand: brend,
-            deliveryNumber: deliveryNumber
+            // deliveryNumber: deliveryNumber
         }
 
         try {
@@ -204,14 +204,14 @@ const AdminPanel = () => {
 
         setError('')
         let question;
-        if (deliveryNumber.trim() == '') {
-            alert('Введите номер поставки');
-            return;
-        }
+        // if (deliveryNumber.trim() == '') {
+        //     alert('Введите номер поставки');
+        //     return;
+        // }
 
         if (brend === 'Armbest' || brend === 'BestShoes' || brend === 'Best26' || brend === 'OZON') {
             console.log('brend:', brend)
-            question = confirm(`Согласны добавить КИЗ на, ${brend}, в поставку №, ${deliveryNumber}`);
+            question = confirm(`Согласны добавить КИЗ на, ${brend}`); // , в поставку №, ${deliveryNumber}
             // Логика перехода в панель администратора
         } else if (brend == '') {
             alert('Выберите фирму на которую хотите добавить честный знак и попробуйте еще раз.')
@@ -229,7 +229,7 @@ const AdminPanel = () => {
         formData.append('file', pdfFile);
         console.log(brend)
         formData.append('brandData', JSON.stringify(brend));
-        formData.append('deliveryNumber', JSON.stringify(deliveryNumber));
+        // formData.append('deliveryNumber', JSON.stringify(deliveryNumber));
         formData.append('placePrint', JSON.stringify(placePrint));
 
         setIsModalInfoOpen(true);
@@ -325,61 +325,61 @@ const AdminPanel = () => {
         return acc;
     }, {});
 
-    const checkDelivery = async () => {
-        if (!deliveryNumber.trim()) {
-            setDeliveryMessage('Введите номер поставки.');
-            return;
-        }
-        try {
-            console.log(deliveryNumber)
+    // const checkDelivery = async () => {
+    //     if (!deliveryNumber.trim()) {
+    //         setDeliveryMessage('Введите номер поставки.');
+    //         return;
+    //     }
+    //     try {
+    //         console.log(deliveryNumber)
 
-            const response = await fetch(`http://${window.location.hostname}:6501/api/checkDelivery`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ deliverynumber: Number(deliveryNumber) }),
-            });
+    //         const response = await fetch(`http://${window.location.hostname}:6501/api/checkDelivery`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ deliverynumber: Number(deliveryNumber) }),
+    //         });
 
-            if (response.ok) {
-                const result = await response.json();
-                if (result.exists) {
-                    setDeliveryMessage(`Поставка с номером ${deliveryNumber} уже существует.`);
-                    setConfirmCreateDelivery(false); // Скрыть кнопку подтверждения
-                } else {
-                    setDeliveryMessage(`Поставка с номером ${deliveryNumber} не найдена. Вы хотите её создать?`);
-                    setConfirmCreateDelivery(true); // Показать кнопку подтверждения
-                }
-            } else {
-                throw new Error('Ошибка проверки номера поставки.');
-            }
-        } catch (error) {
-            setDeliveryMessage('Ошибка проверки номера поставки.');
-            console.error(error);
-        }
-    };
+    //         if (response.ok) {
+    //             const result = await response.json();
+    //             if (result.exists) {
+    //                 setDeliveryMessage(`Поставка с номером ${deliveryNumber} уже существует.`);
+    //                 setConfirmCreateDelivery(false); // Скрыть кнопку подтверждения
+    //             } else {
+    //                 setDeliveryMessage(`Поставка с номером ${deliveryNumber} не найдена. Вы хотите её создать?`);
+    //                 setConfirmCreateDelivery(true); // Показать кнопку подтверждения
+    //             }
+    //         } else {
+    //             throw new Error('Ошибка проверки номера поставки.');
+    //         }
+    //     } catch (error) {
+    //         setDeliveryMessage('Ошибка проверки номера поставки.');
+    //         console.error(error);
+    //     }
+    // };
 
-    const createDelivery = async () => {
-        try {
-            const response = await fetch(`http://${window.location.hostname}:6501/addDelivery`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ deliverynumber: Number(deliveryNumber) }),
-            });
+    // const createDelivery = async () => {
+    //     try {
+    //         const response = await fetch(`http://${window.location.hostname}:6501/addDelivery`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ deliverynumber: Number(deliveryNumber) }),
+    //         });
 
-            if (response.ok) {
-                setDeliveryMessage(`Поставка с номером ${deliveryNumber} успешно создана.`);
-                setConfirmCreateDelivery(false); // Скрыть кнопку подтверждения
-            } else {
-                throw new Error('Ошибка создания новой поставки. Не правильно введены данные');
-            }
-        } catch (error) {
-            setDeliveryMessage('Ошибка создания новой поставки. Не удалось подключится к серверу');
-            console.error(error);
-        }
-    };
+    //         if (response.ok) {
+    //             setDeliveryMessage(`Поставка с номером ${deliveryNumber} успешно создана.`);
+    //             setConfirmCreateDelivery(false); // Скрыть кнопку подтверждения
+    //         } else {
+    //             throw new Error('Ошибка создания новой поставки. Не правильно введены данные');
+    //         }
+    //     } catch (error) {
+    //         setDeliveryMessage('Ошибка создания новой поставки. Не удалось подключится к серверу');
+    //         console.error(error);
+    //     }
+    // };
     const handleCompanySelection = (company) => {
         console.log(`[INFO] Выбрана компания: ${company}`);
         setBrend(company);  // Устанавливаем компанию в стейт родительского компонента
@@ -764,7 +764,7 @@ const AdminPanel = () => {
 
                                 <button type="submit" className="btn-submit">Добавить</button>
                             </form>
-                                <input
+                                {/* <input
                                     type="number"
                                     value={deliveryNumber}
                                     onChange={(e) => setDeliveryNumber(e.target.value)}
@@ -777,7 +777,7 @@ const AdminPanel = () => {
                                     <button onClick={createDelivery}>
                                         Создать поставку {deliveryNumber}
                                     </button>
-                                )}  
+                                )}   */}
                             <CompareFiles selectedCompany={brend} placePrint={placePrint}/>
                         </article>
                     </div>
