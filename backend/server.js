@@ -581,13 +581,14 @@ app.post('/kyz', async (req, res) => {
 					['Used', dateToday, user, rowIds]
 				),
 				Promise.all(writePromises),
-			]);
-    });
-		if (result.affectedRows > 0) {
+        ]);
+        
+        if (result.affectedRows > 0) {
 			console.log(`Успешно обновлено ${result.affectedRows} строк.`);
 		} else {
 			console.log('Ни одна строка не была обновлена.');
 		}
+    });
 		
     await Promise.all(allPromises);
 
