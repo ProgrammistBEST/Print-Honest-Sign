@@ -69,7 +69,7 @@ app.post('/api/compare', upload.single('file'), compareFiles); // Использ
 
 async function mergePDFs(pdfPaths) {
   const mergedPdf = await PDFDocument.create(); // Создаём новый PDF-документ
-
+	console.log('Проверка 4: ', pdfPaths);
   for (const pdfPath of pdfPaths) {
     const pdfBytes = fs.readFileSync(pdfPath); // Читаем содержимое каждого PDF-файла
     const pdfDoc = await PDFDocument.load(pdfBytes); // Загружаем PDF-документ
@@ -79,7 +79,7 @@ async function mergePDFs(pdfPaths) {
 
   const mergedPdfBytes = await mergedPdf.save(); // Сохраняем объединённый PDF
 
-  const mergedPdfPath = path.join(__dirname, '../frontend/public/pdfs', getCurrentTimestamp() + 'merged.pdf'); // Путь к объединённому файлу
+  const mergedPdfPath = path.join(__dirname, getCurrentTimestamp() + 'merged.pdf'); // Путь к объединённому файлу
   fs.writeFileSync(mergedPdfPath, mergedPdfBytes); // Записываем объединённый файл на диск
 
   // Удаляем использованные PDF-файлы
@@ -184,7 +184,7 @@ app.post('/api/FindHonestSign', async (req, res) => {
 });
 
 app.post('/api/getAllHonestSign', async (req, res) => {
-  console.log(req.body);
+  console.log('513');
   const { brand } = req.body;
 
   try {
@@ -192,9 +192,9 @@ app.post('/api/getAllHonestSign', async (req, res) => {
       'SELECT * FROM honestsignfordeliverytest WHERE Locked = 0 AND Status = "Waiting" AND Brand = ?',
       [brand]
     );
-    console.log(rows)
+    console.log('643')
     if (rows.length > 0) {
-      console.log('Найдено:', rows);
+      console.log('745');
       const mergedPdf = await PDFDocument.create();
 
       for (const row of rows) {
@@ -204,7 +204,7 @@ app.post('/api/getAllHonestSign', async (req, res) => {
           copiedPages.forEach((page) => {
             mergedPdf.addPage(page);
           });
-          console.log(row.Model + "`" + row.Size + "`");
+          console.log();
         }
       }
       const mergedPdfBytes = await mergedPdf.save();
@@ -500,45 +500,49 @@ app.post('/kyz', async (req, res) => {
 
   try {
     const allPromises = filledInputs.map(async (input) => {
-      if (selectedBrand === 'Best26 (Арташ)') {
-        tableName = `delivery_bestshoes_ozon_${placeMappings[placePrint]}`;
-        console.log("Test if brand", tableName);
-      }
-      const { size, model, value } = input;
+      // if (selectedBrand === 'Best26 (Арташ)') {
+      //   tableName = `delivery_bestshoes_ozon_${placeMappings[placePrint]}`;
+      //   console.log('7564');
+      // }
+			const { size, model, value } = input;
       const count = Number(value);
       const formattedModel = ['Armbest'].includes(normalizedBrand) ? 'Multimodel' : model;
-
-      let [waitingRows] = await pool.query( // Заменили const на let
+        
+      //Проверка 
+			console.log('Проверка: ', size, model, value, tableName, brandDetails, normalizedBrand, formattedModel, count)
+			const sizes = filledInputs.map(item => item.size);
+			const models = filledInputs.map(item => ['Armbest'].includes(normalizedBrand) ? 'Multimodel' : item.model);
+		
+      let [waitingRows] = await pool.query(
         `SELECT * FROM \`${tableName}\` 
-           WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" 
-             AND \`Model\` = ? AND \`Locked\` = 0 
+           WHERE \`Size\` IN (?)  AND \`Brand\` = ? AND \`Status\` = "Waiting" 
+             AND \`Model\` IN (?) AND \`Locked\` = 0 
            LIMIT ?`,
-        [size, normalizedBrand, formattedModel, count]
+        [sizes, normalizedBrand, models, count]
       );
 
-      if (selectedBrand === 'Best26 (Арташ)') {
-        tableName = `delivery_best26_${placeMappings[placePrint]}`;
-        const needCount = count - waitingRows.length;
-        console.log("Test waitng rows =>", needCount, tableName);
+    //   if (selectedBrand === 'Best26 (Арташ)') {
+    //     tableName = `delivery_best26_${placeMappings[placePrint]}`;
+    //     const needCount = count - waitingRows.length;
+    //     console.log("Test waitng rows =>", needCount, tableName);
 
-        const [additionalRows] = await pool.query(
-          `SELECT * FROM \`${tableName}\` 
-             WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" 
-               AND \`Model\` = ? AND \`Locked\` = 0 
-             LIMIT ?`,
-          [size, 'Best26', formattedModel, needCount]
-        );
-        console.log('Additional Rows:', additionalRows.length);
-        waitingRows = [...waitingRows, ...additionalRows]; // Теперь это разрешено
-        console.log(waitingRows);
-      }
+    //     const [additionalRows] = await pool.query(
+    //       `EXPLAIN SELECT * FROM \`${tableName}\`
+    //          WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" 
+    //            AND \`Model\` = ? AND \`Locked\` = 0 
+    //          LIMIT ?`,
+    //       [size, 'Best26', formattedModel, needCount]
+    //     );
+    //     console.log('Additional Rows:', additionalRows.length);
+    //     waitingRows = [...waitingRows, ...additionalRows]; // Теперь это разрешено
+    //     console.log(waitingRows);
+    //   }
 
-      console.log('Executing query with params:', size, normalizedBrand, formattedModel, count);
       const dateToday = getFormattedDateTime();
-      console.log('waitingRows:', waitingRows);
+      console.log('Проверка 3: ',waitingRows);
 
       if (waitingRows.length < count) {
-        console.log('Shortage detected for model:', model, 'size:', size);
+        console.log('856');
         shortageInfo.push({
           model,
           size,
@@ -556,37 +560,52 @@ app.post('/kyz', async (req, res) => {
         required: count,
         available: waitingRows.length,
       });
+			const rowIds = waitingRows.slice(0, count).map(row => row.id);
 
-      const updatePromises = waitingRows.slice(0, count).map(async (row) => {
-        if (row.PDF) {
-          const randomNumbers = Math.floor(1000 + Math.random() * 9000);
-          const pdfPath = path.join(__dirname, `output${row.id}-${row.Model}[${randomNumbers}]${row.Size}.pdf`);
-          fs.writeFileSync(pdfPath, row.PDF);
-          pdfPaths.push(pdfPath);
-        }
-        await pool.query(
-          `UPDATE \`${tableName}\` 
-             SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ? 
-             WHERE \`id\` = ? AND \`Model\` = ? AND \`color\` = ? AND \`Crypto\` = ? 
-               AND \`Brand\` = ? AND \`Size\` = ? AND \`Status\` = ? 
-               AND \`Locked\` = 0`,
-          ['Used', dateToday, user, row.id, row.Model, row.color, row.Crypto, row.Brand, row.Size, 'Waiting']
-        );
-      });
-
-      await Promise.all(updatePromises);
+		// Запись PDF файлов
+		const writePromises = waitingRows.slice(0, count)
+		.filter(row => row.PDF)
+		.map(async (row) => {
+			const randomNumbers = Math.floor(1000 + Math.random() * 9000); // 4 случайные цифры
+			const pdfPath = path.join(__dirname, `output${row.id}-${row.Model}[${randomNumbers}]${row.Size}.pdf`);
+			await fs.promises.writeFile(pdfPath, row.PDF);
+			pdfPaths.push(pdfPath);
+		});
+			
+		// Обновление статуса в базе данных
+		const [result] = await Promise.all([
+				pool.query(
+					`UPDATE \`${tableName}\`
+					SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ?
+					WHERE \`id\` IN (?) AND \`Status\` = "Waiting" AND \`Locked\` = 0`,
+					['Used', dateToday, user, rowIds]
+				),
+				Promise.all(writePromises),
+			]);
     });
-
+		if (result.affectedRows > 0) {
+			console.log(`Успешно обновлено ${result.affectedRows} строк.`);
+		} else {
+			console.log('Ни одна строка не была обновлена.');
+		}
+		
     await Promise.all(allPromises);
 
+    // Проверка на нехватку ЧЗ
+    if (shortageInfo.length > 0) {
+        console.log('Нехватка ЧЗ:', shortageInfo);
+    }
+      
     if (pdfPaths.length > 0) {
       pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
-      let mergedPdfPath = await mergePDFs(pdfPaths);
-      mergedPdfPath = mergedPdfPath.split('\\').pop();
-      console.log(mergedPdfPath);
-      const pdfUrl = `http://localhost:6500/pdfs/${mergedPdfPath}`;
+      // let mergedPdfPath = await mergePDFs(pdfPaths);
+      // mergedPdfPath = mergedPdfPath.split('\\').pop();
+      // console.log('4378');
+      // const pdfUrl = `http://localhost:6500/pdfs/${mergedPdfPath}`;
+      const mergedPdfPath = await mergePDFs(pdfPaths);
+      printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
 
-      res.json({ success: true, data: { successfulSign, shortageInfo }, mergedPdfPath: pdfUrl });
+      res.json({ success: true, data: { successfulSign, shortageInfo } });
     } else {
       res.json({ success: false, data: { successfulSign, shortageInfo } });
     }
@@ -631,32 +650,29 @@ app.post('/api/checkDelivery', async (req, res) => {
 // Функция для печати PDF файла
 async function printPDF(filePath, type, placePrint) {
 
-  if (!placePrint) {
-    console.error('Ошибка: Не указан принтер!');
-    return;
-  }
+  // if (!placePrint) {
+  //   console.error('Ошибка: Не указан принтер!');
+  //   return;
+	// }
+	
+  // const resolvedPath = path.resolve(filePath);
+  // let command = '';
+  // if (type == 'barcode') {
+  //   command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
+  // } else if (type == 'honestSign') {
+  //   command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
+	// }
+	
+  // try {
+  //   const { stdout, stderr } = await execCommand(command);
+  //   if (stderr) {
+  //     console.warn('Предупреждение при печати:', stderr);
+  //   }
+  //   console.log('Печать завершена успешно');
+  // } catch (err) {
+  //   console.error('Произошла ошибка, но она игнорируется, так как печать завершена');
+  // }
 
-  const resolvedPath = path.resolve(filePath);
-  let command = '';
-  if (type == 'barcode') {
-    command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
-  } else if (type == 'honestSign') {
-    command = `'C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe' /h /t "${resolvedPath}" "${placePrint}" "" ""`;
-  }
-  console.log('resolvedPath: ', resolvedPath)
-  console.log('command: ', command)
-  console.log('type: ', type)
-  console.log('filePath: ', filePath)
-
-  try {
-    const { stdout, stderr } = await execCommand(command);
-    if (stderr) {
-      console.warn('Предупреждение при печати:', stderr);
-    }
-    console.log('Печать завершена успешно');
-  } catch (err) {
-    console.error('Произошла ошибка при печати:', err);
-  }
 }
 
 app.get('/getApiById', async (req, res) => {
@@ -700,7 +716,7 @@ app.get('/api/report', async (req, res) => {
     return res.status(400).json({ error: 'Brand is required' });
   }
 
-  // Сопоставление бренда с таблицей в базе данных
+	// Сопоставление бренда с таблицей в базе данных
   const tableName = getTableForBrand(brand);
   if (!tableName) {
     return res.status(400).json({ error: 'Invalid brand' });

@@ -190,6 +190,7 @@ const SignDisplay = () => {
                     // numberdelivery: numberdelivery,
                 })
             });
+            console.log('Статус ответа:', response.status);
 
             // Ответ с результатом запроса на печать честных знаков.
             if (!response.ok) {
@@ -201,45 +202,11 @@ const SignDisplay = () => {
             console.log(result)
             if (result.success) {
                 // Открытие файла в новой вкладке
-                const printWindow = window.open(`${result.mergedPdfPath}`);
-                
-                printWindow.focus();
-                printWindow.print();  // Автоматический вызов печати
                 console.log('Данные с сервера2:', result);
             } else {
                 alert('Ошибка при создании PDF');
             }
-    
-            // const printWindow = window.open(result.mergedPdfPath);
-
-            // if (printWindow) {
-            //     printWindow.onload = () => {
-            //         printWindow.focus();
-            //         printWindow.print();  // Автоматический вызов печати
-            //     };
-            // }
-
-            // console.log('Данные с сервера:', result.data);
-            console.log('Данные с сервера2:', result);
-            // const fileName = result.mergedPdfPath.split('\\').pop();
-            // console.log('fileName:', result.mergedPdfPath);
-
-            // window.open(result.mergedPdfPath, '_blank');
-
-            // const a = document.createElement('a');
-            // a.style.display = 'none';
-            // console.log(fileName)
-            // a.href = fileName; 
-            // a.target = '_blank';  // Открытие в новой вкладке
-            // console.log(a)
-
-            // document.body.appendChild(a);
-            
-            // a.click();
-            // document.body.removeChild(a);
-
-            console.log('!')
-        
+            console.log('Данные с сервера2:', result);        
 
             setIsModalInfoOpen(true);
             setInfoPrintedSigns(result.data)
