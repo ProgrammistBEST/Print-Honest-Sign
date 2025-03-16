@@ -481,8 +481,9 @@ const writePDFs = async (rows) => {
 
 // Получение номера поставок
 app.post('/kyz', async (req, res) => {
-    const { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
-  
+    let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
+    printerForHonestSign = 'ChestniZnak'
+    
     const brandMappings = {
       'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
       'Ozon (BestShoes)': { name: 'Ozon BestShoes', table: 'delivery_bestshoes_ozon_' },
