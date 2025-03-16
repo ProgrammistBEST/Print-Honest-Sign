@@ -466,158 +466,119 @@ app.get('/getBrandsData', async (req, res) => {
   }
 });
 
+const writePDFs = async (rows) => {
+    const writePromises = rows
+      .filter(row => row.PDF)
+      .map(async (row) => {
+        const randomNumbers = Math.floor(1000 + Math.random() * 9000);
+        const pdfPath = path.join(__dirname, `output${row.id}-${row.Model}[${randomNumbers}]${row.Size}.pdf`);
+        await fs.promises.writeFile(pdfPath, row.PDF);
+        return pdfPath;
+      });
+  
+    return Promise.all(writePromises);
+  };
+
 // Получение номера поставок
 app.post('/kyz', async (req, res) => {
-  const { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
-
-  const brandMappings = {
-    'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
-    'Ozon (BestShoes)': { name: 'Ozon BestShoes', table: 'delivery_bestshoes_ozon_' },
-    'Armbest (Новая)': { name: 'Armbest', table: 'delivery_armbest_' },
-    'BestShoes (Старая)': { name: 'BestShoes', table: 'delivery_bestshoes_' },
-    'BestShoes': { name: 'BestShoes', table: 'delivery_bestshoes_' },
-    'Best26 (Арташ)': { name: 'Best26', table: 'delivery_best26_' },
-  };
-
-  const placeMappings = {
-    'Тест': 'delivery_test',
-    'Пятигорск': 'pyatigorsk',
-    'Лермонтово': 'lermontovo',
-  };
-
-  const brandDetails = brandMappings[selectedBrand] || {};
-  let tableName = placePrint === 'Тест' ? placeMappings['Тест'] : `${brandDetails.table}${placeMappings[placePrint]}`;
-  const normalizedBrand = brandDetails.name;
-
-  if (!tableName || !normalizedBrand) {
-    return res.status(400).json({ error: 'Некорректные данные о бренде или месте печати.' });
-  }
-
-  const shortageInfo = [];
-  const successfulSign = [];
-  const pdfPaths = [];
-  const imagesBarckodePDF = [];
-
-  try {
-    const allPromises = filledInputs.map(async (input) => {
-      // if (selectedBrand === 'Best26 (Арташ)') {
-      //   tableName = `delivery_bestshoes_ozon_${placeMappings[placePrint]}`;
-      //   console.log('7564');
-      // }
-			const { size, model, value } = input;
-      const count = Number(value);
-      const formattedModel = ['Armbest'].includes(normalizedBrand) ? 'Multimodel' : model;
-        
-      //Проверка 
-			console.log('Проверка: ', size, model, value, tableName, brandDetails, normalizedBrand, formattedModel, count)
-			const sizes = filledInputs.map(item => item.size);
-			const models = filledInputs.map(item => ['Armbest'].includes(normalizedBrand) ? 'Multimodel' : item.model);
-		
-      let [waitingRows] = await pool.query(
-        `SELECT * FROM \`${tableName}\` 
-           WHERE \`Size\` IN (?)  AND \`Brand\` = ? AND \`Status\` = "Waiting" 
-             AND \`Model\` IN (?) AND \`Locked\` = 0 
-           LIMIT ?`,
-        [sizes, normalizedBrand, models, count]
-      );
-
-    //   if (selectedBrand === 'Best26 (Арташ)') {
-    //     tableName = `delivery_best26_${placeMappings[placePrint]}`;
-    //     const needCount = count - waitingRows.length;
-    //     console.log("Test waitng rows =>", needCount, tableName);
-
-    //     const [additionalRows] = await pool.query(
-    //       `EXPLAIN SELECT * FROM \`${tableName}\`
-    //          WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" 
-    //            AND \`Model\` = ? AND \`Locked\` = 0 
-    //          LIMIT ?`,
-    //       [size, 'Best26', formattedModel, needCount]
-    //     );
-    //     console.log('Additional Rows:', additionalRows.length);
-    //     waitingRows = [...waitingRows, ...additionalRows]; // Теперь это разрешено
-    //     console.log(waitingRows);
-    //   }
-
-      const dateToday = getFormattedDateTime();
-      console.log('Проверка 3: ',waitingRows);
-
-      if (waitingRows.length < count) {
-        console.log('856');
-        shortageInfo.push({
-          model,
-          size,
-          brand: normalizedBrand,
-          required: count,
-          available: waitingRows.length,
-        });
-        return;
-      }
-
-      successfulSign.push({
-        model,
-        size,
-        brand: normalizedBrand,
-        required: count,
-        available: waitingRows.length,
+    const { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
+  
+    const brandMappings = {
+      'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
+      'Ozon (BestShoes)': { name: 'Ozon BestShoes', table: 'delivery_bestshoes_ozon_' },
+      'Armbest (Новая)': { name: 'Armbest', table: 'delivery_armbest_' },
+      'BestShoes (Старая)': { name: 'BestShoes', table: 'delivery_bestshoes_' },
+      'BestShoes': { name: 'BestShoes', table: 'delivery_bestshoes_' },
+      'Best26 (Арташ)': { name: 'Best26', table: 'delivery_best26_' },
+    };
+  
+    const placeMappings = {
+      'Тест': 'delivery_test',
+      'Пятигорск': 'pyatigorsk',
+      'Лермонтово': 'lermontovo',
+    };
+  
+    const brandDetails = brandMappings[selectedBrand];
+    let tableName = placePrint === 'Тест' 
+      ? placeMappings['Тест'] 
+      : typeof brandDetails.table === 'function' 
+        ? brandDetails.table(placePrint) 
+        : `${brandDetails.table}${placeMappings[placePrint]}`;
+    const normalizedBrand = brandDetails.name;
+  
+    if (!tableName || !normalizedBrand) {
+      return res.status(400).json({ error: 'Некорректные данные о бренде или месте печати.' });
+    }
+  
+    const shortageInfo = [];
+    const successfulSign = [];
+    const pdfPaths = [];
+  
+    try {
+      const allPromises = filledInputs.map(async (input) => {
+        const { size, model, value } = input;
+        const count = Number(value);
+        const formattedModel = ['Armbest'].includes(normalizedBrand) ? 'Multimodel' : model;
+  
+        console.log(`Обработка модели "${model}", размера "${size}" для бренда "${normalizedBrand}". Требуется: ${count}`);
+  
+        const sizes = filledInputs.map(item => item.size);
+        const models = filledInputs.map(item => ['Armbest'].includes(normalizedBrand) ? 'Multimodel' : item.model);
+  
+        // Запрос к базе данных для текущего размера
+        const [waitingRows] = await pool.query(
+            `SELECT * FROM \`${tableName}\` 
+            WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" 
+            AND \`Model\` = ? AND \`Locked\` = 0 
+            LIMIT ?`,
+            [size, normalizedBrand, formattedModel, count]
+        );
+  
+        if (waitingRows.length < count) {
+          shortageInfo.push({ model, size, brand: normalizedBrand, required: count, available: waitingRows.length });
+          console.warn(`Недостаточно записей для модели "${model}", размера "${size}". Требуется: ${count}, доступно: ${waitingRows.length}`);
+          return;
+        }
+  
+        successfulSign.push({ model, size, brand: normalizedBrand, required: count, available: waitingRows.length });
+  
+        const rowIds = waitingRows.slice(0, count).map(row => row.id);
+  
+        // Запись PDF
+        const newPdfPaths = await writePDFs(waitingRows.slice(0, count));
+        pdfPaths.push(...newPdfPaths);
+  
+        // Обновление статуса
+        await pool.query(
+          `UPDATE \`${tableName}\`
+           SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ?
+           WHERE \`id\` IN (?) AND \`Status\` = "Waiting" AND \`Locked\` = 0`,
+          ['Used', getFormattedDateTime(), user, rowIds]
+        );
       });
-			const rowIds = waitingRows.slice(0, count).map(row => row.id);
-
-		// Запись PDF файлов
-		const writePromises = waitingRows.slice(0, count)
-		.filter(row => row.PDF)
-		.map(async (row) => {
-			const randomNumbers = Math.floor(1000 + Math.random() * 9000); // 4 случайные цифры
-			const pdfPath = path.join(__dirname, `output${row.id}-${row.Model}[${randomNumbers}]${row.Size}.pdf`);
-			await fs.promises.writeFile(pdfPath, row.PDF);
-			pdfPaths.push(pdfPath);
-		});
-			
-		// Обновление статуса в базе данных
-		const [result] = await Promise.all([
-				pool.query(
-					`UPDATE \`${tableName}\`
-					SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ?
-					WHERE \`id\` IN (?) AND \`Status\` = "Waiting" AND \`Locked\` = 0`,
-					['Used', dateToday, user, rowIds]
-				),
-				Promise.all(writePromises),
-        ]);
-        
-        if (result.affectedRows > 0) {
-			console.log(`Успешно обновлено ${result.affectedRows} строк.`);
-		} else {
-			console.log('Ни одна строка не была обновлена.');
-		}
-    });
-		
-    await Promise.all(allPromises);
-
-    // Проверка на нехватку ЧЗ
-    if (shortageInfo.length > 0) {
+  
+      await Promise.all(allPromises);
+  
+      if (shortageInfo.length > 0) {
         console.log('Нехватка ЧЗ:', shortageInfo);
+      }
+  
+      if (pdfPaths.length > 0) {
+        pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
+        const mergedPdfPath = await mergePDFs(pdfPaths);
+        printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
+  
+        res.json({ success: true, data: { successfulSign, shortageInfo } });
+      } else {
+        res.json({ success: false, data: { successfulSign, shortageInfo } });
+      }
+    } catch (error) {
+      console.error('Произошла ошибка:', error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Произошла ошибка при выполнении операции.' });
+      }
     }
-      
-    if (pdfPaths.length > 0) {
-      pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
-      // let mergedPdfPath = await mergePDFs(pdfPaths);
-      // mergedPdfPath = mergedPdfPath.split('\\').pop();
-      // console.log('4378');
-      // const pdfUrl = `http://localhost:6500/pdfs/${mergedPdfPath}`;
-      const mergedPdfPath = await mergePDFs(pdfPaths);
-      printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
-
-      res.json({ success: true, data: { successfulSign, shortageInfo } });
-    } else {
-      res.json({ success: false, data: { successfulSign, shortageInfo } });
-    }
-  } catch (error) {
-    console.error('Произошла ошибка:', error);
-    if (!res.headersSent) {
-      res.status(500).json({ error: 'Произошла ошибка при выполнении операции.' });
-    }
-  }
-});
-
+  });
 // Мое добро на добавление номеров поставок
 app.post('/addDelivery', async (req, res) => {
   const { deliverynumber } = req.body;
