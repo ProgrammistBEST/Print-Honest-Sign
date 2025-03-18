@@ -42,7 +42,7 @@ function CompareFiles({ selectedCompany, placePrint }) {
     
         try {
             // URL для отправки запроса
-            const url = `http://${window.location.hostname}:6501/api/compare`;
+            const url = `http://localhost:6501/api/compare`;
     
             // Отправка POST-запроса на сервер
             const response = await fetch(url, {

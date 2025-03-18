@@ -33,14 +33,16 @@ const SignDisplay = () => {
 
     const fetchInitialData = async () => {
         try {
+            console.log(window.location)
+            console.log(window)
+
             const [brandsResponse, deliveriesResponse] = await Promise.all([
-                fetch(`http://${window.location.hostname}:6501/getBrandsData`),
+                fetch(`http://localhost:6501/getBrandsData`),
                 // fetch(`http://${window.location.hostname}:6501/getNumbersDeliveries`)
             ]);
-
             const brandsData = await brandsResponse.json();
+            console.log(brandsData)
             // const deliveriesData = await deliveriesResponse.json();
-
             setBrands(brandsData);
             // setNumbersDeliveries(deliveriesData.map(item => Number(item.deliverynumber)));
         } catch (error) {
@@ -83,7 +85,7 @@ const SignDisplay = () => {
             // }
             setWarning('');
             try {
-                const response = await fetch(`http://${window.location.hostname}:6501/api/CheckUser`, {
+                const response = await fetch(`http://localhost:6501/api/CheckUser`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -174,7 +176,7 @@ const SignDisplay = () => {
         console.log(document.querySelector('.placePrintValue').value)
 
         try {
-            const response = await fetch(`http://${window.location.hostname}:6501/kyz`, {
+            const response = await fetch(`http://localhost:6501/kyz`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

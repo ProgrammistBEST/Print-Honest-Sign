@@ -1,23 +1,25 @@
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 // Настройки для подключения к базе данных
 const pool = mysql.createPool({
-  host: '192.168.100.170',  // хост базы данных
-  user: 'root',  // имя пользователя базы данных
-  password: 'root',  // пароль от базы данных
-  database: 'storagesigns',  // название базы данных
-  waitForConnections: true,
-  connectionLimit: 10,  // максимальное количество соединений
-  queueLimit: 100 // сколько запросов можно поместить в очередь
-});
-
-const userPool = mysql.createPool({
-    host: '192.168.100.170',  // хост базы данных
-    user: 'root',  // имя пользователя базы данных
-    password: 'root',  // пароль от базы данных
-    database: 'bestserver',  // название базы данных
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     waitForConnections: true,
-    queueLimit: 0
+    connectionLimit: 10,
+    queueLimit: 1,
+    idleTimeout: 30000,
+});
+  
+const userPool = mysql.createPool({
+    host: process.env.USER_DB_HOST,
+    user: process.env.USER_DB_USER,
+    password: process.env.USER_DB_PASSWORD,
+    database: process.env.USER_DB_NAME,
+    waitForConnections: true,
+    queueLimit: 0,
 });
 
 // Проверка соединения и логирование результата
@@ -42,5 +44,5 @@ userPool.getConnection()
 
 // Экспорт функции processPDF
 module.exports = {
-    pool,userPool
+    pool, userPool
 };

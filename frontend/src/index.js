@@ -4,7 +4,6 @@ import './index.css';
 import App from './App';
 import AdminPanel from './components/AdminPanel';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
 // Получаем DOM-элемент с id="root"
 const rootElement = document.getElementById('root');
 

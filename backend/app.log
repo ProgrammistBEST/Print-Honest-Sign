@@ -1,0 +1,11 @@
+{"level":"info","message":"Успешное подключение к базе данных MySQL: storagesigns","timestamp":"2025-03-17T06:51:50.006Z"}
+{"level":"info","message":"Успешное подключение к базе данных MySQL: bestserver","timestamp":"2025-03-17T06:51:50.009Z"}
+{"database":"storagesigns","host":"192.168.100.170","level":"info","message":"Успешное подключение к базе данных MySQL: storagesigns","timestamp":"2025-03-17T06:58:50.405Z","user":"root"}
+{"database":"bestserver","host":"192.168.100.170","level":"info","message":"Успешное подключение к базе данных MySQL: bestserver","timestamp":"2025-03-17T06:58:50.475Z","user":"root"}
+{"level":"info","message":"Пулы соединений успешно закрыты","timestamp":"2025-03-17T07:00:53.783Z"}
+{"database":"storagesigns","host":"192.168.100.170","level":"info","message":"Успешное подключение к базе данных MySQL: storagesigns","timestamp":"2025-03-17T07:00:55.295Z","user":"root"}
+{"database":"bestserver","host":"192.168.100.170","level":"info","message":"Успешное подключение к базе данных MySQL: bestserver","timestamp":"2025-03-17T07:00:55.368Z","user":"root"}
+{"level":"info","message":"Пулы соединений успешно закрыты","timestamp":"2025-03-17T07:02:05.264Z"}
+{"database":"storagesigns","host":"192.168.100.170","level":"info","message":"Успешное подключение к базе данных MySQL: storagesigns","timestamp":"2025-03-17T07:02:08.576Z","user":"root"}
+{"database":"bestserver","host":"192.168.100.170","level":"info","message":"Успешное подключение к базе данных MySQL: bestserver","timestamp":"2025-03-17T07:02:08.655Z","user":"root"}
+{"level":"info","message":"Пулы соединений успешно закрыты","timestamp":"2025-03-17T07:03:22.659Z"}

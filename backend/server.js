@@ -1,7 +1,9 @@
 // Библиотека
 const express = require('express');
 const app = express();
-const portExpress = process.env.PORT || 6501;
+const portExpress = 6501;
+// const portExpress = process.env.PORT || 6501;
+
 const portSocket = 6502;
 const fs = require('fs');
 const cors = require('cors');
@@ -28,18 +30,29 @@ app.use(express.json());
 const util = require('util');
 const execCommand = util.promisify(exec);
 
+// Подача статических файлов React приложения
+if (process.env.NODE_ENV === 'production') {
+    // Указываем путь к папке build
+    app.use(express.static(path.join(__dirname, '../frontend/build')));
+  
+    // Обработка всех запросов, которые не совпадают с API-маршрутами
+    // app.get('*', (req, res) => {
+    //   res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+    // });
+  }
+  
+
 // Для работы с сокетами
 const http = require('http');
-const socketIo = require('socket.io');
-const server = http.createServer();
+const  { Server } = require('socket.io');
 
-const io = socketIo(server, {
+const server = http.createServer(app);
+const io = new Server(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
+    origin: 'http://localhost:6501', // Разрешаем запросы только с этого origin
+    methods: ['GET', 'POST'],       // Разрешенные методы
   }
 });
-
 io.on('connection', (socket) => {
   console.log('Client connected');
 });
@@ -479,10 +492,9 @@ const writePDFs = async (rows) => {
     return Promise.all(writePromises);
   };
 
-// Получение номера поставок
 app.post('/kyz', async (req, res) => {
     let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
-    printerForHonestSign = 'ChestniZnak'
+    printerForHonestSign = process.env.PRINTER_HS
     
     const brandMappings = {
       'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
@@ -523,14 +535,11 @@ app.post('/kyz', async (req, res) => {
   
         console.log(`Обработка модели "${model}", размера "${size}" для бренда "${normalizedBrand}". Требуется: ${count}`);
   
-        const sizes = filledInputs.map(item => item.size);
-        const models = filledInputs.map(item => ['Armbest'].includes(normalizedBrand) ? 'Multimodel' : item.model);
-  
         // Запрос к базе данных для текущего размера
         const [waitingRows] = await pool.query(
-            `SELECT * FROM \`${tableName}\` 
-            WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting" 
-            AND \`Model\` = ? AND \`Locked\` = 0 
+            `SELECT PDF, id, Model, Size, Crypto FROM \`${tableName}\` 
+            WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting"
+            AND \`Model\` = ? AND \`Locked\` = 0
             LIMIT ?`,
             [size, normalizedBrand, formattedModel, count]
         );
@@ -551,11 +560,11 @@ app.post('/kyz', async (req, res) => {
   
         // Обновление статуса
         await pool.query(
-          `UPDATE \`${tableName}\`
-           SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ?
-           WHERE \`id\` IN (?) AND \`Status\` = "Waiting" AND \`Locked\` = 0`,
-          ['Used', getFormattedDateTime(), user, rowIds]
-        );
+            `UPDATE \`${tableName}\`
+             SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ?
+             WHERE \`id\` IN (?) AND \`Status\` = "Waiting" AND \`Locked\` = 0`,
+            ['Used', getFormattedDateTime(), user, rowIds.flat()]
+          );
       });
   
       await Promise.all(allPromises);
@@ -612,6 +621,10 @@ app.post('/api/checkDelivery', async (req, res) => {
 
 // Функция для печати PDF файла
 async function printPDF(filePath, type, placePrint) {
+    if (process.env.NODE_ENV == 'production') {
+        console.log('Печать завершена успешно');
+        return;
+    }
 
   if (!placePrint) {
     console.error('Ошибка: Не указан принтер!');
@@ -624,7 +637,7 @@ async function printPDF(filePath, type, placePrint) {
     command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
   } else if (type == 'honestSign') {
     command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
-	}
+  }
 	
   try {
     const { stdout, stderr } = await execCommand(command);
@@ -688,8 +701,8 @@ app.get('/api/report', async (req, res) => {
   // Запрос, который учитывает доставку (delivery_number)
   const query = `
     SELECT 
-      Size, 
-      Model, 
+      Size,
+      Model,
       deliverynumber,
       COUNT(*) as Quantity
     FROM ${tableName}

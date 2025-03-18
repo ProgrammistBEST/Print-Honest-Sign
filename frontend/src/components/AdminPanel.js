@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import CompareFiles from './CompareFiles';
 
 // Socket
-const socket = io(`http://${window.location.hostname}:6502`);
+const socket = io(`http://localhost:6502`);
 
 const AdminPanel = () => {
     const [username, setUsernameAdminPanel] = useState('');
@@ -109,7 +109,7 @@ const AdminPanel = () => {
             setError('')
             setStatusAdmin(prevState => !prevState);
 
-            const url1 = new URL(`http://${window.location.hostname}:6501/api/printedHonestSign`);
+            const url1 = new URL(`http://localhost:6501/api/printedHonestSign`);
             url1.searchParams.append('placePrint', localStorage.getItem('placePrint'));
             fetch(url1)
                 .then((response) => {
@@ -124,7 +124,7 @@ const AdminPanel = () => {
                 .catch((error) => console.error('Ошибка при получении данных:', error));
 
 
-            const url = new URL(`http://${window.location.hostname}:6501/api/InfoAboutAllHonestSign`);
+            const url = new URL(`http://localhost:6501/api/InfoAboutAllHonestSign`);
             url.searchParams.append('placePrint', localStorage.getItem('placePrint'));
             url.searchParams.append('brand', brend);
             // url.searchParams.append('deliveryNumber', deliveryNumber)
@@ -170,7 +170,7 @@ const AdminPanel = () => {
         }
 
         try {
-            const response = await fetch(`http://${window.location.hostname}:6501/api/getAllHonestSign`, {
+            const response = await fetch(`http://localhost:6501/api/getAllHonestSign`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataAboutSign),
@@ -235,7 +235,7 @@ const AdminPanel = () => {
         setIsModalInfoOpen(true);
 
         try {
-            const response = await fetch(`http://${window.location.hostname}:6501/uploadNewKyz`, {
+            const response = await fetch(`http://localhost:6501/uploadNewKyz`, {
                 method: 'POST',
                 body: formData,
             });
@@ -273,7 +273,7 @@ const AdminPanel = () => {
         console.log("Данные строки:", item);
         const { Brand, user, Model, Size, date } = item;
         try {
-            const response = await fetch(`http://${window.location.hostname}:6501/api/returnKyz`, {
+            const response = await fetch(`http://localhost:6501/api/returnKyz`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
