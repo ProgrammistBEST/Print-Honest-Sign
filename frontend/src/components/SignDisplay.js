@@ -33,16 +33,11 @@ const SignDisplay = () => {
 
     const fetchInitialData = async () => {
         try {
-            console.log(window.location)
-            console.log(window)
-
             const [brandsResponse, deliveriesResponse] = await Promise.all([
                 fetch(`http://localhost:6501/getBrandsData`),
                 // fetch(`http://${window.location.hostname}:6501/getNumbersDeliveries`)
             ]);
             const brandsData = await brandsResponse.json();
-            console.log(brandsData)
-            // const deliveriesData = await deliveriesResponse.json();
             setBrands(brandsData);
             // setNumbersDeliveries(deliveriesData.map(item => Number(item.deliverynumber)));
         } catch (error) {

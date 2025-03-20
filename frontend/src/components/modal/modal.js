@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import './style.css'
 
-const Modal = ({ isOpen, onClose, info, type }) => {
+const ModalPrint = ({ isOpen, onClose, info, type }) => {
     if (!isOpen) { return null };
     if (isOpen && type == 'statusUploadSigns') {
         return (
@@ -65,9 +65,9 @@ const Modal = ({ isOpen, onClose, info, type }) => {
 
 
 
-Modal.propTypes = {
+ModalPrint.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
 }
 
-export default Modal;
+export default ModalPrint;

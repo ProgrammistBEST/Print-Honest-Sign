@@ -1,9 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import '../css/AdminPanel.css';
 import ReportGenerator from './ReportGenerator';
-import Modal from './modal/modal';
+import ModalPrint from './modal/modal';
 import { useLocation } from 'react-router-dom';
 import CompareFiles from './CompareFiles';
+import {
+    Modal,
+    Box,
+    Typography,
+    TextField,
+    Select,
+    MenuItem,
+    Button,
+    IconButton,
+    Stack,
+    Snackbar,
+    Alert,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 // Socket
 const socket = io(`http://localhost:6502`);
@@ -17,22 +31,17 @@ const AdminPanel = () => {
     const [error, setError] = useState('');
     const [pdfFile, setPdfFile] = useState(null);
     const [windowAdmin, setWindowAdmin] = useState(false);
+    const location = useLocation();
 
-    const location = useLocation(); // Получаем текущий маршрут
-    // Используем useEffect для автоматического открытия формы при загрузке
     useEffect(() => {
         if (location.pathname === '/admin') {
-            setWindowAdmin(true); // Открываем форму, если маршрут /admin
+            setWindowAdmin(true);
         } else {
-            setWindowAdmin(false); // Скрываем форму для других маршрутов
+            setWindowAdmin(false)
         }
-    }, [location]); // Зависимость от location гарантирует обновление при изменении маршрута
+    }, [location]);
+
     const [CheckStatus, setStatusAdmin] = useState(false)
-    // const [deliveryNumber, setDeliveryNumber] = useState('');
-
-    const [deliveryMessage, setDeliveryMessage] = useState(''); // Сообщение для пользователя
-    const [confirmCreateDelivery, setConfirmCreateDelivery] = useState(false); // Флаг для отображения подтверждения создания
-
     // доступные принтеры и места печати
     const [places, setPlaces] = useState(["Лермонтово", "Пятигорск", "Тест"]);
     const [placePrint, setPlacePrint] = useState('');
@@ -49,6 +58,60 @@ const AdminPanel = () => {
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
     const handleCloseModalInfo = () => setIsModalInfoOpen(false);
 
+    // Модальное окно
+    const [models, setModels] = useState([{ article: '', size: '', brand: 'bestshoes' }]);
+    const [snackbar, setSnackbar] = useState({ open: false, message: "", type: "success" });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const handleInputChange = (index, field, value) => {
+        const updatedModels = [...models];
+        updatedModels[index][field] = value;
+        setModels(updatedModels);
+    };
+    
+    // Добавление нового элемента в список
+    const addModel = () => {
+        setModels([...models, { article: "", size: "", brand: "bestshoes" }]);
+    };
+
+    // Удаление элемента из списка
+    const removeModel = (index) => {
+        const updatedModels = models.filter((_, i) => i !== index);
+        setModels(updatedModels);
+    };
+
+    // Отправка данных (например, сохранение в базу данных)
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            // Эмуляция отправки данных на сервер
+            const response = await fetch("http://localhost:6501/api/models/add", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(models),
+            });
+      
+            if (!response.ok) {
+              throw new Error("Ошибка при добавлении моделей");
+            }
+      
+            // Очистка состояния и закрытие модального окна
+            setModels([{ article: "", size: "", brand: "bestshoes" }]);
+            setIsModalOpen(false);
+      
+            // Показ уведомления об успехе
+            setSnackbar({ open: true, message: "Модели успешно добавлены", type: "success" });
+        } catch (error) {
+          // Показ уведомления об ошибке
+          setSnackbar({ open: true, message: "Ошибка добавления моделей", type: "error" });
+        }
+    };
+  
+    const handleCloseSnackbar = () => {
+        setSnackbar({ ...snackbar, open: false });
+    };
+    
     socket.on('upload_status', ({ progress, message }) => {
         let status = { progress, message };
         console.log('Upload Status:', message);
@@ -380,6 +443,7 @@ const AdminPanel = () => {
     //         console.error(error);
     //     }
     // };
+
     const handleCompanySelection = (company) => {
         console.log(`[INFO] Выбрана компания: ${company}`);
         setBrend(company);  // Устанавливаем компанию в стейт родительского компонента
@@ -502,7 +566,7 @@ const AdminPanel = () => {
                     </div>
                 </section>
                 {/* Модуль вывода информации о печати честного знака */}
-                <Modal
+                <ModalPrint
                     isOpen={isModalInfoOpen}
                     onClose={handleCloseModalInfo}
                     info={statusUploadSign}
@@ -752,37 +816,163 @@ const AdminPanel = () => {
                         <button className="btn-action" onClick={getAllHonestSign}>Вернуть честный знак для Маркетплейса</button>
                         <article className="add-section">
                             <h2 className="admin-title">Добавление честного знака</h2>
-                            <ReportGenerator setSelectedCompany={handleCompanySelection} />
-                            <form onSubmit={addNewKyz} className="upload-form">
-                                <input
-                                    type="file"
-                                    accept="application/pdf"
-                                    onChange={handleFileChange}
-                                />
+                            <Button variant="contained" onClick={() => setIsModalOpen(true)}>
+                                Добавить модели
+                            </Button>
 
-                                {error && <p style={{ color: 'red' }}>{error}</p>}
+                            <div className={`${CheckStatus ? 'Admin' : 'NonAdmin'} admin-functions`}>
+                                <button className="btn-action" onClick={getAllHonestSign}>Вернуть честный знак для Маркетплейса</button>
+                                <article className="add-section">
+                                    <h2 className="admin-title">Добавление честного знака</h2>
+                                    <ReportGenerator setSelectedCompany={handleCompanySelection} />
+                                    <form onSubmit={addNewKyz} className="upload-form">
+                                        <input
+                                            type="file"
+                                            accept="application/pdf"
+                                            onChange={handleFileChange}
+                                        />
 
-                                <button type="submit" className="btn-submit">Добавить</button>
-                            </form>
-                                {/* <input
-                                    type="number"
-                                    value={deliveryNumber}
-                                    onChange={(e) => setDeliveryNumber(e.target.value)}
-                                    placeholder="Введите номер поставки"
-                                />
-                                <button onClick={checkDelivery}>Проверить</button>
-                                {deliveryMessage && <p>{deliveryMessage}</p>}
+                                        {error && <p style={{ color: 'red' }}>{error}</p>}
 
-                                {confirmCreateDelivery && (
-                                    <button onClick={createDelivery}>
-                                        Создать поставку {deliveryNumber}
-                                    </button>
-                                )}   */}
-                            <CompareFiles selectedCompany={brend} placePrint={placePrint}/>
+                                        <button type="submit" className="btn-submit">Загрузить честный знак</button>
+                                    </form>
+                                        {/* <input
+                                            type="number"
+                                            value={deliveryNumber}
+                                            onChange={(e) => setDeliveryNumber(e.target.value)}
+                                            placeholder="Введите номер поставки"
+                                        />
+                                        <button onClick={checkDelivery}>Проверить</button>
+                                        {deliveryMessage && <p>{deliveryMessage}</p>}
+
+                                        {confirmCreateDelivery && (
+                                            <button onClick={createDelivery}>
+                                                Создать поставку {deliveryNumber}
+                                            </button>
+                                        )}   */}
+                                    <CompareFiles selectedCompany={brend} placePrint={placePrint}/>
+                                </article>
+                            </div>
                         </article>
                     </div>
                 </section>
             </div>
+            {/* Модальное окно */}
+            <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <Box
+                sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 600,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 3,
+                    borderRadius: 2,
+                    maxHeight: "80vh",
+                    overflowY: "auto",
+                }}
+                >
+                <IconButton
+                    aria-label="close"
+                    onClick={() => setIsModalOpen(false)}
+                    sx={{ position: "absolute", right: 8, top: 8 }}
+                >
+                    <CloseIcon />
+                </IconButton>
+                <Typography variant="h6" gutterBottom>
+                    Добавление моделей
+                </Typography>
+                <form onSubmit={handleSubmit}>
+                    {models.map((model, index) => (
+                    <Stack
+                        key={index}
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        sx={{ mb: 1 }}
+                    >
+                        <TextField
+                        label="Артикул"
+                        value={model.article}
+                        onChange={(e) =>
+                            handleInputChange(index, "article", e.target.value)
+                        }
+                        size="small"
+                        sx={{ flex: 1 }}
+                        />
+                        <TextField
+                        label="Размер"
+                        value={model.size}
+                        onChange={(e) =>
+                            handleInputChange(index, "size", e.target.value)
+                        }
+                        size="small"
+                        sx={{ width: 100 }}
+                        />
+                        <Select
+                        value={model.brand}
+                        onChange={(e) =>
+                            handleInputChange(index, "brand", e.target.value)
+                        }
+                        size="small"
+                        sx={{ width: 150 }}
+                        >
+                        <MenuItem value="bestshoes">BestShoes</MenuItem>
+                        <MenuItem value="best26">Best26</MenuItem>
+                        <MenuItem value="armbest">Armbest</MenuItem>
+                        </Select>
+                        <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => removeModel(index)}
+                        disabled={models.length === 1}
+                        size="small"
+                        >
+                        Удалить
+                        </Button>
+                    </Stack>
+                    ))}
+                    <Button
+                    variant="contained"
+                    onClick={addModel}
+                    size="small"
+                    sx={{ mb: 2 }}
+                    >
+                    Добавить модель
+                    </Button>
+                    <Stack direction="row" spacing={2}>
+                    <Button variant="contained" type="submit" size="small">
+                        Сохранить
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setIsModalOpen(false)}
+                        size="small"
+                    >
+                        Отмена
+                    </Button>
+                    </Stack>
+                </form>
+                </Box>
+            </Modal>
+
+            {/* Уведомления */}
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={4000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                onClose={handleCloseSnackbar}
+                severity={snackbar.type}
+                sx={{ width: "100%" }}
+                >
+                {snackbar.message}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

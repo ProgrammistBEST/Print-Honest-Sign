@@ -24,22 +24,17 @@ const { getInfoAboutAllHonestSign } = require('./controllers/infoHSController.js
 const { getPrintedHonestSign } = require('./controllers/printedHSController.js'); // Импортируем функцию
 const { compareFiles } = require('./utils/compareFiles.js'); // Импортируем функцию
 // const { kyz } = require('./controllers/kyzController.js'); // Импортируем функцию
+
+
+
 app.use(cors());
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
 const util = require('util');
 const execCommand = util.promisify(exec);
 
-// Подача статических файлов React приложения
 if (process.env.NODE_ENV === 'production') {
-    // Указываем путь к папке build
     app.use(express.static(path.join(__dirname, '../frontend/build')));
-  
-    // Обработка всех запросов, которые не совпадают с API-маршрутами
-    // app.get('*', (req, res) => {
-    //   res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-    // });
-  }
+}
   
 
 // Для работы с сокетами
@@ -76,9 +71,88 @@ app.get('/api/printers', async (req, res) => {
 });
 
 // Роуты
-app.get('/api/printedHonestSign', getPrintedHonestSign); // Используем функцию для маршрута
-app.get('/api/InfoAboutAllHonestSign', getInfoAboutAllHonestSign); // Используем функцию для маршрута
-app.post('/api/compare', upload.single('file'), compareFiles); // Используем функцию для маршрута
+app.get('/api/printedHonestSign', getPrintedHonestSign);
+app.get('/api/InfoAboutAllHonestSign', getInfoAboutAllHonestSign);
+app.post('/api/compare', upload.single('file'), compareFiles);
+
+// Добавление моделей
+app.post('/api/models/add', async (req, res) => {
+
+    const models = req.body;
+    if (!Array.isArray(models) || models.length === 0) {
+        return res.status(400).send({ error: 'Массив моделей пуст или отсутствует' });
+    }
+
+    const addedModels = [];
+    const existingModels = [];
+
+    try {
+        for (const model of models) {
+            const { article, size, brand } = model;
+
+            // Проверка данных модели
+            if (!article || !size || !brand) {
+                return res.status(400).send({ error: 'Некорректные данные модели' });
+            }
+
+            // Определение таблицы на основе бренда
+            let table;
+            switch (brand) {
+                case 'bestshoes':
+                    table = 'product_sizesbestshoes';
+                    break;
+                case 'best26':
+                    table = 'product_sizesbest26';
+                    break;
+                case 'armbest':
+                    table = 'product_sizesarmbest';
+                    break;
+                default:
+                    return res.status(400).send({ error: `Неизвестный бренд: ${brand}` });
+            }
+
+            // Проверка существования модели в базе данных
+            const [existingRows] = await pool.query(
+                `SELECT * FROM ${table} WHERE vendor_code = ? AND tech_size = ?`,
+                [article, size]
+            );
+
+            if (existingRows.length > 0) {
+                // Модель уже существует
+                existingModels.push({ article, size, brand });
+            } else {
+                // Добавление новой модели
+                await pool.query(`INSERT INTO ${table} (vendor_code, tech_size) VALUES (?, ?)`, [article, size]);
+                addedModels.push({ article, size, brand });
+            }
+        }
+
+        // Формирование ответа
+        if (existingModels.length > 0 && addedModels.length === 0) {
+            // Все модели уже существуют
+            return res.status(409).send({
+                message: 'Все указанные модели уже существуют',
+                existingModels,
+            });
+        } else if (existingModels.length > 0) {
+            // Некоторые модели уже существуют
+            return res.status(200).send({
+                message: 'Часть моделей добавлена, часть уже существует',
+                addedModels,
+                existingModels,
+            });
+        } else {
+            // Все модели успешно добавлены
+            return res.status(200).send({
+                message: 'Все модели успешно добавлены',
+                addedModels,
+            });
+        }
+    } catch (error) {
+        console.error('Ошибка добавления поставки:', error);
+        res.status(500).send({ error: 'Ошибка добавления поставки' });
+    }
+});
 
 async function mergePDFs(pdfPaths) {
   const mergedPdf = await PDFDocument.create(); // Создаём новый PDF-документ
@@ -438,11 +512,11 @@ app.get('/getBrandsData', async (req, res) => {
   console.log('Запрос на сервер');
 
   const queries = [
-    { brand: 'Armbest (Новая)', table: 'product_sizesArmbest' },
+    { brand: 'Armbest (Новая)', table: 'product_sizesbestshoes' },
     { brand: 'BestShoes (Старая)', table: 'product_sizesbestshoes' },
-    { brand: 'Best26 (Арташ)', table: 'product_sizesBestShoes' },
-    { brand: 'Ozon (Armbest)', table: 'product_sizesozonarm' },
-    { brand: 'Ozon (BestShoes)', table: 'product_sizesBestShoes' }
+    { brand: 'Best26 (Арташ)', table: 'product_sizesbestshoes' },
+    { brand: 'Ozon (Armbest)', table: 'product_sizesbestshoes' },
+    { brand: 'Ozon (BestShoes)', table: 'product_sizesbestshoes' }
   ];
 
   try {
@@ -629,8 +703,8 @@ async function printPDF(filePath, type, placePrint) {
   if (!placePrint) {
     console.error('Ошибка: Не указан принтер!');
     return;
-	}
-	
+  }
+  
   const resolvedPath = path.resolve(filePath);
   let command = '';
   if (type == 'barcode') {
