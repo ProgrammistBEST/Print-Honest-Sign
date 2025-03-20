@@ -29,7 +29,7 @@ function isValidSize(text) {
 }
 
 // Сохранение всех данных в базу данных
-async function saveAllDataToDB(connection, fileName, pageDataList, brandData, deliveryNumber, placePrint) {
+async function saveAllDataToDB(connection, fileName, pageDataList, brandData, placePrint) {
 
   let Brand = brandData;
   let Color;
@@ -110,8 +110,8 @@ async function saveAllDataToDB(connection, fileName, pageDataList, brandData, de
     }
   }
 
-  const insertQuery = `INSERT INTO ${tableName} (Model, Color, PDF, Size, Crypto, Brand, Date, Status, deliverynumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  const checkQuery = `SELECT 1 FROM ${tableName} WHERE Model = ? AND Color = ? AND Size = ? AND Crypto = ? AND Brand = ? AND deliverynumber = ?`;
+  const insertQuery = `INSERT INTO ${tableName} (Model, Color, PDF, Size, Crypto, Brand, Date, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+  const checkQuery = `SELECT 1 FROM ${tableName} WHERE Model = ? AND Color = ? AND Size = ? AND Crypto = ? AND Brand = ?`;
 
   for (let { pageData, Crypto, Size, Model } of pageDataList) {
 
@@ -123,9 +123,9 @@ async function saveAllDataToDB(connection, fileName, pageDataList, brandData, de
     }
 
     try {
-      const [rows] = await connection.execute(checkQuery, [Model, Color, Size, Crypto, Brand, deliveryNumber]);
+      const [rows] = await connection.execute(checkQuery, [Model, Color, Size, Crypto, Brand]);
       if (rows.length === 0) {
-        await connection.execute(insertQuery, [Model, Color, pageData, Size, Crypto, Brand, DateNow, "Waiting", deliveryNumber]);
+        await connection.execute(insertQuery, [Model, Color, pageData, Size, Crypto, Brand, DateNow, "Waiting"]);
       } else {
         console.log('Найдено совпадение для:', Model, Color, Size, Crypto, Brand);
       }
@@ -145,19 +145,14 @@ async function createSinglePagePDF(pdfBytes, pageIndex) {
 }
 
 // Функция обработки PDF
-async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, placePrint, io) {
+async function processPDF(fileBuffer, fileName, brandData, placePrint, io, MultiModel) {
   try {
     const data = new Uint8Array(fileBuffer);
     const { extractedTexts, pdf } = await extractTextFromPDF(data);
 
-    // subscribers.forEach(chatId => {
-    //   let message = `Запущена загрузка честного знака на ${brandData} в количестве ${extractedTexts.length} шт.`;
-    //   // bot.telegram.sendMessage(chatId, message);
-    //   console.log(message)
-    // });
-
     const pdfBytes = new Uint8Array(fileBuffer);
     const pageSize = 25;
+    const arrayAddingModels = {};
     let startPage = 0;
 
     while (startPage < extractedTexts.length) {
@@ -166,8 +161,6 @@ async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, place
         let Crypto = linesArray.filter(line => line.startsWith('(01)')).join('\n');
         let Size = '';
         let Model = '';
-        const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
-        io.emit('upload_status', { progress, message: `Загружено ${startPage} из ${extractedTexts.length}` });
 
         if (linesArray.length > 1 && brandData == 'Armbest') {
           const secondLine = linesArray[4] || '';
@@ -211,7 +204,32 @@ async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, place
             Model = 'Multimodel';
           }
         }
-
+        
+        if (MultiModel == true) {
+            Model = 'ЭВА';
+        }
+                  
+        if (!arrayAddingModels[Model]) {
+            arrayAddingModels[Model] = { count: 0, sizes: {} };
+        }
+        arrayAddingModels[Model].count += 1;
+          
+        if (!arrayAddingModels[Model].sizes[Size]) {
+            arrayAddingModels[Model].sizes[Size] = 0;
+        }
+        arrayAddingModels[Model].sizes[Size] += 1;
+        
+        const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
+        
+        console.log(progress, `Загружено ${startPage} из ${extractedTexts.length}`, placePrint, arrayAddingModels);
+          
+        io.emit('upload_status', {
+          progress,
+          message: `Загружено ${startPage} из ${extractedTexts.length}`,
+          placePrint,
+          arrayAddingModels,
+        });
+          
         // Создаем новый PDF-документ с одной страницей
         const pageBytes = await createSinglePagePDF(pdfBytes, startPage + pageIndex);
         return { pageData: pageBytes, pageNumber: startPage + pageIndex + 1, Crypto, Size, Model };
@@ -219,10 +237,11 @@ async function processPDF(fileBuffer, fileName, brandData, deliveryNumber, place
       }));
     
       // Записываем данные в базу данных
-      await saveAllDataToDB(pool, fileName, pageDataList, brandData, deliveryNumber, placePrint);
+      await saveAllDataToDB(pool, fileName, pageDataList, brandData, placePrint);
       // Перемещаемся к следующей порции страниц
       startPage += pageSize;
       console.log(startPage)
+        
     }
     // subscribers.forEach(chatId => {
     //   let message = `Для ${brandData} добавлено ${extractedTexts.length} шт. честного знака.`;

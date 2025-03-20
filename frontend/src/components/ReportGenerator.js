@@ -6,8 +6,8 @@ const ReportGenerator = ({ setSelectedCompany }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCompanySelection = (company) => {
-    setSelectedCompanyState(company);  // Обновляем локальное состояние
-    setSelectedCompany(company);  // Передаем выбранную компанию в родительский компонент
+    setSelectedCompanyState(company);
+    setSelectedCompany(company);
   };
 
   const generateReport = async () => {
@@ -189,7 +189,7 @@ const ReportGenerator = ({ setSelectedCompany }) => {
             {company}
           </button>
         ))}
-      </div>
+        </div>
       <button
         onClick={generateReport}
         className="btn-generate-report"

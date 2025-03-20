@@ -31,6 +31,7 @@ const AdminPanel = () => {
     const [error, setError] = useState('');
     const [pdfFile, setPdfFile] = useState(null);
     const [windowAdmin, setWindowAdmin] = useState(false);
+    const [addMultiModel, setAddMultiModel] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
@@ -73,6 +74,10 @@ const AdminPanel = () => {
         setModels([...models, { article: "", size: "", brand: "bestshoes" }]);
     };
 
+    const handleCheckboxClick = () => {
+        setAddMultiModel((prev) => !prev); // Переключаем состояние
+    };
+    
     // Удаление элемента из списка
     const removeModel = (index) => {
         const updatedModels = models.filter((_, i) => i !== index);
@@ -112,9 +117,9 @@ const AdminPanel = () => {
         setSnackbar({ ...snackbar, open: false });
     };
     
-    socket.on('upload_status', ({ progress, message }) => {
-        let status = { progress, message };
-        console.log('Upload Status:', message);
+    socket.on('upload_status', ({ progress, message, placePrint, arrayAddingModels }) => {
+        let status = { progress, message, placePrint, arrayAddingModels };
+        console.log('Upload Status:', progress, message, placePrint, arrayAddingModels);
         setStatusUploadSign(status);
     });
 
@@ -294,7 +299,8 @@ const AdminPanel = () => {
         formData.append('brandData', JSON.stringify(brend));
         // formData.append('deliveryNumber', JSON.stringify(deliveryNumber));
         formData.append('placePrint', JSON.stringify(placePrint));
-
+        formData.append('MultiModel', JSON.stringify(addMultiModel));
+        
         setIsModalInfoOpen(true);
 
         try {
@@ -571,6 +577,7 @@ const AdminPanel = () => {
                     onClose={handleCloseModalInfo}
                     info={statusUploadSign}
                     type={'statusUploadSigns'}
+                    brand={brend}
                 />
 
                 <div className={CheckStatus ? "Admin" : "NonAdmin"} style={{
@@ -825,6 +832,20 @@ const AdminPanel = () => {
                                 <article className="add-section">
                                     <h2 className="admin-title">Добавление честного знака</h2>
                                     <ReportGenerator setSelectedCompany={handleCompanySelection} />
+                                    <div
+                                        style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginTop: '10px',
+                                        cursor: 'pointer',
+                                        }}
+                                        onClick={handleCheckboxClick} // Обработчик клика
+                                    >
+                                        <span style={{ marginRight: '8px', fontSize: '18px' }}>
+                                        {addMultiModel ? '✔' : '✗'} {/* Показываем галочку или крестик */}
+                                        </span>
+                                        <span>{addMultiModel ? 'Добавятся как мультимодели' : 'Добавятся помодельно'}</span>
+                                    </div>
                                     <form onSubmit={addNewKyz} className="upload-form">
                                         <input
                                             type="file"

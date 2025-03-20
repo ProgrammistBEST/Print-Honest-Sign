@@ -44,7 +44,6 @@ const  { Server } = require('socket.io');
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:6501', // Разрешаем запросы только с этого origin
     methods: ['GET', 'POST'],       // Разрешенные методы
   }
 });
@@ -425,9 +424,11 @@ app.post('/uploadNewKyz', upload.single('file'), async (req, res) => {
     const brandData = JSON.parse(req.body.brandData);
     // const deliveryNumber = JSON.parse(req.body.deliveryNumber);
     const placePrint = JSON.parse(req.body.placePrint);
+    const MultiModel = JSON.parse(req.body.MultiModel);
+
     console.log("req.body: ", req.body);
 
-    await processPDF(fileBuffer, fileName, brandData, placePrint, io);
+    await processPDF(fileBuffer, fileName, brandData, placePrint, io, MultiModel);
     res.status(200).send({ message: 'Файл успешно загружен.' });
 
   } catch (err) {
