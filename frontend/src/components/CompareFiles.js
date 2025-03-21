@@ -96,7 +96,7 @@ function CompareFiles({ selectedCompany, placePrint }) {
             />
 
             {/* Кнопка для запуска сравнения */}
-            <button onClick={handleCompare} disabled={!orderFile}>
+            <button className="btn-submit" onClick={handleCompare} disabled={!orderFile}>
                 Сравнить
             </button>
 

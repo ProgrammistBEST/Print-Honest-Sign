@@ -192,11 +192,12 @@ const ReportGenerator = ({ setSelectedCompany }) => {
         </div>
       <button
         onClick={generateReport}
-        className="btn-generate-report"
+        className="btn-generate-report btn-submit"
         disabled={isLoading}
       >
         {isLoading ? 'Формируется...' : 'Сформировать отчет'}
       </button>
+      
     </div>
   );
 };

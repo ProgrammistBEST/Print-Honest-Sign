@@ -58,6 +58,7 @@ const AdminPanel = () => {
     const [statusUploadSign, setStatusUploadSign] = useState('');
     const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
     const handleCloseModalInfo = () => setIsModalInfoOpen(false);
+    const handleOpenModalInfo = () => setIsModalInfoOpen(true);;
 
     // Модальное окно
     const [models, setModels] = useState([{ article: '', size: '', brand: 'bestshoes' }]);
@@ -574,6 +575,7 @@ const AdminPanel = () => {
                         )}
                     </div>
                 </section>
+
                 {/* Модуль вывода информации о печати честного знака */}
                 <ModalPrint
                     isOpen={isModalInfoOpen}
@@ -825,7 +827,6 @@ const AdminPanel = () => {
                         <button type="submit" className="btn-submit">Войти</button>
                     </form>
                     <div className={`${CheckStatus ? 'Admin' : 'NonAdmin'} admin-functions`}>
-                        <button className="btn-action" onClick={getAllHonestSign}>Вернуть честный знак для Маркетплейса</button>
                         <article className="add-section">
                             <h2 className="admin-title">Добавление честного знака</h2>
                             <Button variant="contained" onClick={() => setIsModalOpen(true)}>
@@ -833,10 +834,14 @@ const AdminPanel = () => {
                             </Button>
 
                             <div className={`${CheckStatus ? 'Admin' : 'NonAdmin'} admin-functions`}>
-                                <button className="btn-action" onClick={getAllHonestSign}>Вернуть честный знак для Маркетплейса</button>
+                                {/* <button className="btn-action" onClick={getAllHonestSign}>Вернуть честный знак для Маркетплейса</button> */}
                                 <article className="add-section">
                                     <h2 className="admin-title">Добавление честного знака</h2>
                                     <ReportGenerator setSelectedCompany={handleCompanySelection} />
+                                    {/* Кнопка для открытия модального окна */}
+                                    <button className="btn-submit" onClick={handleOpenModalInfo}>
+                                        Показать модальное окно
+                                    </button>
                                     <div
                                         style={{
                                         display: 'flex',
