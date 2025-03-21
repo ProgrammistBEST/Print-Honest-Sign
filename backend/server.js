@@ -702,16 +702,15 @@ app.post('/api/checkDelivery', async (req, res) => {
 // Функция для печати PDF файла
 async function printPDF(filePath, type, placePrint) {
 
-    const resolvedPath = path.resolve(filePath);
-    console.log(`"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`, filePath);
-    return;
+  const resolvedPath = path.resolve(filePath);
+  console.log(`"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`, filePath);
   let command = '';
   if (type == 'barcode') {
     command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
   } else if (type == 'honestSign') {
     command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
   }
-	
+  
   try {
     const { stdout, stderr } = await execCommand(command);
     if (stderr) {

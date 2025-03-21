@@ -8,8 +8,8 @@ set "script_dir=%~dp0"
 set "backend_path=%script_dir%backend"
 cd /d "%backend_path%"
 if exist package.json (
-    echo Запуск backend...
-    start /B npm start > backend.log 2>&1
+    echo Запуск frontend...
+    npm start >nul 2>&1
 ) else (
     echo Ошибка: Файл package.json не найден в папке backend.
     exit /b 1

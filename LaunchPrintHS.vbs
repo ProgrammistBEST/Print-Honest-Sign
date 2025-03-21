@@ -4,8 +4,38 @@ Set WshShell = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 currentDir = fso.GetParentFolderName(WScript.ScriptFullName)
 
-' Запуск PrintHSBatFront.bat в скрытом режиме
-WshShell.Run "cmd.exe /c """ & currentDir & "\PrintHSBatFront.bat""", 0, False
+' Функция для проверки занятости порта
+Function IsPortInUse(port)
+    Dim result
+    On Error Resume Next
+    ' Выполняем команду netstat для проверки порта
+    result = WshShell.Run("cmd.exe /c netstat -ano | findstr :" & port, 0, True)
+    If result = 0 Then
+        IsPortInUse = True ' Порт занят
+    Else
+        IsPortInUse = False ' Порт свободен
+    End If
+    On Error GoTo 0
+End Function
+
+' Проверка портов 6501 и 6502
+port6501InUse = IsPortInUse(6501)
+port6502InUse = IsPortInUse(6502)
+
+' If port6501InUse Then
+'     WScript.Echo "Порт 6501 zanyat."
+' Else
+'     WScript.Echo "Порт 6501 svoboden."
+' End If
+
+' If port6502InUse Then
+'     WScript.Echo "Порт 6502 zanyat."
+' Else
+'     WScript.Echo "Порт 6502 svoboden."
+' End If
 
 ' Запуск PrintHSBatBack.bat в скрытом режиме
 WshShell.Run "cmd.exe /c """ & currentDir & "\PrintHSBatBack.bat""", 0, False
+
+' Открываем браузер с localhost:6501 (независимо от состояния портов)
+WshShell.Run "http://localhost:6501", 1, False
