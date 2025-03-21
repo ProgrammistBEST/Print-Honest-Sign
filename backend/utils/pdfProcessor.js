@@ -151,7 +151,7 @@ async function processPDF(fileBuffer, fileName, brandData, placePrint, io, Multi
     const { extractedTexts, pdf } = await extractTextFromPDF(data);
 
     const pdfBytes = new Uint8Array(fileBuffer);
-    const pageSize = 25;
+    const pageSize = 50;
     const arrayAddingModels = {};
     let startPage = 0;
 
@@ -220,9 +220,7 @@ async function processPDF(fileBuffer, fileName, brandData, placePrint, io, Multi
         arrayAddingModels[Model].sizes[Size] += 1;
         
         const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
-        
-        console.log(progress, `Загружено ${startPage} из ${extractedTexts.length}`, placePrint, arrayAddingModels);
-          
+                  
         io.emit('upload_status', {
           progress,
           message: `Загружено ${startPage} из ${extractedTexts.length}`,

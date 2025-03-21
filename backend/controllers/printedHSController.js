@@ -38,7 +38,7 @@ const getPrintedHonestSign = async (req, res) => {
         WHERE Status = 'Used' 
           AND Locked = 1 
           AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-        GROUP BY Model, Size, user, DATE(Date)
+        GROUP BY Model, Size, user, date
       `;
     } else {
       // Формируем запрос для остальных мест и брендов
@@ -53,7 +53,7 @@ const getPrintedHonestSign = async (req, res) => {
             WHERE Status = 'Used' 
               AND Locked = 1 
               AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-            GROUP BY Model, Size, user, DATE(Date)
+            GROUP BY Model, Size, user, date
           `);
         }
       }

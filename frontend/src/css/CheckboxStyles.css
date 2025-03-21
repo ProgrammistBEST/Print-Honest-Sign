@@ -87,15 +87,6 @@
     font-weight: bold;
 }
 
-/* Стили для списка размеров */
-.size-list {
-    display: flex;
-    gap: 10px; /* Отступы между элементами */
-    list-style: none; /* Убираем стандартные маркеры списка */
-    padding: 0;
-    margin: 0;
-}
-
 /* Стили для отдельного размера */
 .size-item {
     background-color: #f0f0f0;
@@ -160,6 +151,7 @@
 
 .size-list {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     list-style: none;
     padding: 0;

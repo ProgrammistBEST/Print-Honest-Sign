@@ -2,15 +2,14 @@ import React from "react";
 import PropTypes from 'prop-types';
 import './style.css'
 
-const ModalPrint = ({ isOpen, onClose, info, type, brand }) => {
-    console.log(isOpen, onClose, info, type, brand)
+const ModalPrint = ({ isOpen, onClose, info, type, brand, placePrint}) => {
     if (!isOpen) { return null };
     if (isOpen && type == 'statusUploadSigns') {
         return (
             <div className="modal-overlay">
                 <div className="modal-content">
                     <h1>{info.message}</h1>
-                    <h2>Загрузка честного знака на фирму {brand} в {type.placePrint}.</h2>
+                    <h2>Загрузка честного знака на {brand} в {placePrint}.</h2>
                     <div className="progress-bar">
                         <div className="progress-fill" style={{ width: `${info.progress}%` }}></div>
                     </div>
@@ -22,10 +21,10 @@ const ModalPrint = ({ isOpen, onClose, info, type, brand }) => {
                                 {Object.entries(info.arrayAddingModels).map(([model, data]) => (
                                     <li key={model}>
                                         <strong>{model}</strong>: {data.count} шт.
-                                        <ul>
+                                        <ul className="model-grid">
                                             {Object.entries(data.sizes).map(([size, count]) => (
-                                                <li key={size}>
-                                                    Размер {size}: {count} шт.
+                                                <li className="model-element" key={size}>
+                                                    {size}: {count} шт.
                                                 </li>
                                             ))}
                                         </ul>
@@ -37,7 +36,7 @@ const ModalPrint = ({ isOpen, onClose, info, type, brand }) => {
                         )}
                     </div>
                     <div className="modal-footer">
-                        <button onClick={onClose} className="close-button">Закрыть</button>
+                        <button onClick={onClose} className="close-button-modal">Закрыть</button>
                     </div>
                 </div>
             </div>

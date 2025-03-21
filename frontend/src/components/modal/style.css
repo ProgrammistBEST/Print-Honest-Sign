@@ -168,10 +168,55 @@
 .model-sizes {
     list-style: none;
     padding-left: 20px;
+    height: 600px;
     margin: 5px 0;
+    overflow-y:scroll;
 }
 
 .model-sizes li {
     font-size: 14px;
     color: #666666;
 }
+
+.model-grid {
+    display: flex;
+    flex-wrap: wrap;
+    /* grid-template-columns: repeat(3, 1fr);  */
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 20px;
+}
+  
+.model-grid li {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+.model-element {
+    transition: 0.3s;
+    cursor: pointer;
+    border-radius: 10px;
+}
+.model-element:hover {
+    transition: 3s;
+    background-color: #c2c2c2;
+    border: 2px solid #949494;
+    transform: rotate(11360deg);
+    position: relative; /* Для перемещения */
+}
+
+@keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .model-element.animate-spin {
+    animation: spin 3s linear infinite; /* Бесконечное вращение */
+  }

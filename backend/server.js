@@ -270,7 +270,6 @@ app.post('/api/FindHonestSign', async (req, res) => {
 });
 
 app.post('/api/getAllHonestSign', async (req, res) => {
-  console.log('513');
   const { brand } = req.body;
 
   try {
@@ -338,14 +337,20 @@ function convertDateToServerFormat(clientDate) {
 
 // Обновление статуса киза
 app.put('/api/returnKyz', async (req, res) => {
-  let { selectedBrand, user, placePrint, date, Model, Size } = req.body;
+  let {                     Brand,
+    user,
+    placePrint,
+    date,
+    Model,
+    Size,
+} = req.body;
   let mainBrand;
   let tableName;
-  console.log(selectedBrand, user, placePrint, date, Model, Size)
+  console.log(Brand, user, placePrint, date, Model, Size)
   if (placePrint == 'Тест') {
     tableName = 'delivery_test';
-  } else if (selectedBrand === 'Ozon (Armbest)' || selectedBrand == 'Ozon Armbest') {
-    selectedBrand = 'Ozon Armbest';
+  } else if (Brand === 'Ozon (Armbest)' || Brand == 'Ozon Armbest') {
+    Brand = 'Ozon Armbest';
     mainBrand = 'ARMBEST';
 
     if (placePrint == 'Пятигорск') {
@@ -354,8 +359,8 @@ app.put('/api/returnKyz', async (req, res) => {
       tableName = 'delivery_armbest_ozon_lermontovo';
     }
 
-  } else if (selectedBrand == 'Ozon (BestShoes)' || selectedBrand == 'Ozon BestShoes') {
-    selectedBrand = 'OZON';
+  } else if (Brand == 'Ozon (BestShoes)' || Brand == 'Ozon BestShoes') {
+    Brand = 'OZON';
     mainBrand = 'BESTSHOES';
 
     if (placePrint == 'Пятигорск') {
@@ -364,9 +369,9 @@ app.put('/api/returnKyz', async (req, res) => {
       tableName = 'delivery_bestshoes_ozon_lermontovo';
     }
 
-  } else if (selectedBrand == 'Armbest (Новая)' || selectedBrand == 'Armbest') {
+  } else if (Brand == 'Armbest (Новая)' || Brand == 'Armbest') {
     tableName = 'delivery_armbest_pyatigorsk';
-    selectedBrand = 'Armbest';
+    Brand = 'Armbest';
 
     if (placePrint == 'Пятигорск') {
       tableName = 'delivery_armbest_pyatigorsk';
@@ -374,8 +379,8 @@ app.put('/api/returnKyz', async (req, res) => {
       tableName = 'delivery_armbest_lermontovo';
     }
 
-  } else if (selectedBrand == 'BestShoes (Старая)' || selectedBrand == 'BestShoes') {
-    selectedBrand = 'BestShoes';
+  } else if (Brand == 'BestShoes (Старая)' || Brand == 'BestShoes') {
+    Brand = 'BestShoes';
 
     if (placePrint == 'Пятигорск') {
       tableName = 'delivery_bestshoes_pyatigorsk';
@@ -383,8 +388,8 @@ app.put('/api/returnKyz', async (req, res) => {
       tableName = 'delivery_bestshoes_lermontovo';
     }
 
-  } else if (selectedBrand == 'Best26 (Арташ)' || selectedBrand == 'Best26') {
-    selectedBrand = 'Best26';
+  } else if (Brand == 'Best26 (Арташ)' || Brand == 'Best26') {
+    Brand = 'Best26';
 
     if (placePrint == 'Пятигорск') {
       tableName = 'delivery_best26_pyatigorsk';
@@ -394,12 +399,12 @@ app.put('/api/returnKyz', async (req, res) => {
   };
 
   const serverDate = convertDateToServerFormat(date);
-  console.log(tableName, selectedBrand, placePrint);
+  console.log(tableName, Brand, placePrint, serverDate, user, Model, Size);
 
   try {
     const [result] = await pool.query(
       `UPDATE \`${tableName}\` SET Status = 'Waiting', Locked = 0 WHERE Date = ? AND Brand = ? AND user = ? AND Model = ? AND Size = ?`,
-      [serverDate, selectedBrand, user, Model, Size]
+      [serverDate, Brand, user, Model, Size]
     );
     res.json({
       message: 'Status updated successfully',
@@ -569,7 +574,7 @@ const writePDFs = async (rows) => {
 
 app.post('/kyz', async (req, res) => {
     let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
-    printerForHonestSign = process.env.PRINTER_HS
+    printerForHonestSign = process.env.PRINTER_HS;
     
     const brandMappings = {
       'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
@@ -606,7 +611,7 @@ app.post('/kyz', async (req, res) => {
       const allPromises = filledInputs.map(async (input) => {
         const { size, model, value } = input;
         const count = Number(value);
-        const formattedModel = ['Armbest'].includes(normalizedBrand) ? 'Multimodel' : model;
+        const formattedModel = ['Armbest'].includes(normalizedBrand) ? 'ЭВА' : model;
   
         console.log(`Обработка модели "${model}", размера "${size}" для бренда "${normalizedBrand}". Требуется: ${count}`);
   
@@ -652,7 +657,6 @@ app.post('/kyz', async (req, res) => {
         pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
         const mergedPdfPath = await mergePDFs(pdfPaths);
         printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
-  
         res.json({ success: true, data: { successfulSign, shortageInfo } });
       } else {
         res.json({ success: false, data: { successfulSign, shortageInfo } });
@@ -663,7 +667,8 @@ app.post('/kyz', async (req, res) => {
         res.status(500).json({ error: 'Произошла ошибка при выполнении операции.' });
       }
     }
-  });
+});
+  
 // Мое добро на добавление номеров поставок
 app.post('/addDelivery', async (req, res) => {
   const { deliverynumber } = req.body;
@@ -696,17 +701,10 @@ app.post('/api/checkDelivery', async (req, res) => {
 
 // Функция для печати PDF файла
 async function printPDF(filePath, type, placePrint) {
-    if (process.env.NODE_ENV == 'production') {
-        console.log('Печать завершена успешно');
-        return;
-    }
 
-  if (!placePrint) {
-    console.error('Ошибка: Не указан принтер!');
+    const resolvedPath = path.resolve(filePath);
+    console.log(`"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`, filePath);
     return;
-  }
-  
-  const resolvedPath = path.resolve(filePath);
   let command = '';
   if (type == 'barcode') {
     command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;

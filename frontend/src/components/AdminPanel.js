@@ -33,7 +33,7 @@ const AdminPanel = () => {
     const [windowAdmin, setWindowAdmin] = useState(false);
     const [addMultiModel, setAddMultiModel] = useState(false);
     const location = useLocation();
-
+    let [filteredItems, setFilteredItems] = useState([]);
     useEffect(() => {
         if (location.pathname === '/admin') {
             setWindowAdmin(true);
@@ -119,21 +119,23 @@ const AdminPanel = () => {
     
     socket.on('upload_status', ({ progress, message, placePrint, arrayAddingModels }) => {
         let status = { progress, message, placePrint, arrayAddingModels };
-        console.log('Upload Status:', progress, message, placePrint, arrayAddingModels);
         setStatusUploadSign(status);
     });
 
-    const filteredItems = printItems.filter(item =>
-        item.Brand.toLowerCase().includes(brandFilter.toLowerCase()) &&
-        item.Model.toLowerCase().includes(modelFilter.toLowerCase()) &&
-        item.Size.toLowerCase().includes(sizeFilter.toLowerCase()) &&
-        item.deliverynumber.toLowerCase().includes(deliveryFilter.toLowerCase())
-    ).sort((a, b) => {
+    filteredItems = printItems.filter(item => {
+        // Проверка для каждого фильтра: если фильтр пустой или undefined, пропускаем его
+        const isBrandMatch = !brandFilter || item.Brand.toLowerCase().includes(brandFilter.toLowerCase());
+        const isModelMatch = !modelFilter || item.Model.toLowerCase().includes(modelFilter.toLowerCase());
+        const isSizeMatch = !sizeFilter || item.Size.toLowerCase().includes(sizeFilter.toLowerCase());
+        const isDeliveryMatch = !deliveryFilter || item.deliverynumber.toLowerCase().includes(deliveryFilter.toLowerCase());
+        // Возвращаем true только если все активные фильтры совпадают
+        return isBrandMatch && isModelMatch && isSizeMatch && isDeliveryMatch;
+    }).sort((a, b) => {
         const parseDate = (dateString) => {
             const [dayMonth, time] = dateString.split(" ");
             const [day, month] = dayMonth.split(".");
             const [hours, minutes, seconds] = time.split(":");
-
+    
             const date = new Date();
             date.setDate(parseInt(day));
             date.setMonth(parseInt(month) - 1);
@@ -142,10 +144,10 @@ const AdminPanel = () => {
             date.setSeconds(parseInt(seconds) || 0);
             return date;
         };
-
+    
         return parseDate(b.date) - parseDate(a.date);
     });
-
+    
     // Загружаем значение из Local Storage при загрузке компонента
     useEffect(() => {
         const savedPlace = localStorage.getItem('placePrint');
@@ -215,7 +217,7 @@ const AdminPanel = () => {
                             model: item.Model,
                             size: item.Size,
                             quantity: item.quantity,
-                            deliverynumber: item.deliverynumber
+                            // deliverynumber: item.deliverynumber
                         });
                     });
                     setInfoAboutHonestSing(brandGet);
@@ -341,6 +343,7 @@ const AdminPanel = () => {
         }
         console.log("Данные строки:", item);
         const { Brand, user, Model, Size, date } = item;
+        console.log(item);
         try {
             const response = await fetch(`http://localhost:6501/api/returnKyz`, {
                 method: 'PUT',
@@ -348,12 +351,12 @@ const AdminPanel = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    selectedBrand: Brand,
+                    Brand,
                     user,
                     placePrint,
                     date,
                     Model,
-                    Size,
+                    Size
                 }),
             });
             const data = await response.json();
@@ -578,6 +581,7 @@ const AdminPanel = () => {
                     info={statusUploadSign}
                     type={'statusUploadSigns'}
                     brand={brend}
+                    placePrint={placePrint}
                 />
 
                 <div className={CheckStatus ? "Admin" : "NonAdmin"} style={{
@@ -639,7 +643,7 @@ const AdminPanel = () => {
                     </label>
                     <select
                         className='printForHonestSign'
-                        id="printerForHonestSign"  // Уникальный id
+                        id="printerForHonestSign"
                         value={printerForHonestSign}
                         onChange={handleprinterForHonestSign}
                         style={{
@@ -653,6 +657,7 @@ const AdminPanel = () => {
                     >
                     <option value="Баркод">Баркод</option>
                     <option value="EPSON2AF3CE (L3250 Series)">EPSON2AF3CE (L3250 Series)</option>
+                    <option value="ChestiZnak">ChestiZnak</option>
                     </select>
                     {printerForHonestSign && <p style={{ color: 'green', marginTop: '-10px' }}>Вы выбрали: {printerForHonestSign}</p>}
 

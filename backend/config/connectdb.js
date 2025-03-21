@@ -7,10 +7,6 @@ const pool = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 100,
-    queueLimit: 1,
-    idleTimeout: 30000,
 });
   
 const userPool = mysql.createPool({
@@ -18,8 +14,6 @@ const userPool = mysql.createPool({
     user: process.env.USER_DB_USER,
     password: process.env.USER_DB_PASSWORD,
     database: process.env.USER_DB_NAME,
-    waitForConnections: true,
-    queueLimit: 0,
 });
 
 // Проверка соединения и логирование результата
