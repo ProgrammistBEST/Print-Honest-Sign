@@ -34,8 +34,8 @@ port6502InUse = IsPortInUse(6502)
 '     WScript.Echo "Порт 6502 svoboden."
 ' End If
 
-' Запуск PrintHSBatBack.bat в скрытом режиме
-WshShell.Run "cmd.exe /c """ & currentDir & "\PrintHSBatBack.bat""", 0, False
+' Запуск Start.bat в скрытом режиме
+WshShell.Run "cmd.exe /c """ & currentDir & "\Start.bat""", 0, False
 
 ' Открываем браузер с localhost:6501 (независимо от состояния портов)
 WshShell.Run "http://localhost:6501", 1, False
