@@ -4,6 +4,7 @@ import './style.css'
 
 const ModalPrint = ({ isOpen, onClose, info, type, brand, placePrint}) => {
     if (!isOpen) { return null };
+    
     if (isOpen && type == 'statusUploadSigns') {
         return (
             <div className="modal-overlay">

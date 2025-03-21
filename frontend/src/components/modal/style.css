@@ -201,22 +201,20 @@
     border-radius: 10px;
 }
 .model-element:hover {
-    transition: 3s;
+    transition: 0.3s;
     background-color: #c2c2c2;
     border: 2px solid #949494;
-    transform: rotate(11360deg);
-    position: relative; /* Для перемещения */
+    transform: scale(1.2);
+    position: relative; /* scale(1.2) */
 }
 
-@keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .model-element.animate-spin {
-    animation: spin 3s linear infinite; /* Бесконечное вращение */
-  }
+.close-button-modal{
+    padding: 10px 20px;
+    background: #007bff;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
