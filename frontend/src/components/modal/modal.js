@@ -25,7 +25,7 @@ const ModalPrint = ({ isOpen, onClose, info, type, brand, placePrint}) => {
                                         <ul className="model-grid">
                                             {Object.entries(data.sizes).map(([size, count]) => (
                                                 <li className="model-element" key={size}>
-                                                    {size}: {count} шт.
+                                                    <span className="model-element-size">{size}:</span> {count} шт.
                                                 </li>
                                             ))}
                                         </ul>
