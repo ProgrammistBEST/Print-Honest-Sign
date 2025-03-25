@@ -728,7 +728,6 @@ app.get('/getApiById', async (req, res) => {
 
   try {
     const today = new Date(); // Текущая дата
-
     // Запрос для получения токена и даты истечения подписки
     const [rows] = await db.query(
       `SELECT token, expiration_date FROM apitokens 
@@ -738,10 +737,8 @@ app.get('/getApiById', async (req, res) => {
 
     if (rows.length > 0) {
       const { token, expiration_date } = rows[0];
-
       // Преобразуем expiration_date в объект Date
       const expirationDate = new Date(expiration_date);
-
       // Проверяем дату истечения подписки
       if (expirationDate > today) {
         res.json({ token });
@@ -764,7 +761,7 @@ app.get('/api/report', async (req, res) => {
     return res.status(400).json({ error: 'Brand is required' });
   }
 
-	// Сопоставление бренда с таблицей в базе данных
+  // Сопоставление бренда с таблицей в базе данных
   const tableName = getTableForBrand(brand);
   if (!tableName) {
     return res.status(400).json({ error: 'Invalid brand' });
