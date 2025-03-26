@@ -88,7 +88,7 @@ app.post('/api/models/add', async (req, res) => {
     try {
         for (const model of models) {
             const { article, size, brand } = model;
-
+            console.log(article, size, brand)
             // Проверка данных модели
             if (!article || !size || !brand) {
                 return res.status(400).send({ error: 'Некорректные данные модели' });
@@ -527,7 +527,7 @@ app.get('/getBrandsData', async (req, res) => {
 
   try {
     const results = await Promise.all(queries.map(async query => {
-      const sql = `SELECT vendor_code, GROUP_CONCAT(tech_size) AS sizes FROM ${query.table} GROUP BY vendor_code`;
+      const sql = `SELECT article, GROUP_CONCAT(size) AS sizes FROM products GROUP BY article`;
 
       const [rows] = await pool.query(sql);
 
@@ -537,12 +537,12 @@ app.get('/getBrandsData', async (req, res) => {
 
       // Преобразуем данные в нужный формат
       const models = rows.map((row, index) => ({
-        name: row.vendor_code,
+        name: row.article,
         sizes: row.sizes.split(',').map(size => {
           if (size.includes('-')) {
-            return size; // Оставляем размер строкой
+            return size;
           } else {
-            return Number(size); // Преобразуем в число
+            return Number(size);
           }
         }),
         id: index,
@@ -574,7 +574,6 @@ const writePDFs = async (rows) => {
 
 app.post('/kyz', async (req, res) => {
     let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
-    printerForHonestSign = process.env.PRINTER_HS;
     
     const brandMappings = {
       'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },

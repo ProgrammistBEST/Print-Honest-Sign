@@ -218,7 +218,7 @@ const SignDisplay = () => {
 
         }
     };
-
+    console.log(selectedBrand)
     const filteredModels = selectedBrand?.models.filter(model =>
         model.name.toLowerCase().startsWith(query.toLowerCase())
     ) || [];
