@@ -1,30 +1,44 @@
 const { pool } = require('../config/connectdb');
+const { getTableName } = require('./models.js');
+
+// Функция для получения всех категорий из базы данных
+async function fetchCategoriesFromDB() {
+  try {
+    const [rows] = await pool.query(`
+      SELECT DISTINCT category FROM model_categories
+    `);
+    return rows.map(row => row.category);
+  } catch (error) {
+    console.error("Ошибка при получении категорий из базы данных:", error.message);
+    throw error;
+  }
+}
 
 const getPrintedHonestSign = async (req, res) => {
   const selectedPlace = req.query.placePrint;
-  const selectedBrand = req.query.brand; // Новый параметр для фильтрации по бренду
+  const selectedBrand = req.query.brand;
   console.log('selectedPlace:', selectedPlace, 'selectedBrand:', selectedBrand);
 
   const placeMappings = {
-    'Лермонтово': 'lermontovo',
-    'Пятигорск': 'pyatigorsk',
+    'Лермонтово': 'l',
+    'Пятигорск': '',
     'Тест': 'test'
   };
 
-  const brandMappings = {
-    Armbest: "armbest",
-    BestShoes: "bestshoes",
-    Best26: "best26",
-    "Ozon Armbest": "armbest_ozon",
-    "Ozon BestShoes": "bestshoes_ozon"
-  };
+  const brands = [
+    "armbest",
+    "bestshoes",
+    "best26"
+  ];
+  
+  const categories = await fetchCategoriesFromDB();
 
   // Проверка валидности выбранного места
-  if (!placeMappings[selectedPlace]) {
-    return res.status(400).json({ error: 'Неизвестное место' });
-  }
+//   if (!placeMappings[selectedPlace]) {
+//     return res.status(400).json({ error: 'Неизвестное место' });
+//   }
 
-  const selectedPlaceDB = placeMappings[selectedPlace];
+//   const selectedPlaceDB = placeMappings[selectedPlace];
 
   try {
     let query;
@@ -33,26 +47,27 @@ const getPrintedHonestSign = async (req, res) => {
       // Для места "Тест" используем одну таблицу
       query = `
         SELECT Brand, Model, Size, COUNT(*) AS quantity,
-               DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
+               DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
         FROM delivery_test
         WHERE Status = 'Used' 
           AND Locked = 1 
-          AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
         GROUP BY Model, Size, user, date
       `;
     } else {
       // Формируем запрос для остальных мест и брендов
       const queryParts = [];
 
-      for (const [brandName, brandDB] of Object.entries(brandMappings)) {
-        if (!selectedBrand || selectedBrand === brandName) { // Фильтрация по бренду
+      // Формируем запросы для всех комбинаций брендов и категорий
+      for (const brand of brands) {
+        for (const category of categories) {
+          const tableName = getTableName(brand, category);
+          if (!tableName) continue;
           queryParts.push(`
             SELECT Brand, Model, Size, COUNT(*) AS quantity,
-                   DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user, deliverynumber
-            FROM delivery_${brandDB}_${selectedPlaceDB}
+                   DATE_FORMAT(Date, '%d.%m %H:%i:%s') AS date, user
+            FROM ${tableName}
             WHERE Status = 'Used' 
               AND Locked = 1 
-              AND Date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
             GROUP BY Model, Size, user, date
           `);
         }

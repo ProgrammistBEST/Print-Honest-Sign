@@ -1,0 +1,347 @@
+[LOG] 2025-03-28T08:50:13.481Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T08:50:13.482Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T08:50:13.499Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T08:50:13.500Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T08:50:13.698Z: Client connected
+[LOG] 2025-03-28T08:50:15.271Z: Обработка модели "051сине-красный", размера "36" для бренда "BestShoes". Требуется: 1. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:15.272Z: Обработка модели "051сине-красный", размера "37" для бренда "BestShoes". Требуется: 1. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:15.273Z: Обработка модели "051сине-красный", размера "38" для бренда "BestShoes". Требуется: 2. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:15.274Z: Обработка модели "051сине-красный", размера "39" для бренда "BestShoes". Требуется: 3. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:15.274Z: Обработка модели "051сине-красный", размера "40" для бренда "BestShoes". Требуется: 4. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:15.275Z: Обработка модели "051сине-красный", размера "41" для бренда "BestShoes". Требуется: 5. tableName: bestshoes_not_defined
+[ERROR] 2025-03-28T08:50:15.282Z: Произошла ошибка: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') AND `Status` = "Waiting" AND `Locked` = 0' at line 3
+[LOG] 2025-03-28T08:50:25.566Z: Обработка модели "051сине-красный", размера "36" для бренда "BestShoes". Требуется: 2. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:25.566Z: Обработка модели "051сине-красный", размера "37" для бренда "BestShoes". Требуется: 1. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:25.567Z: Обработка модели "051сине-красный", размера "38" для бренда "BestShoes". Требуется: 1. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:25.567Z: Обработка модели "051сине-красный", размера "39" для бренда "BestShoes". Требуется: 2. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:25.567Z: Обработка модели "051сине-красный", размера "40" для бренда "BestShoes". Требуется: 3. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:50:25.567Z: Обработка модели "051сине-красный", размера "41" для бренда "BestShoes". Требуется: 1. tableName: bestshoes_not_defined
+[ERROR] 2025-03-28T08:50:25.571Z: Произошла ошибка: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') AND `Status` = "Waiting" AND `Locked` = 0' at line 3
+[LOG] 2025-03-28T08:51:03.074Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T08:51:03.075Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T08:51:03.092Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T08:51:03.092Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T08:51:03.221Z: Client connected
+[LOG] 2025-03-28T08:51:03.875Z: Client connected
+[LOG] 2025-03-28T08:51:29.826Z: Обработка модели "51-black", размера "41" для бренда "Ozon". Требуется: 1. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:51:29.826Z: Обработка модели "51-black", размера "42" для бренда "Ozon". Требуется: 2. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:51:29.826Z: Обработка модели "51-black", размера "43" для бренда "Ozon". Требуется: 3. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:51:29.826Z: Обработка модели "51-black", размера "44" для бренда "Ozon". Требуется: 1. tableName: bestshoes_not_defined
+[LOG] 2025-03-28T08:51:29.827Z: Обработка модели "51-black", размера "45" для бренда "Ozon". Требуется: 2. tableName: bestshoes_not_defined
+[ERROR] 2025-03-28T08:51:29.831Z: Произошла ошибка: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') AND `Status` = "Waiting" AND `Locked` = 0' at line 3
+[LOG] 2025-03-28T08:55:16.638Z: Client connected
+[LOG] 2025-03-28T08:57:19.377Z: Client connected
+[LOG] 2025-03-28T08:58:47.669Z: Client connected
+[LOG] 2025-03-28T09:21:11.648Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:21:11.649Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:21:11.668Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:21:11.669Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:21:11.764Z: Client connected
+[LOG] 2025-03-28T09:21:31.456Z: Обработка модели "22-бордовый", размера "37" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:21:31.457Z: Обработка модели "22-бордовый", размера "38" для бренда "Armbest". Требуется: 3. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:21:31.458Z: Обработка модели "22-бордовый", размера "39" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:21:31.459Z: Обработка модели "22-бордовый", размера "40" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:21:31.460Z: Обработка модели "22-бордовый", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:21:31.460Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:21:31.462Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:21:31.463Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[ERROR] 2025-03-28T09:21:31.473Z: Произошла ошибка: Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') AND `Status` = "Waiting" AND `Locked` = 0' at line 3
+[LOG] 2025-03-28T09:24:05.719Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:24:05.720Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:24:05.738Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:24:05.739Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:24:05.838Z: Client connected
+[LOG] 2025-03-28T09:24:06.493Z: Client connected
+[LOG] 2025-03-28T09:24:18.196Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:24:18.196Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:24:18.197Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 4. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:24:18.197Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 3. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:24:18.197Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:24:52.310Z: Client connected
+[LOG] 2025-03-28T09:25:16.858Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:25:16.860Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:25:16.876Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:25:16.877Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:25:16.978Z: Client connected
+[LOG] 2025-03-28T09:25:23.178Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:25:23.179Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:25:23.180Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 3. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:25:23.180Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 4. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:25:23.181Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 5. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:02.764Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:26:02.765Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:26:02.783Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:26:02.783Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:26:02.881Z: Client connected
+[LOG] 2025-03-28T09:26:05.979Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:05.979Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:05.980Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:05.980Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:05.981Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:05.986Z: 0
+[LOG] 2025-03-28T09:26:05.990Z: 0
+[LOG] 2025-03-28T09:26:05.991Z: 0
+[LOG] 2025-03-28T09:26:05.992Z: 0
+[LOG] 2025-03-28T09:26:05.993Z: 0
+[LOG] 2025-03-28T09:26:48.151Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:26:48.153Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:26:48.170Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:26:48.171Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:26:48.263Z: Client connected
+[LOG] 2025-03-28T09:26:52.133Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:52.134Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:52.134Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:52.135Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:52.135Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:26:52.141Z: 0  
+[LOG] 2025-03-28T09:26:52.144Z: 0 [object Object] 
+[LOG] 2025-03-28T09:26:52.145Z: 0 [object Object],[object Object] 
+[LOG] 2025-03-28T09:26:52.146Z: 0 [object Object],[object Object],[object Object] 
+[LOG] 2025-03-28T09:26:52.146Z: 0 [object Object],[object Object],[object Object],[object Object] 
+[LOG] 2025-03-28T09:27:21.647Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:27:21.649Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:27:21.666Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:27:21.667Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:27:21.835Z: Client connected
+[LOG] 2025-03-28T09:27:24.943Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:27:24.943Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:27:24.944Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:27:24.944Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:27:24.945Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:27:24.953Z: 0  
+[LOG] 2025-03-28T09:27:24.958Z: 0 [object Object] 
+[LOG] 2025-03-28T09:27:24.959Z: 0 [object Object],[object Object] 
+[LOG] 2025-03-28T09:27:24.960Z: 0 [object Object],[object Object],[object Object] 
+[LOG] 2025-03-28T09:27:24.960Z: 0 [object Object],[object Object],[object Object],[object Object] 
+[LOG] 2025-03-28T09:28:01.842Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:28:01.843Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:28:01.861Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:28:01.862Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:28:01.955Z: Client connected
+[LOG] 2025-03-28T09:28:05.131Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:28:05.132Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:28:05.133Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:28:05.133Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:28:05.134Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:28:05.140Z: 0   5050-black 41
+[LOG] 2025-03-28T09:28:05.143Z: 0 [object Object]  5050-black 43
+[LOG] 2025-03-28T09:28:05.144Z: 0 [object Object],[object Object]  5050-black 44
+[LOG] 2025-03-28T09:28:05.144Z: 0 [object Object],[object Object],[object Object]  5050-black 45
+[LOG] 2025-03-28T09:28:05.145Z: 0 [object Object],[object Object],[object Object],[object Object]  5050-black 42
+[LOG] 2025-03-28T09:29:15.439Z: Client connected
+[LOG] 2025-03-28T09:29:28.148Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:28.149Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:28.149Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:28.149Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:28.149Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:28.149Z: Обработка модели "51-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:28.152Z: 0   5050-black 41
+[LOG] 2025-03-28T09:29:28.153Z: 0 [object Object]  5050-black 42
+[LOG] 2025-03-28T09:29:28.154Z: 0 [object Object],[object Object]  5050-black 43
+[LOG] 2025-03-28T09:29:28.154Z: 0 [object Object],[object Object],[object Object]  5050-black 44
+[LOG] 2025-03-28T09:29:28.155Z: 0 [object Object],[object Object],[object Object],[object Object]  5050-black 45
+[LOG] 2025-03-28T09:29:28.160Z: 0 [object Object],[object Object],[object Object],[object Object],[object Object]  51-black 42
+[LOG] 2025-03-28T09:29:54.312Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:29:54.313Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:29:54.330Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:29:54.331Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:29:54.425Z: Client connected
+[LOG] 2025-03-28T09:29:59.135Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:59.135Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:59.136Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:59.137Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:59.138Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:29:59.144Z: 0 1   5050-black 41
+[LOG] 2025-03-28T09:29:59.148Z: 0 1 [object Object]  5050-black 42
+[LOG] 2025-03-28T09:29:59.150Z: 0 2 [object Object],[object Object]  5050-black 45
+[LOG] 2025-03-28T09:29:59.151Z: 0 1 [object Object],[object Object],[object Object]  5050-black 44
+[LOG] 2025-03-28T09:29:59.152Z: 0 2 [object Object],[object Object],[object Object],[object Object]  5050-black 43
+[LOG] 2025-03-28T09:58:26.078Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:58:26.079Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:58:26.104Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:58:26.105Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:58:26.108Z: Client connected
+[LOG] 2025-03-28T09:58:31.790Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:58:31.791Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:58:31.791Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:58:31.792Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:58:31.793Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:58:31.799Z: 0 1   5050-black 41
+[LOG] 2025-03-28T09:58:31.799Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T09:58:31.802Z: 0 2 [object Object]  5050-black 42
+[LOG] 2025-03-28T09:58:31.802Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T09:58:31.803Z: 0 1 [object Object],[object Object]  5050-black 43
+[LOG] 2025-03-28T09:58:31.803Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T09:58:31.803Z: 0 2 [object Object],[object Object],[object Object]  5050-black 44
+[LOG] 2025-03-28T09:58:31.803Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T09:58:31.804Z: 0 1 [object Object],[object Object],[object Object],[object Object]  5050-black 45
+[LOG] 2025-03-28T09:58:31.804Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T09:59:19.127Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:59:19.128Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:59:19.147Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:59:19.147Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:59:19.242Z: Client connected
+[LOG] 2025-03-28T09:59:22.211Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:22.212Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:22.214Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:22.214Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:22.215Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:22.222Z: 5050-black 41 Armbest 1 0
+[LOG] 2025-03-28T09:59:22.222Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T09:59:22.227Z: 5050-black 42 Armbest 2 0
+[LOG] 2025-03-28T09:59:22.227Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T09:59:22.228Z: 5050-black 43 Armbest 1 0
+[LOG] 2025-03-28T09:59:22.228Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T09:59:22.228Z: 5050-black 45 Armbest 1 0
+[LOG] 2025-03-28T09:59:22.228Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T09:59:22.229Z: 5050-black 44 Armbest 2 0
+[LOG] 2025-03-28T09:59:22.229Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T09:59:48.976Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T09:59:48.978Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T09:59:48.995Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T09:59:48.996Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T09:59:49.089Z: Client connected
+[LOG] 2025-03-28T09:59:51.617Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:51.617Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:51.618Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:51.619Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:51.619Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T09:59:51.625Z: [object Object]
+[LOG] 2025-03-28T09:59:51.625Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T09:59:51.628Z: [object Object],[object Object]
+[LOG] 2025-03-28T09:59:51.628Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T09:59:51.628Z: [object Object],[object Object],[object Object]
+[LOG] 2025-03-28T09:59:51.628Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T09:59:51.629Z: [object Object],[object Object],[object Object],[object Object]
+[LOG] 2025-03-28T09:59:51.629Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T09:59:51.629Z: [object Object],[object Object],[object Object],[object Object],[object Object]
+[LOG] 2025-03-28T09:59:51.629Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:02:14.729Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T10:02:14.730Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T10:02:14.839Z: Client connected
+[LOG] 2025-03-28T10:02:14.840Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T10:02:14.841Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T10:02:18.145Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:02:18.145Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:02:18.146Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:02:18.146Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:02:18.147Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:02:18.147Z: 0
+[LOG] 2025-03-28T10:02:18.162Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:02:18.195Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:02:18.195Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:02:18.196Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:02:18.196Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:08:46.763Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T10:08:46.764Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T10:08:46.876Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T10:08:46.876Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T10:08:46.885Z: Client connected
+[LOG] 2025-03-28T10:08:51.253Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:08:51.254Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:08:51.254Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:08:51.255Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:08:51.255Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:08:51.264Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:08:51.280Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:08:51.280Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:08:51.280Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:08:51.281Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:15:01.469Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T10:15:01.471Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T10:15:01.490Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T10:15:01.491Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T10:15:01.585Z: Client connected
+[LOG] 2025-03-28T10:15:05.151Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:05.152Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:05.153Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:05.153Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:05.154Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:05.160Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:15:05.160Z: 
+[LOG] 2025-03-28T10:15:05.164Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:15:05.164Z: 
+[LOG] 2025-03-28T10:15:05.164Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:15:05.164Z: 
+[LOG] 2025-03-28T10:15:05.165Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:15:05.165Z: 
+[LOG] 2025-03-28T10:15:05.165Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:15:05.165Z: 
+[LOG] 2025-03-28T10:15:32.147Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T10:15:32.148Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T10:15:32.167Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T10:15:32.174Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T10:15:32.178Z: Client connected
+[LOG] 2025-03-28T10:15:35.349Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:35.350Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:35.351Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:35.351Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:35.352Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:15:35.357Z: 
+[LOG] 2025-03-28T10:15:35.357Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:15:35.360Z: 
+[LOG] 2025-03-28T10:15:35.361Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:15:35.361Z: 
+[LOG] 2025-03-28T10:15:35.361Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:15:35.361Z: 
+[LOG] 2025-03-28T10:15:35.361Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:15:35.362Z: 
+[LOG] 2025-03-28T10:15:35.362Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:20:31.365Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:20:31.366Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:20:31.367Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:20:31.368Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:20:31.369Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:20:31.374Z: 
+[LOG] 2025-03-28T10:20:31.374Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:20:31.375Z: 
+[LOG] 2025-03-28T10:20:31.375Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:20:31.375Z: 
+[LOG] 2025-03-28T10:20:31.375Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:20:31.376Z: 
+[LOG] 2025-03-28T10:20:31.376Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:20:31.376Z: 
+[LOG] 2025-03-28T10:20:31.376Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:23:40.872Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T10:23:40.874Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T10:23:40.891Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T10:23:40.892Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T10:23:40.985Z: Client connected
+[LOG] 2025-03-28T10:23:45.954Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:23:45.955Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:23:45.955Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:23:45.956Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:23:45.956Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[ERROR] 2025-03-28T10:23:45.957Z: Произошла ошибка: ReferenceError: allPromises is not defined
+[LOG] 2025-03-28T10:23:45.962Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:23:45.965Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:23:45.965Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:23:45.965Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:23:45.965Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:24:38.732Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-28T10:24:38.733Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-28T10:24:38.756Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-28T10:24:38.757Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-28T10:24:38.761Z: Client connected
+[LOG] 2025-03-28T10:24:41.109Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:24:41.110Z: Обработка модели "5050-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:24:41.110Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:24:41.111Z: Обработка модели "5050-black", размера "44" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:24:41.111Z: Обработка модели "5050-black", размера "45" для бренда "Armbest". Требуется: 1. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:24:41.115Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:24:41.118Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:24:41.118Z: Недостаточно записей для модели "5050-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:24:41.118Z: Недостаточно записей для модели "5050-black", размера "44". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:24:41.119Z: Недостаточно записей для модели "5050-black", размера "45". Требуется: 1, доступно: 0
+[LOG] 2025-03-28T10:24:41.119Z: Нехватка ЧЗ: [object Object],[object Object],[object Object],[object Object],[object Object]
+[LOG] 2025-03-28T10:32:26.781Z: Обработка модели "5050-black", размера "41" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:32:26.782Z: Обработка модели "5050-black", размера "43" для бренда "Armbest". Требуется: 3. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:32:26.783Z: Обработка модели "51-black", размера "41" для бренда "Armbest". Требуется: 12. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:32:26.784Z: Обработка модели "51-black", размера "42" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:32:26.785Z: Обработка модели "51-black", размера "43" для бренда "Armbest". Требуется: 2. tableName: armbest_not_defined
+[LOG] 2025-03-28T10:32:26.790Z: Недостаточно записей для модели "5050-black", размера "43". Требуется: 3, доступно: 0
+[LOG] 2025-03-28T10:32:26.791Z: Недостаточно записей для модели "51-black", размера "42". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:32:26.792Z: Недостаточно записей для модели "5050-black", размера "41". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:32:26.792Z: Недостаточно записей для модели "51-black", размера "41". Требуется: 12, доступно: 0
+[LOG] 2025-03-28T10:32:26.792Z: Недостаточно записей для модели "51-black", размера "43". Требуется: 2, доступно: 0
+[LOG] 2025-03-28T10:32:26.792Z: Нехватка ЧЗ: [object Object],[object Object],[object Object],[object Object],[object Object]

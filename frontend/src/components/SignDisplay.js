@@ -19,6 +19,7 @@ const SignDisplay = () => {
     const handleCloseModalInfo = () => setIsModalInfoOpen(false);
     const isDataFetched = useRef(false);
     const [isAccess, setSetAccess] = useState(false);
+    
     useEffect(() => {
         if (!isDataFetched.current) {
             const password = prompt('Введите пароль администратора')
@@ -201,7 +202,7 @@ const SignDisplay = () => {
                 // Открытие файла в новой вкладке
                 console.log('Данные с сервера2:', result);
             } else {
-                alert('Ошибка при создании PDF');
+                console.log('Ошибка при создании PDF');
             }
             console.log('Данные с сервера2:', result);        
 
@@ -235,15 +236,16 @@ const SignDisplay = () => {
                             placeholder="Введите номер упаковщика"
                             style={inputStyle}
                         />
-{/*                         
-                        <input
-                            type="number"
-                            value={numberdelivery}
-                            onChange={(e) => setNumberDelivery(e.target.value)}
-                            placeholder="Введите номер поставки"
-                            style={inputStyle}
-                            className="placeHolderNumberDelivery"
-                        /> */}
+                        {/*
+                            <input
+                                type="number"
+                                value={numberdelivery}
+                                onChange={(e) => setNumberDelivery(e.target.value)}
+                                placeholder="Введите номер поставки"
+                                style={inputStyle}
+                                className="placeHolderNumberDelivery"
+                            />
+                        */}
                         {warning && <p style={{ color: 'red' }}>{warning}</p>}
                         <button onClick={handleLogin} style={buttonStyle} className='loginButton'>
                             Войти

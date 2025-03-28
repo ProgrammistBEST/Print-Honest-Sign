@@ -1,28 +1,37 @@
 const { pool } = require('../config/connectdb');
+const { getTableName } = require('./models.js');
+
+// Функция для получения всех категорий из базы данных
+async function fetchCategoriesFromDB() {
+  try {
+    const [rows] = await pool.query(`
+      SELECT DISTINCT category FROM model_categories
+    `);
+    return rows.map(row => row.category);
+  } catch (error) {
+    console.error("Ошибка при получении категорий из базы данных:", error.message);
+    throw error;
+  }
+}
 
 const getInfoAboutAllHonestSign = async (req, res) => {
   const selectedPlace = req.query.placePrint;
 
-  const brandMappings = {
-    Armbest: "armbest",
-    BestShoes: "bestshoes",
-    Best26: "best26",
-    "Ozon Armbest": "armbest_ozon",
-    "Ozon BestShoes": "bestshoes_ozon",
-  };
+  const brands = ["armbest", "bestshoes", "best26"];
+  const categories = await fetchCategoriesFromDB();
 
   const places = {
     Лермонтово: "lermontovo",
     Пятигорск: "pyatigorsk",
     Тест: "test",
   };
-
+    
   // Проверка на валидность местоположения
   if (!places[selectedPlace]) {
     return res.status(400).json({ error: "Неизвестное место" });
   }
 
-  console.log(selectedPlace, 'in info');
+  console.log(selectedPlace, 'Запрос на получение данных о печати чз из базы');
 
   let query;
 
@@ -37,20 +46,24 @@ const getInfoAboutAllHonestSign = async (req, res) => {
     `;
   } else {
     // Формируем часть запроса для остальных мест
-    const brandTables = Object.entries(brandMappings)
-      .map(([key, value]) => {
-        const tableName = `delivery_${value}_${places[selectedPlace]}`;
-        return `
-          SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
-          FROM ${tableName}
-          WHERE Status = 'Waiting'
-            AND Locked = 0
-          GROUP BY Model, Size, deliverynumber
-        `;
-      })
-      .join(" UNION ALL ");
+    const queryParts = [];
 
-    query = `${brandTables}`;
+    for (const brand of brands) {
+        for (const category of categories) {
+          const tableName = getTableName(brand, category);
+          if (!tableName) continue;
+
+          const fullTableName = `${brand}_${category}`;
+          queryParts.push(`
+            SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
+            FROM ${fullTableName}
+            WHERE Status = 'Waiting'
+              AND Locked = 0
+            GROUP BY Model, Size, deliverynumber
+          `);
+        }
+    }
+    query = queryParts.join(" UNION ALL ");
   }
 
   try {

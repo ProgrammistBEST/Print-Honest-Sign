@@ -7,35 +7,37 @@ const portExpress = 6501;
 const portSocket = 6502;
 const fs = require('fs');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
+// const sqlite3 = require('sqlite3').verbose();
 const multer = require('multer');
 const path = require('path');
-const os = require('os');
+// const os = require('os');
 const { processPDF } = require('./utils/pdfProcessor.js');
 const { exec } = require('child_process');
 const { PDFDocument } = require('pdf-lib');
 const { pool, userPool } = require('./config/connectdb.js');
-const { general_article, get_article } = require('./models/scriptsArticles.js');
-const stringSimilarity = require('string-similarity');
+// const stringSimilarity = require('string-similarity');
 const { getPrinters } = require('pdf-to-printer');
-const mysql = require('mysql2');
-const iconv = require('iconv-lite');
-const { getInfoAboutAllHonestSign } = require('./controllers/infoHSController.js'); // Импортируем функцию
-const { getPrintedHonestSign } = require('./controllers/printedHSController.js'); // Импортируем функцию
-const { compareFiles } = require('./utils/compareFiles.js'); // Импортируем функцию
-// const { kyz } = require('./controllers/kyzController.js'); // Импортируем функцию
+// const mysql = require('mysql2');
+// const iconv = require('iconv-lite');
 
-
+////////////////// Импортируем функции //////////////////////
+const { getInfoAboutAllHonestSign } = require('./controllers/infoHSController.js');
+const { getPrintedHonestSign } = require('./controllers/printedHSController.js');
+const { getCategoryByModel, getTableName } = require('./controllers/models.js');
+const { compareFiles } = require('./utils/compareFiles.js');
+const initializeLogger = require('./controllers/logStream.js');
+// const { general_article, get_article } = require('./models/scriptsArticles.js');
+// const { kyz } = require('./controllers/kyzController.js');
 
 app.use(cors());
 app.use(express.json());
+initializeLogger();
 const util = require('util');
 const execCommand = util.promisify(exec);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend/build')));
-}
-  
+} 
 
 // Для работы с сокетами
 const http = require('http');
@@ -44,13 +46,13 @@ const  { Server } = require('socket.io');
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    methods: ['GET', 'POST'],       // Разрешенные методы
+    methods: ['GET', 'POST'],
   }
 });
+
 io.on('connection', (socket) => {
   console.log('Client connected');
 });
-
 
 // Настройка multer для загрузки файлов
 const storage = multer.memoryStorage();
@@ -155,7 +157,6 @@ app.post('/api/models/add', async (req, res) => {
 
 async function mergePDFs(pdfPaths) {
   const mergedPdf = await PDFDocument.create(); // Создаём новый PDF-документ
-	console.log('Проверка 4: ', pdfPaths);
   for (const pdfPath of pdfPaths) {
     const pdfBytes = fs.readFileSync(pdfPath); // Читаем содержимое каждого PDF-файла
     const pdfDoc = await PDFDocument.load(pdfBytes); // Загружаем PDF-документ
@@ -181,46 +182,6 @@ function extractSizeFromPath(filePath) {
   return match ? parseInt(match[1], 10) : null; // Возвращаем число или null, если не найдено
 }
 
-// Получение ЧЗ для финального скачивания документов
-app.post('/api/getlineToFinishDocument', (req, res) => {
-  const { kyz, size, brand } = req.body;
-  // Валидация входных данных
-  if (!kyz || !size || !brand) {
-    return res.status(400).json({ error: 'Некорректные входные данные' });
-  }
-  const sql = 'SELECT data FROM lines WHERE line = ? AND size = ? AND brand = ?';
-  pool.query(sql, [kyz, size, brand], (error, result) => {
-    if (error) {
-      console.error('Ошибка запроса:', error);
-      res.status(500).json({ error: 'Ошибка запроса' });
-      return;
-    }
-    if (!result) {
-      return res.status(404).json({ error: 'Данные не найдены' });
-    }
-    res.setHeader('Content-Type', 'application/pdf');
-    res.send(result.data);
-  });
-});
-
-// Сохранение информации о поставке в базе данных SaveDataAboutDelivery
-app.post('/api/SaveDataKyzToDB', (req, res) => {
-  const { date, delivery, quantity } = req.body;
-  if (typeof delivery !== 'string') {
-    return res.status(400).json({ error: 'Delivery must be a string' });
-  }
-  const stmt = saveDataAboutDelivery.prepare('INSERT INTO DeliveryData (date, delivery, quantity) VALUES (?, ?, ?)');
-  stmt.query(date, delivery, quantity, function (err) {
-    if (err) {
-      console.error('Ошибка при выполнении запроса', err);
-      res.status(500).json({ error: 'Ошибка при выполнении запроса' });
-    } else {
-      res.status(200).json({ message: 'Data added successfully', id: this.lastID });
-    }
-  });
-  stmt.finalize();
-});
-
 app.post('/api/CheckUser', async (req, res) => {
   const { user } = req.body;
   try {
@@ -240,87 +201,6 @@ app.post('/api/CheckUser', async (req, res) => {
   }
 });
 
-app.post('/api/FindHonestSign', async (req, res) => {
-  const { model, size, crypto, brand, placePrint } = req.body;
-  if (!model || !size || !crypto) {
-    res.send('Данные указаны неправильно')
-    res.status(500).send('Ошибка базы данных');
-    return
-  }
-  try {
-    const [rows] = await pool.execute(
-      'SELECT * FROM honestsignfordeliverytest WHERE Model = ? AND Size = ? AND Crypto = ? AND Locked = 1 AND Status = "Used" AND Brand = ?',
-      [model, size, crypto, brand]
-    );
-
-    if (rows.length > 0) {
-      if (rows[0].PDF) {
-        const pdfPath = path.join(__dirname, `outputt.pdf`);
-        fs.writeFileSync(pdfPath, rows[0].PDF);
-        printPDF(pdfPath, 'honestSign', placePrint);
-      } else {
-      }
-    } else {
-      res.status(404).send('Честный знак не найден');
-    }
-  } catch (err) {
-    console.error('Ошибка базы данных:', err);
-    res.status(500).send('Ошибка базы данных');
-  }
-});
-
-app.post('/api/getAllHonestSign', async (req, res) => {
-  const { brand } = req.body;
-
-  try {
-    const [rows] = await pool.execute(
-      'SELECT * FROM honestsignfordeliverytest WHERE Locked = 0 AND Status = "Waiting" AND Brand = ?',
-      [brand]
-    );
-    console.log('643')
-    if (rows.length > 0) {
-      console.log('745');
-      const mergedPdf = await PDFDocument.create();
-
-      for (const row of rows) {
-        if (row.PDF) {
-          const pdf = await PDFDocument.load(row.PDF);
-          const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-          copiedPages.forEach((page) => {
-            mergedPdf.addPage(page);
-          });
-          console.log();
-        }
-      }
-      const mergedPdfBytes = await mergedPdf.save();
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename=merged_output.pdf');
-      res.send(Buffer.from(mergedPdfBytes));
-    } else {
-      console.log('!!!');
-      res.status(404).send('Нет данных для указанного бренда');
-    }
-  } catch (err) {
-    console.error('Ошибка базы данных:', err);
-    res.status(500).send('Ошибка базы данных');
-  }
-});
-
-// Обновление статуса киза
-app.put('/api/kyzUpdatestatus', (req, res) => {
-  const { line, dateNow } = req.body;
-  const stmt = MainDbForKyz.prepare("UPDATE lines SET Status = 'Used', created_at = ? WHERE line = ?");
-  stmt.run(dateNow, line, function (err) {
-    if (err) {
-      console.error('Error during update:', err);
-      res.status(500).json({ message: 'Database error', error: err });
-    } else {
-      res.json({ message: 'Status updated successfully', changes: this.changes });
-    }
-  });
-  stmt.finalize();
-});
-
 function convertDateToServerFormat(clientDate) {
   // Разделение даты и времени
   const [datePart, timePart] = clientDate.split(' ');
@@ -337,16 +217,19 @@ function convertDateToServerFormat(clientDate) {
 
 // Обновление статуса киза
 app.put('/api/returnKyz', async (req, res) => {
-  let {                     Brand,
+
+  let {
+    Brand,
     user,
     placePrint,
     date,
     Model,
     Size,
-} = req.body;
+  } = req.body;
+
   let mainBrand;
   let tableName;
-  console.log(Brand, user, placePrint, date, Model, Size)
+  
   if (placePrint == 'Тест') {
     tableName = 'delivery_test';
   } else if (Brand === 'Ozon (Armbest)' || Brand == 'Ozon Armbest') {
@@ -398,6 +281,7 @@ app.put('/api/returnKyz', async (req, res) => {
     }
   };
 
+
   const serverDate = convertDateToServerFormat(date);
   console.log(tableName, Brand, placePrint, serverDate, user, Model, Size);
 
@@ -424,76 +308,18 @@ app.post('/uploadNewKyz', upload.single('file'), async (req, res) => {
       return res.status(400).send({ message: 'Файл не загружен.' });
     }
 
-    const fileName = req.file.originalname;
     const fileBuffer = req.file.buffer;
     const brandData = JSON.parse(req.body.brandData);
-    // const deliveryNumber = JSON.parse(req.body.deliveryNumber);
     const placePrint = JSON.parse(req.body.placePrint);
     const MultiModel = JSON.parse(req.body.MultiModel);
 
-    console.log("req.body: ", req.body);
-
-    await processPDF(fileBuffer, fileName, brandData, placePrint, io, MultiModel);
+    await processPDF(fileBuffer, brandData, placePrint, io, MultiModel);
     res.status(200).send({ message: 'Файл успешно загружен.' });
 
   } catch (err) {
     console.error('Error processing file:', err);
     res.status(500).send({ message: 'Ошибка загрузки файла.' });
   }
-});
-
-// Получение списка успешных доставок
-app.get('/api/getdeliveryinfo/:id', (req, res) => {
-  const deliveryId = req.params.id;
-  saveDataAboutDelivery.get('SELECT * FROM DeliveryData WHERE id = ?', [deliveryId], (err, row) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    if (!row) {
-      return res.status(404).json({ error: 'Delivery not found' });
-    }
-    res.status(200).json(row);
-  });
-});
-
-// Получить размер
-app.get('/api/getWbSizeArmbest', (req, res) => {
-  const skus = req.query.skus;
-  db.get(`SELECT tech_size FROM product_sizesArmbest WHERE skus = ?`, [skus], (err, row) => {
-    if (err) {
-      res.status(500).send(err);
-    } else if (row) {
-      res.json({ tech_size: row.tech_size });
-    } else {
-      res.status(404).send('Размер не найден');
-    }
-  });
-});
-
-app.get('/api/getWbSizeBest26', (req, res) => {
-  const skus = req.query.skus;
-  db.get(`SELECT tech_size FROM product_sizesBest26 WHERE skus = ?`, [skus], (err, row) => {
-    if (err) {
-      res.status(500).send(err);
-    } else if (row) {
-      res.json({ tech_size: row.tech_size });
-    } else {
-      res.status(404).send('Размер не найден');
-    }
-  });
-});
-
-app.get('/api/getWbSizeBestShoes', (req, res) => {
-  const skus = req.query.skus;
-  db.get(`SELECT tech_size FROM product_sizesBestShoes WHERE skus = ?`, [skus], (err, row) => {
-    if (err) {
-      res.status(500).send(err);
-    } else if (row) {
-      res.json({ tech_size: row.tech_size });
-    } else {
-      res.status(404).send('Размер не найден');
-    }
-  });
 });
 
 let activeRequests = {};
@@ -515,7 +341,6 @@ app.use((req, res, next) => {
 });
 
 app.get('/getBrandsData', async (req, res) => {
-  console.log('Запрос на сервер');
 
   const queries = [
     { brand: 'Armbest (Новая)', table: 'product_sizesbestshoes' },
@@ -527,8 +352,7 @@ app.get('/getBrandsData', async (req, res) => {
 
   try {
     const results = await Promise.all(queries.map(async query => {
-      const sql = `SELECT article, GROUP_CONCAT(size) AS sizes FROM products GROUP BY article`;
-
+      const sql = `SELECT DISTINCT article, GROUP_CONCAT(size) AS sizes FROM products GROUP BY article, company_name`;
       const [rows] = await pool.query(sql);
 
       if (rows.length === 0) {
@@ -573,31 +397,51 @@ const writePDFs = async (rows) => {
   };
 
 app.post('/kyz', async (req, res) => {
-    let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign, printerForBarcode } = req.body;
-    
-    const brandMappings = {
-      'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
-      'Ozon (BestShoes)': { name: 'Ozon BestShoes', table: 'delivery_bestshoes_ozon_' },
-      'Armbest (Новая)': { name: 'Armbest', table: 'delivery_armbest_' },
-      'BestShoes (Старая)': { name: 'BestShoes', table: 'delivery_bestshoes_' },
-      'BestShoes': { name: 'BestShoes', table: 'delivery_bestshoes_' },
-      'Best26 (Арташ)': { name: 'Best26', table: 'delivery_best26_' },
-    };
+    let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign } = req.body;
+    // const brandMappings = {
+    //   'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
+    //   'Ozon (BestShoes)': { name: 'Ozon BestShoes', table: 'delivery_bestshoes_ozon_' },
+    //   'Armbest (Новая)': { name: 'Armbest', table: 'delivery_armbest_' },
+    //   'BestShoes (Старая)': { name: 'BestShoes', table: 'delivery_bestshoes_' },
+    //   'BestShoes': { name: 'BestShoes', table: 'delivery_bestshoes_' },
+    //   'Best26 (Арташ)': { name: 'Best26', table: 'delivery_best26_' },
+    // };
   
+    // const placeMappings = {
+    //   'Тест': 'delivery_test',
+    //   'Пятигорск': 'pyatigorsk',
+    //   'Лермонтово': 'lermontovo',
+    // };
+    
     const placeMappings = {
       'Тест': 'delivery_test',
       'Пятигорск': 'pyatigorsk',
       'Лермонтово': 'lermontovo',
     };
+
+    const brands = {
+        'Ozon (Armbest)': 'armbest',
+        'Ozon (BestShoes)': 'bestshoes',
+        'Armbest (Новая)': 'armbest',
+        'BestShoes (Старая)': 'bestshoes',
+        'Best26 (Арташ)': 'best26',
+    };
   
-    const brandDetails = brandMappings[selectedBrand];
-    let tableName = placePrint === 'Тест' 
-      ? placeMappings['Тест'] 
-      : typeof brandDetails.table === 'function' 
-        ? brandDetails.table(placePrint) 
-        : `${brandDetails.table}${placeMappings[placePrint]}`;
-    const normalizedBrand = brandDetails.name;
-  
+    const brandDetails = brands[selectedBrand];
+    let tableName;
+
+    if (placePrint === 'Тест') {
+        tableName = placeMappings['Тест'];
+    } else {
+        const category = getCategoryByModel(filledInputs[0]?.model); // Определяем категорию первой модели
+        tableName = getTableName(brandDetails, category);
+        if (!tableName) {
+            return res.status(400).json({ error: 'Не удалось определить таблицу для данной модели.' });
+        }
+        tableName = `${tableName}`;
+    }
+    const normalizedBrand = selectedBrand.split(' ')[0];
+    
     if (!tableName || !normalizedBrand) {
       return res.status(400).json({ error: 'Некорректные данные о бренде или месте печати.' });
     }
@@ -607,52 +451,50 @@ app.post('/kyz', async (req, res) => {
     const pdfPaths = [];
   
     try {
-      const allPromises = filledInputs.map(async (input) => {
-        const { size, model, value } = input;
-        const count = Number(value);
-        const formattedModel = ['Armbest'].includes(normalizedBrand) ? 'ЭВА' : model;
-  
-        console.log(`Обработка модели "${model}", размера "${size}" для бренда "${normalizedBrand}". Требуется: ${count}`);
-  
-        // Запрос к базе данных для текущего размера
-        const [waitingRows] = await pool.query(
-            `SELECT PDF, id, Model, Size, Crypto FROM \`${tableName}\` 
-            WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = "Waiting"
-            AND \`Model\` = ? AND \`Locked\` = 0
-            LIMIT ?`,
-            [size, normalizedBrand, formattedModel, count]
-        );
-  
-        if (waitingRows.length < count) {
-          shortageInfo.push({ model, size, brand: normalizedBrand, required: count, available: waitingRows.length });
-          console.warn(`Недостаточно записей для модели "${model}", размера "${size}". Требуется: ${count}, доступно: ${waitingRows.length}`);
-          return;
+        const allPromises = await filledInputs.map(async (input) => {
+          const { size, model, value } = input;
+          const count = Number(value);
+          if (isNaN(count) || count <= 0) {
+            console.error(`Некорректное значение "value" для модели "${model}", размера "${size}".`);
         }
-  
-        successfulSign.push({ model, size, brand: normalizedBrand, required: count, available: waitingRows.length });
-  
-        const rowIds = waitingRows.slice(0, count).map(row => row.id);
-  
-        // Запись PDF
-        const newPdfPaths = await writePDFs(waitingRows.slice(0, count));
-        pdfPaths.push(...newPdfPaths);
-  
-        // Обновление статуса
-        await pool.query(
-            `UPDATE \`${tableName}\`
-             SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ?
-             WHERE \`id\` IN (?) AND \`Status\` = "Waiting" AND \`Locked\` = 0`,
-            ['Used', getFormattedDateTime(), user, rowIds.flat()]
+          // const formattedModel = ['Armbest'].includes(normalizedBrand) ? 'ЭВА' : model;
+          console.log(`Обработка модели "${model}", размера "${size}" для бренда "${normalizedBrand}". Требуется: ${count}. tableName: ${tableName}`);
+    
+          // Запрос к базе данных для текущего размера
+          const [waitingRows] = await pool.query(
+              `SELECT PDF, id, Model, Size, Crypto FROM \`${tableName}\` 
+              WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = 'Waiting'
+              AND \`Model\` = ? AND \`Locked\` = 0
+              LIMIT ?`,
+              [size, normalizedBrand, model, count]
           );
-      });
+          if (waitingRows.length <= 0) {
+              shortageInfo.push({ model, size, brand: normalizedBrand, required: count, available: waitingRows.length });
+              console.log(`Недостаточно записей для модели "${model}", размера "${size}". Требуется: ${count}, доступно: ${waitingRows.length}`);
+          } else if (waitingRows.length >= count) {
+              successfulSign.push({ model, size, brand: normalizedBrand, required: count, available: waitingRows.length });
+              const rowIds = waitingRows.slice(0, count).map(row => row.id);
+      
+              // Запись PDF
+              const newPdfPaths = await writePDFs(waitingRows.slice(0, count));
+              pdfPaths.push(...newPdfPaths);
+              console.log(waitingRows.length);
   
+              // Обновление статуса
+              await pool.query(
+                  `UPDATE \`${tableName}\`
+                  SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ?
+                  WHERE \`id\` IN (?) AND \`Status\` = "Waiting" AND \`Locked\` = 0`,
+                  ['Used', getFormattedDateTime(), user, rowIds.flat()]
+              );
+            }
+
+      });
+      
       await Promise.all(allPromises);
   
-      if (shortageInfo.length > 0) {
-        console.log('Нехватка ЧЗ:', shortageInfo);
-      }
-  
       if (pdfPaths.length > 0) {
+        await Promise.all(allPromises);
         pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
         const mergedPdfPath = await mergePDFs(pdfPaths);
         printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
@@ -669,34 +511,34 @@ app.post('/kyz', async (req, res) => {
 });
   
 // Мое добро на добавление номеров поставок
-app.post('/addDelivery', async (req, res) => {
-  const { deliverynumber } = req.body;
-  console.log("Запрос ")
-  try {
-    await pool.query('INSERT INTO honestsignfordeliverytest (deliverynumber) VALUES (?)', [deliverynumber])
-    res.status(200).send({ message: 'Поставка добавлена успешно' });
-  } catch (error) {
-    console.error('Ошибка добавления поставки:', error);
-    res.status(500).send({ error: 'Ошибка добавления поставки' });
-  }
-})
+// app.post('/addDelivery', async (req, res) => {
+//   const { deliverynumber } = req.body;
+//   console.log("Запрос ")
+//   try {
+//     await pool.query('INSERT INTO honestsignfordeliverytest (deliverynumber) VALUES (?)', [deliverynumber])
+//     res.status(200).send({ message: 'Поставка добавлена успешно' });
+//   } catch (error) {
+//     console.error('Ошибка добавления поставки:', error);
+//     res.status(500).send({ error: 'Ошибка добавления поставки' });
+//   }
+// })
 
-app.post('/api/checkDelivery', async (req, res) => {
-  console.log('/api/checkDelivery')
-  const { deliverynumber } = req.body;
-  console.log(deliverynumber)
-  try {
-    const [rows] = await pool.query('SELECT 1 FROM honestsignfordeliverytest WHERE deliverynumber = ?', [deliverynumber]);
-    if (rows.length > 0) {
-      res.status(200).send({ exists: true });
-    } else {
-      res.status(200).send({ exists: false });
-    }
-  } catch (error) {
-    console.error('Ошибка проверки поставки:', error);
-    res.status(500).send({ error: 'Ошибка проверки поставки' });
-  }
-});
+// app.post('/api/checkDelivery', async (req, res) => {
+//   console.log('/api/checkDelivery')
+//   const { deliverynumber } = req.body;
+//   console.log(deliverynumber)
+//   try {
+//     const [rows] = await pool.query('SELECT 1 FROM honestsignfordeliverytest WHERE deliverynumber = ?', [deliverynumber]);
+//     if (rows.length > 0) {
+//       res.status(200).send({ exists: true });
+//     } else {
+//       res.status(200).send({ exists: false });
+//     }
+//   } catch (error) {
+//     console.error('Ошибка проверки поставки:', error);
+//     res.status(500).send({ error: 'Ошибка проверки поставки' });
+//   }
+// });
 
 // Функция для печати PDF файла
 async function printPDF(filePath, type, placePrint) {
@@ -722,36 +564,36 @@ async function printPDF(filePath, type, placePrint) {
 
 }
 
-app.get('/getApiById', async (req, res) => {
-  const { id, company_name, category } = req.query; // Извлечение параметров запроса
+// app.get('/getApiById', async (req, res) => {
+//   const { id, company_name, category } = req.query; // Извлечение параметров запроса
 
-  try {
-    const today = new Date(); // Текущая дата
-    // Запрос для получения токена и даты истечения подписки
-    const [rows] = await db.query(
-      `SELECT token, expiration_date FROM apitokens 
-           WHERE id = ? AND company_name = ? AND category = ?`,
-      [id, company_name, category]
-    );
+//   try {
+//     const today = new Date(); // Текущая дата
+//     // Запрос для получения токена и даты истечения подписки
+//     const [rows] = await db.query(
+//       `SELECT token, expiration_date FROM apitokens 
+//            WHERE id = ? AND company_name = ? AND category = ?`,
+//       [id, company_name, category]
+//     );
 
-    if (rows.length > 0) {
-      const { token, expiration_date } = rows[0];
-      // Преобразуем expiration_date в объект Date
-      const expirationDate = new Date(expiration_date);
-      // Проверяем дату истечения подписки
-      if (expirationDate > today) {
-        res.json({ token });
-      } else {
-        res.status(404).json({ error: 'Подписка истекла' });
-      }
-    } else {
-      res.status(404).json({ error: 'Информация не найдена' });
-    }
-  } catch (err) {
-    console.error('Ошибка выполнения запроса:', err.message);
-    res.status(500).json({ error: 'Ошибка выполнения запроса' });
-  }
-});
+//     if (rows.length > 0) {
+//       const { token, expiration_date } = rows[0];
+//       // Преобразуем expiration_date в объект Date
+//       const expirationDate = new Date(expiration_date);
+//       // Проверяем дату истечения подписки
+//       if (expirationDate > today) {
+//         res.json({ token });
+//       } else {
+//         res.status(404).json({ error: 'Подписка истекла' });
+//       }
+//     } else {
+//       res.status(404).json({ error: 'Информация не найдена' });
+//     }
+//   } catch (err) {
+//     console.error('Ошибка выполнения запроса:', err.message);
+//     res.status(500).json({ error: 'Ошибка выполнения запроса' });
+//   }
+// });
 
 app.get('/api/report', async (req, res) => {
   const { brand } = req.query;

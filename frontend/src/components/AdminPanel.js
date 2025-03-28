@@ -174,116 +174,68 @@ const AdminPanel = () => {
         setPdfFile(e.target.files[0]);
     };
 
+    const toggleBrandinfoaddreturn = () => {
+        
+        const url1 = new URL(`http://localhost:6501/api/printedHonestSign`);
+        url1.searchParams.append('placePrint', localStorage.getItem('placePrint'));
+        fetch(url1)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Ошибка сети!');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setPrintItems(data)
+            })
+            .catch((error) => console.error('Ошибка при получении данных:', error));
+
+        const url = new URL(`http://localhost:6501/api/InfoAboutAllHonestSign`);
+        url.searchParams.append('placePrint', localStorage.getItem('placePrint'));
+        url.searchParams.append('brand', brend);
+
+        fetch(url)
+        .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Ошибка сети');
+                }
+                return response.json();
+        })
+        .then((data) => {
+            const brandGet = {};
+            data.forEach(item => {
+                if (!brandGet[item.Brand]) {
+                    brandGet[item.Brand] = { totalQuantity: 0, models: [] };
+                }
+                brandGet[item.Brand].totalQuantity += item.quantity;
+                brandGet[item.Brand].models.push({
+                    model: item.Model,
+                    size: item.Size,
+                    quantity: item.quantity,
+                });
+            });
+            setInfoAboutHonestSing(brandGet);
+        })
+        .catch((error) => console.error('Ошибка при получении данных:', error));
+    }
+    
     const handleLogin = (e) => {
         e.preventDefault();
         if (username === 'best' && password === 'best') {
             setError('')
             setStatusAdmin(prevState => !prevState);
-
-            const url1 = new URL(`http://localhost:6501/api/printedHonestSign`);
-            url1.searchParams.append('placePrint', localStorage.getItem('placePrint'));
-            fetch(url1)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Ошибка сети!');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    setPrintItems(data)
-                })
-                .catch((error) => console.error('Ошибка при получении данных:', error));
-
-
-            const url = new URL(`http://localhost:6501/api/InfoAboutAllHonestSign`);
-            url.searchParams.append('placePrint', localStorage.getItem('placePrint'));
-            url.searchParams.append('brand', brend);
-            // url.searchParams.append('deliveryNumber', deliveryNumber)
-
-            fetch(url)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Ошибка сети');
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    const brandGet = {};
-                    data.forEach(item => {
-                        if (!brandGet[item.Brand]) {
-                            brandGet[item.Brand] = { totalQuantity: 0, models: [] };
-                        }
-                        brandGet[item.Brand].totalQuantity += item.quantity;
-                        brandGet[item.Brand].models.push({
-                            model: item.Model,
-                            size: item.Size,
-                            quantity: item.quantity,
-                            // deliverynumber: item.deliverynumber
-                        });
-                    });
-                    setInfoAboutHonestSing(brandGet);
-                })
-                .catch((error) => console.error('Ошибка при получении данных:', error));
         } else {
             setError('Неправильный логин или пароль');
         }
     };
 
-    const getAllHonestSign = async (e) => {
-        e.preventDefault();
-        const conf = confirm(`Вы уверены, что хотите вернуть весь честный знак для ${brend}`); //  с поставки №" ${deliveryNumber}
-        if (!conf) {
-            return;
-        }
-        const dataAboutSign = {
-            brand: brend,
-            // deliveryNumber: deliveryNumber
-        }
-
-        try {
-            const response = await fetch(`http://localhost:6501/api/getAllHonestSign`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataAboutSign),
-            })
-
-            document.querySelector('.modal-background-loader').style.display = 'flex'
-            if (response.ok) {
-                // Читаем данные PDF как Blob
-                const blob = await response.blob();
-                // Создаем URL для скачивания файла
-                const url = window.URL.createObjectURL(new Blob([blob]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'merged_output.pdf'); // Имя сохраняемого файла
-                document.querySelector('.modal-background-loader').style.display = 'none'
-                // Добавляем ссылку в документ и имитируем клик для скачивания
-                document.body.appendChild(link);
-                link.click();
-                // Удаляем ссылку после скачивания
-                link.parentNode.removeChild(link);
-            } else {
-                alert('Ошибка при возвращении PDF');
-            }
-        } catch (err) {
-            console.error('Ошибка:', err);
-        }
-    }
-
     const addNewKyz = async (e) => {
         e.preventDefault();
-
         setError('')
         let question;
-        // if (deliveryNumber.trim() == '') {
-        //     alert('Введите номер поставки');
-        //     return;
-        // }
-
         if (brend === 'Armbest' || brend === 'BestShoes' || brend === 'Best26' || brend === 'OZON') {
             console.log('brend:', brend)
             question = confirm(`Согласны добавить КИЗ на, ${brend}`); // , в поставку №, ${deliveryNumber}
-            // Логика перехода в панель администратора
         } else if (brend == '') {
             alert('Выберите фирму на которую хотите добавить честный знак и попробуйте еще раз.')
             return;
@@ -300,7 +252,6 @@ const AdminPanel = () => {
         formData.append('file', pdfFile);
         console.log(brend)
         formData.append('brandData', JSON.stringify(brend));
-        // formData.append('deliveryNumber', JSON.stringify(deliveryNumber));
         formData.append('placePrint', JSON.stringify(placePrint));
         formData.append('MultiModel', JSON.stringify(addMultiModel));
         
@@ -478,16 +429,16 @@ const AdminPanel = () => {
                     <div className="category-block">
                         <div className="tabs">
                             <button
-                                className={`tab-button ${activeTab === 'remaining-signs' ? 'active' : ''}`}
+                                className={`tab-button active`}
                                 onClick={() => setActiveTab('remaining-signs')}
                             >
                                 Количество оставшихся знаков
                             </button>
                             <button
-                                className={`tab-button ${activeTab === 'info-add-return' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('info-add-return')}
+                                className={`tab-button`}
+                                onClick={() => toggleBrandinfoaddreturn()}
                             >
-                                Информация о добавлении и возврате знаков
+                                Обновить список
                             </button>
                         </div>
 
@@ -565,12 +516,6 @@ const AdminPanel = () => {
                                         </li>
                                     ))}
                                 </ul>
-                            </div>
-                        )}
-
-                        {activeTab === 'info-add-return' && (
-                            <div className="content">
-                                <p>Здесь будет информация о добавлении и возврате знаков.</p>
                             </div>
                         )}
                     </div>
@@ -762,7 +707,6 @@ const AdminPanel = () => {
                                     <th style={tableHeaderStyle}>Шт.</th>
                                     <th style={tableHeaderStyle}>Время</th>
                                     <th style={tableHeaderStyle}>Отв.</th>
-                                    <th style={tableHeaderStyle}>Пост.</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -774,7 +718,6 @@ const AdminPanel = () => {
                                         <td style={tableCellStyle}>{item.quantity}</td>
                                         <td style={tableCellStyle}>{item.date}</td>
                                         <td style={tableCellStyle}>{item.user}</td>
-                                        <td style={tableCellStyle}>{item.deliverynumber}</td>
                                         <td style={tableCellStyle}>
                                             <button
                                                 className="buttonReturnSign"
@@ -834,7 +777,6 @@ const AdminPanel = () => {
                             </Button>
 
                             <div className={`${CheckStatus ? 'Admin' : 'NonAdmin'} admin-functions`}>
-                                {/* <button className="btn-action" onClick={getAllHonestSign}>Вернуть честный знак для Маркетплейса</button> */}
                                 <article className="add-section">
                                     <h2 className="admin-title">Добавление честного знака</h2>
                                     <ReportGenerator setSelectedCompany={handleCompanySelection} />
