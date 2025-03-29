@@ -300,6 +300,24 @@ app.put('/api/returnKyz', async (req, res) => {
   }
 });
 
+// Функция для разделения PDF на части
+async function splitPDFIntoChunks(pdfBytes, chunkSize = 500) {
+  const pdfDoc = await PDFDocument.load(pdfBytes);
+  const totalPages = pdfDoc.getPageCount();
+  const chunks = [];
+
+  for (let startPage = 0; startPage < totalPages; startPage += chunkSize) {
+    const endPage = Math.min(startPage + chunkSize, totalPages);
+    const newPdfDoc = await PDFDocument.create();
+    const copiedPages = await newPdfDoc.copyPages(pdfDoc, Array.from({ length: endPage - startPage }, (_, i) => startPage + i));
+    copiedPages.forEach(page => newPdfDoc.addPage(page));
+    const chunkBytes = await newPdfDoc.save();
+    chunks.push(chunkBytes);
+  }
+
+  return chunks, totalPages;
+}
+
 // Загрузка нового киза
 app.post('/uploadNewKyz', upload.single('file'), async (req, res) => {
   try {
@@ -312,8 +330,16 @@ app.post('/uploadNewKyz', upload.single('file'), async (req, res) => {
     const brandData = JSON.parse(req.body.brandData);
     const placePrint = JSON.parse(req.body.placePrint);
     const MultiModel = JSON.parse(req.body.MultiModel);
+    
+    const pdfBytes = new Uint8Array(fileBuffer);
+    const { chunks, totalPages } = await splitPDFIntoChunks(pdfBytes, 500);
 
-    await processPDF(fileBuffer, brandData, placePrint, io, MultiModel);
+    for (let i = 0; i < chunks.length; i++) {
+      const chunkBytes = chunks[i];
+      console.log(`Обработка части ${i + 1} из ${chunks.length}`);
+      await processPDF(chunkBytes, brandData, placePrint, io, MultiModel, totalPages);
+    }
+    
     res.status(200).send({ message: 'Файл успешно загружен.' });
 
   } catch (err) {

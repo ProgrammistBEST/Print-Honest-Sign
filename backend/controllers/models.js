@@ -41,7 +41,7 @@ function getTableName(brand, category) {
     not_defined: `${brand}_not_defined`,
   };
 
-  return tableMapping[category] || null; // Возвращаем имя таблицы или null, если категория не найдена
+  return tableMapping[category] || null;
 }  
 
 module.exports = { getCategoryByModel, getTableName };

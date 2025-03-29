@@ -238,117 +238,93 @@ async function splitPDFIntoChunks(pdfBytes, chunkSize = 500) {
 
   return chunks;
 }
-
-
-
+let pageForLoadingHonestSign = 0;
 // Функция обработки PDF
-async function processPDF(fileBuffer, brandData, placePrint, io, MultiModel) {
+async function processPDF(fileBuffer, brandData, placePrint, io, MultiModel, totalPages) {
   try {
+    const data = new Uint8Array(fileBuffer);
+    const { extractedTexts } = await extractTextFromPDF(data);
+
+    // subscribers.forEach(chatId => {
+    //   let message = `Запущена загрузка честного знака на ${brandData} в количестве ${extractedTexts.length} шт.`;
+    //   // bot.telegram.sendMessage(chatId, message);
+    //   console.log(message)
+    // });
+
     const pdfBytes = new Uint8Array(fileBuffer);
-    const chunks = await splitPDFIntoChunks(pdfBytes, 500);
-    const totalChunks = chunks.length;
-    let processedPages = 0;
-    
-    const pageSize = 100;
-    
-    for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-        const chunkBytes = chunks[chunkIndex];
-        const pdfDoc = await PDFDocument.load(chunkBytes);
-        const extractedTexts = await extractTextFromPDF(chunkBytes);
-        const arrayAddingModels = {};
-        let startPage = 0;
-        
-        while (startPage < extractedTexts.length) {
-            const pageDataList = await Promise.all(extractedTexts.slice(startPage, startPage + pageSize).map(async (text, pageIndex) => {
-            const linesArray = text.split('\n');
-            let Crypto = linesArray.filter(line => line.startsWith('(01)')).join('\n');
-            let Size = '';
-            let Model = '';
+    const pageSize = 50;
+    let startPage = 0;
 
-            if (linesArray.length > 1 && brandData == 'Armbest') {
-            const secondLine = linesArray[4] || '';
-            if (isValidSize(secondLine)) {
-                Size = secondLine;
-                Model = 'Multimodel';
-            } else {
-                Size = linesArray[2] || '';
-                Model = 'Multimodel';
-            }
-            } else if (linesArray.length > 1 && brandData == 'Best26') {
-            const secondLine = linesArray[4] || '';
-            const thirdLine = linesArray[2] || '';
-            if (isValidSize(secondLine)) {
-                Size = secondLine;
-                Model = thirdLine;
-            } else {
-                Size = linesArray[2] || '';
-                Model = thirdLine;
-            }
-            } else if (linesArray.length > 1 && brandData == 'BestShoes') {
-            const secondLine = linesArray[4] || '';
-            const thirdLine = linesArray[2] || '';
-            const modelLine = linesArray[0] || '';
-            if (isValidSize(secondLine)) {
-                Size = secondLine;
-                Model = modelLine;
-            } else {
-                Size = linesArray[2] || '';
-                Model = modelLine;
-            }
-            } else if (linesArray.length > 1 && brandData == 'Ozon Armbest' ||
-            linesArray.length > 1 && brandData == 'Ozon BestShoes') {
-            const secondLine = linesArray[4] || '';
-            const thirdLine = linesArray[2] || '';
-            if (isValidSize(secondLine)) {
-                Size = secondLine;
-                Model = thirdLine;
-            } else {
-                Size = linesArray[2] || '';
-                Model = 'Multimodel';
-            }
-            }
-            
-            if (MultiModel == true) {
-                Model = 'ЭВА';
-            }
-                    
-            if (!arrayAddingModels[Model]) {
-                arrayAddingModels[Model] = { count: 0, sizes: {} };
-            }
-            arrayAddingModels[Model].count += 1;
-            
-            if (!arrayAddingModels[Model].sizes[Size]) {
-                arrayAddingModels[Model].sizes[Size] = 0;
-            }
-            arrayAddingModels[Model].sizes[Size] += 1;
-            
-            const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
-                    
-            io.emit('upload_status', {
-                progress,
-                message: `Загружено ${processedPages} из ${extractedTexts.length}`,
-                placePrint,
-                arrayAddingModels,
-            });
+    while (startPage < extractedTexts.length) {
+      pageForLoadingHonestSign += 1;
+      const pageDataList = await Promise.all(extractedTexts.slice(startPage, startPage + pageSize).map(async (text, pageIndex) => {
+        const linesArray = text.split('\n');
+        let Crypto = linesArray.filter(line => line.startsWith('(01)')).join('\n');
+        let Size = '';
+        let Model = '';
+        const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
+        io.emit('upload_status', { progress, message: `Загружено ${startPage} из ${totalPages}` });
 
-            // Создаем новый PDF-документ с одной страницей
-            const pageBytes = await createSinglePagePDF(chunkBytes, startPage + pageIndex);
-            console.log('5');
-            return { pageData: pageBytes, pageNumber: startPage + pageIndex + 1, Crypto, Size, Model };
-        
-        }));
-        
-        // Записываем данные в базу данных
-        await saveAllDataToDB(pool, pageDataList, brandData, placePrint);
-        
-        // Перемещаемся к следующей порции страниц
-        startPage += pageSize;
-        processedPages += pageSize;
-
-        console.log(startPage)  
+        if (linesArray.length > 1 && brandData == 'Armbest') {
+          const secondLine = linesArray[4] || '';
+          if (isValidSize(secondLine)) {
+            Size = secondLine;
+            Model = 'Multimodel';
+          } else {
+            Size = linesArray[2] || '';
+            Model = 'Multimodel';
+          }
+        } else if (linesArray.length > 1 && brandData == 'Best26') {
+          const secondLine = linesArray[4] || '';
+          const thirdLine = linesArray[2] || '';
+          if (isValidSize(secondLine)) {
+            Size = secondLine;
+            Model = thirdLine;
+          } else {
+            Size = linesArray[2] || '';
+            Model = thirdLine;
+          }
+        } else if (linesArray.length > 1 && brandData == 'BestShoes') {
+          const secondLine = linesArray[4] || '';
+          const thirdLine = linesArray[2] || '';
+          const modelLine = linesArray[0] || '';
+          if (isValidSize(secondLine)) {
+            Size = secondLine;
+            Model = modelLine;
+          } else {
+            Size = linesArray[2] || '';
+            Model = modelLine;
+          }
+        } else if (linesArray.length > 1 && brandData == 'Ozon Armbest' ||
+          linesArray.length > 1 && brandData == 'Ozon BestShoes') {
+          const secondLine = linesArray[4] || '';
+          const thirdLine = linesArray[2] || '';
+          if (isValidSize(secondLine)) {
+            Size = secondLine;
+            Model = thirdLine;
+          } else {
+            Size = linesArray[2] || '';
+            Model = 'Multimodel';
+          }
         }
-    }
+
+        // Создаем новый PDF-документ с одной страницей
+        const pageBytes = await createSinglePagePDF(pdfBytes, startPage + pageIndex);
+        return { pageData: pageBytes, pageNumber: startPage + pageIndex + 1, Crypto, Size, Model };
     
+      }));
+    
+      // Записываем данные в базу данных
+      await saveAllDataToDB(pool, pageDataList, brandData, placePrint);
+      // Перемещаемся к следующей порции страниц
+      startPage += pageSize;
+      console.log(startPage)
+    }
+    // subscribers.forEach(chatId => {
+    //   let message = `Для ${brandData} добавлено ${extractedTexts.length} шт. честного знака.`;
+    //   // bot.telegram.sendMessage(chatId, message);
+    //   console.log(message)
+    // });
     io.emit('upload_status', { progress: 100, message: 'Загрузка завершена!' });
 
   } catch (err) {
