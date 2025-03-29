@@ -1,0 +1,471 @@
+[LOG] 2025-03-29T07:07:35.954Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:07:35.960Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:07:42.729Z: delivery_test Best26 Тест 2025-03-29 10:05:03 Администратор 10 45
+[LOG] 2025-03-29T07:07:48.512Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:07:48.517Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:10:06.418Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T07:10:06.419Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T07:10:06.437Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T07:10:06.438Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T07:10:06.534Z: Client connected
+[LOG] 2025-03-29T07:10:06.581Z: Client connected
+[LOG] 2025-03-29T07:10:36.730Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T07:10:36.732Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T07:10:36.752Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T07:10:36.752Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T07:10:36.850Z: Client connected
+[LOG] 2025-03-29T07:10:54.538Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T07:10:54.540Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T07:10:54.557Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T07:10:54.557Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T07:10:54.651Z: Client connected
+[LOG] 2025-03-29T07:10:56.396Z: Client connected
+[LOG] 2025-03-29T07:10:57.948Z: delivery_test Best26 Тест 2025-03-29 10:05:03 Администратор 10 42
+[LOG] 2025-03-29T07:11:00.235Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:11:00.240Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:11:11.014Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:11:11.015Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:11:13.272Z: delivery_test Best26 Тест 2025-03-29 10:05:03 Администратор 10 44
+[LOG] 2025-03-29T07:11:14.013Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:11:14.019Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:11:18.937Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:11:18.938Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:12:17.924Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T07:12:17.925Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T07:12:17.942Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T07:12:17.943Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T07:12:18.070Z: Client connected
+[LOG] 2025-03-29T07:12:18.110Z: Client connected
+[LOG] 2025-03-29T07:16:28.795Z: Обработка модели "10", размера "42" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T07:16:28.797Z: Обработка модели "10", размера "44" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T07:16:28.798Z: Обработка модели "10", размера "45" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T07:16:29.901Z: 45
+[LOG] 2025-03-29T07:16:29.927Z: 45
+[LOG] 2025-03-29T07:16:29.931Z: 45
+[LOG] 2025-03-29T07:16:30.916Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.10.16.30merged.pdf
+[LOG] 2025-03-29T07:16:30.916Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.10.16.30merged.pdf" "EPSON2AF3CE (L3250 Series)" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.10.16.30merged.pdf
+[LOG] 2025-03-29T07:16:38.360Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:16:38.362Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:17:16.892Z: delivery_test Best26 Тест 2025-03-29 10:16:29 Администратор 10 44
+[LOG] 2025-03-29T07:17:17.937Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:17:17.938Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:17:20.290Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:17:20.292Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:17:23.201Z: delivery_test Best26 Тест 2025-03-29 10:16:29 Администратор 10 45
+[LOG] 2025-03-29T07:17:25.315Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:17:25.316Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:17:27.349Z: delivery_test Best26 Тест 2025-03-29 10:16:29 Администратор 10 42
+[LOG] 2025-03-29T07:17:28.906Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:17:28.908Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:17:41.663Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T07:17:41.665Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T07:17:41.683Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T07:17:41.683Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T07:17:41.779Z: Client connected
+[LOG] 2025-03-29T07:17:41.849Z: Client connected
+[LOG] 2025-03-29T07:17:49.830Z: Обработка модели "10", размера "41" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T07:17:49.830Z: Обработка модели "10", размера "42" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T07:17:49.831Z: Обработка модели "10", размера "43" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T07:17:49.832Z: Обработка модели "10", размера "44" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T07:17:49.833Z: Обработка модели "10", размера "45" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T07:17:50.495Z: 45
+[LOG] 2025-03-29T07:17:50.551Z: 45
+[LOG] 2025-03-29T07:17:50.564Z: 45
+[LOG] 2025-03-29T07:17:50.758Z: Недостаточно записей для модели "10", размера "43". Требуется: 45, доступно: 0
+[LOG] 2025-03-29T07:17:50.759Z: Недостаточно записей для модели "10", размера "41". Требуется: 45, доступно: 0
+[LOG] 2025-03-29T07:17:51.757Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.10.17.51merged.pdf
+[LOG] 2025-03-29T07:17:51.758Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.10.17.51merged.pdf" "EPSON2AF3CE (L3250 Series)" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.10.17.51merged.pdf
+[LOG] 2025-03-29T07:18:08.287Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:18:08.288Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:20:45.416Z: Client connected
+[LOG] 2025-03-29T07:20:45.709Z: Client connected
+[LOG] 2025-03-29T07:20:49.873Z: Client connected
+[LOG] 2025-03-29T07:20:49.875Z: Client connected
+[LOG] 2025-03-29T07:20:53.679Z: Client connected
+[LOG] 2025-03-29T07:20:53.681Z: Client connected
+[LOG] 2025-03-29T07:20:54.921Z: Client connected
+[LOG] 2025-03-29T07:20:54.923Z: Client connected
+[LOG] 2025-03-29T07:21:19.867Z: Client connected
+[LOG] 2025-03-29T07:21:19.868Z: Client connected
+[LOG] 2025-03-29T07:21:22.584Z: Client connected
+[LOG] 2025-03-29T07:21:22.587Z: Client connected
+[LOG] 2025-03-29T07:21:24.610Z: Client connected
+[LOG] 2025-03-29T07:21:24.611Z: Client connected
+[LOG] 2025-03-29T07:21:26.413Z: Client connected
+[LOG] 2025-03-29T07:21:26.415Z: Client connected
+[LOG] 2025-03-29T07:21:27.657Z: Client connected
+[LOG] 2025-03-29T07:21:27.661Z: Client connected
+[LOG] 2025-03-29T07:21:29.044Z: Client connected
+[LOG] 2025-03-29T07:21:29.046Z: Client connected
+[LOG] 2025-03-29T07:21:31.643Z: Client connected
+[LOG] 2025-03-29T07:21:31.644Z: Client connected
+[LOG] 2025-03-29T07:21:33.023Z: Client connected
+[LOG] 2025-03-29T07:21:33.028Z: Client connected
+[LOG] 2025-03-29T07:21:43.256Z: delivery_test Best26 Тест 2025-03-29 10:17:50 Администратор 10 45
+[LOG] 2025-03-29T07:21:45.816Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:21:45.822Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:21:48.950Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:21:48.951Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:21:56.756Z: delivery_test Best26 Тест 2025-03-29 10:17:50 Администратор 10 44
+[LOG] 2025-03-29T07:57:58.644Z: Client connected
+[LOG] 2025-03-29T07:57:58.940Z: Client connected
+[LOG] 2025-03-29T07:58:13.107Z: Client connected
+[LOG] 2025-03-29T07:58:13.130Z: Client connected
+[LOG] 2025-03-29T07:58:26.918Z: Client connected
+[LOG] 2025-03-29T07:58:27.217Z: Client connected
+[LOG] 2025-03-29T07:58:31.349Z: Client connected
+[LOG] 2025-03-29T07:58:31.356Z: Client connected
+[LOG] 2025-03-29T07:58:37.884Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:58:37.889Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T07:58:40.465Z: delivery_test Best26 Тест 2025-03-29 10:17:50 Администратор 10 42
+[LOG] 2025-03-29T07:58:46.439Z: delivery_test Best26 Тест 2025-03-29 10:17:50 Администратор 10 42
+[LOG] 2025-03-29T07:58:59.601Z: Client connected
+[LOG] 2025-03-29T07:58:59.605Z: Client connected
+[LOG] 2025-03-29T07:59:03.909Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T07:59:03.911Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:00:25.998Z: Client connected
+[LOG] 2025-03-29T08:00:26.291Z: Client connected
+[LOG] 2025-03-29T08:00:29.274Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T08:00:29.275Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:00:37.964Z: Обработка модели "10", размера "41" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T08:00:37.964Z: Обработка модели "10", размера "42" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T08:00:37.964Z: Обработка модели "10", размера "43" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T08:00:37.965Z: Обработка модели "10", размера "44" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T08:00:37.966Z: Обработка модели "10", размера "45" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T08:00:38.485Z: 15
+[LOG] 2025-03-29T08:00:38.510Z: 15
+[LOG] 2025-03-29T08:00:38.511Z: 15
+[LOG] 2025-03-29T08:00:39.199Z: Недостаточно записей для модели "10", размера "43". Требуется: 15, доступно: 0
+[LOG] 2025-03-29T08:00:39.200Z: Недостаточно записей для модели "10", размера "41". Требуется: 15, доступно: 0
+[LOG] 2025-03-29T08:00:39.390Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.11.00.39merged.pdf
+[LOG] 2025-03-29T08:00:39.390Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.11.00.39merged.pdf" "EPSON2AF3CE (L3250 Series)" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.11.00.39merged.pdf
+[LOG] 2025-03-29T08:00:52.557Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T08:00:52.559Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:00:58.797Z: Client connected
+[LOG] 2025-03-29T08:00:58.799Z: Client connected
+[LOG] 2025-03-29T08:02:21.299Z: Client connected
+[LOG] 2025-03-29T08:02:21.596Z: Client connected
+[LOG] 2025-03-29T08:02:22.457Z: Client connected
+[LOG] 2025-03-29T08:02:22.466Z: Client connected
+[LOG] 2025-03-29T08:02:25.892Z: Client connected
+[LOG] 2025-03-29T08:02:25.894Z: Client connected
+[LOG] 2025-03-29T08:02:30.883Z: delivery_test Best26 Тест 2025-03-29 11:00:38 Администратор 10 42
+[LOG] 2025-03-29T08:02:39.018Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T08:02:39.019Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:03:27.797Z: delivery_test Best26 Тест 2025-03-29 11:00:38 Администратор 10 45
+[LOG] 2025-03-29T08:03:29.255Z: delivery_test Best26 Тест 2025-03-29 11:00:38 Администратор 10 44
+[LOG] 2025-03-29T08:03:30.486Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T08:03:30.487Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:04:00.799Z: Client connected
+[LOG] 2025-03-29T08:04:00.836Z: Client connected
+[LOG] 2025-03-29T08:04:00.846Z: Client connected
+[LOG] 2025-03-29T08:04:00.858Z: Client connected
+[LOG] 2025-03-29T08:04:04.340Z: Client connected
+[LOG] 2025-03-29T08:04:04.341Z: Client connected
+[LOG] 2025-03-29T08:04:07.797Z: Client connected
+[LOG] 2025-03-29T08:04:07.799Z: Client connected
+[LOG] 2025-03-29T08:04:41.551Z: Client connected
+[LOG] 2025-03-29T08:04:41.552Z: Client connected
+[LOG] 2025-03-29T08:04:43.110Z: Client connected
+[LOG] 2025-03-29T08:04:43.111Z: Client connected
+[LOG] 2025-03-29T08:04:44.643Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T08:04:44.644Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:04:45.066Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T08:04:45.067Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:04:53.611Z: Обработка модели "10", размера "41" для бренда "Best26". Требуется: 14. tableName: delivery_test
+[LOG] 2025-03-29T08:04:53.611Z: Обработка модели "10", размера "42" для бренда "Best26". Требуется: 14. tableName: delivery_test
+[LOG] 2025-03-29T08:04:53.611Z: Обработка модели "10", размера "43" для бренда "Best26". Требуется: 14. tableName: delivery_test
+[LOG] 2025-03-29T08:04:53.613Z: Обработка модели "10", размера "44" для бренда "Best26". Требуется: 14. tableName: delivery_test
+[LOG] 2025-03-29T08:04:53.613Z: Обработка модели "10", размера "45" для бренда "Best26". Требуется: 14. tableName: delivery_test
+[LOG] 2025-03-29T08:04:54.121Z: 14
+[LOG] 2025-03-29T08:04:54.140Z: 14
+[LOG] 2025-03-29T08:04:54.141Z: 14
+[LOG] 2025-03-29T08:04:54.758Z: Недостаточно записей для модели "10", размера "43". Требуется: 14, доступно: 0
+[LOG] 2025-03-29T08:04:54.758Z: Недостаточно записей для модели "10", размера "41". Требуется: 14, доступно: 0
+[LOG] 2025-03-29T08:04:55.047Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.11.04.54merged.pdf
+[LOG] 2025-03-29T08:04:55.047Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.11.04.54merged.pdf" "EPSON2AF3CE (L3250 Series)" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.11.04.54merged.pdf
+[LOG] 2025-03-29T08:05:01.088Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T08:05:01.089Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:05:06.066Z: Client connected
+[LOG] 2025-03-29T08:05:06.070Z: Client connected
+[LOG] 2025-03-29T08:05:08.096Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T08:05:08.098Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:05:13.598Z: delivery_test Best26 Тест 2025-03-29 11:04:54 Администратор 10 42
+[LOG] 2025-03-29T08:05:21.308Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T08:05:21.310Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T08:06:17.247Z: Client connected
+[LOG] 2025-03-29T08:06:17.542Z: Client connected
+[LOG] 2025-03-29T09:03:09.890Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:03:09.894Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:03:12.558Z: selectedPlace: Лермонтово selectedBrand: undefined
+[LOG] 2025-03-29T09:03:12.559Z: Лермонтово Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:03:15.871Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:03:15.872Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:03:25.332Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:03:25.333Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:03:33.302Z: Обработка модели "10", размера "41" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:03:33.302Z: Обработка модели "10", размера "42" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:03:33.302Z: Обработка модели "10", размера "43" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:03:33.302Z: Обработка модели "10", размера "44" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:03:33.304Z: Обработка модели "10", размера "45" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:03:33.735Z: 15
+[LOG] 2025-03-29T09:03:33.836Z: 15
+[LOG] 2025-03-29T09:03:33.854Z: 15
+[LOG] 2025-03-29T09:03:39.461Z: Недостаточно записей для модели "10", размера "43". Требуется: 15, доступно: 0
+[LOG] 2025-03-29T09:03:39.461Z: Недостаточно записей для модели "10", размера "41". Требуется: 15, доступно: 0
+[LOG] 2025-03-29T09:03:39.689Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.03.39merged.pdf
+[LOG] 2025-03-29T09:03:39.689Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.03.39merged.pdf" "EPSON2AF3CE (L3250 Series)" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.03.39merged.pdf
+[LOG] 2025-03-29T09:15:31.580Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:15:31.584Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:15:33.985Z: delivery_test Best26 Тест 2025-03-29 11:04:54 Администратор 10 45
+[LOG] 2025-03-29T09:15:36.078Z: delivery_test Best26 Тест 2025-03-29 11:04:54 Администратор 10 44
+[LOG] 2025-03-29T09:15:37.896Z: delivery_test Best26 Тест 2025-03-29 12:03:33 Администратор 10 45
+[LOG] 2025-03-29T09:15:39.333Z: delivery_test Best26 Тест 2025-03-29 12:03:33 Администратор 10 44
+[LOG] 2025-03-29T09:15:41.161Z: delivery_test Best26 Тест 2025-03-29 12:03:33 Администратор 10 42
+[LOG] 2025-03-29T09:15:43.167Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:15:43.168Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:15:45.259Z: delivery_test Best26 Тест 2025-03-29 12:03:33 Администратор 10 42
+[LOG] 2025-03-29T09:15:45.786Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:15:45.787Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:15:50.304Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:15:50.310Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:20:29.083Z: Client connected
+[LOG] 2025-03-29T09:20:29.093Z: Client connected
+[LOG] 2025-03-29T09:20:52.796Z: Client connected
+[LOG] 2025-03-29T09:20:52.805Z: Client connected
+[LOG] 2025-03-29T09:20:52.842Z: Client connected
+[LOG] 2025-03-29T09:20:52.852Z: Client connected
+[LOG] 2025-03-29T09:20:56.776Z: Client connected
+[LOG] 2025-03-29T09:20:56.779Z: Client connected
+[LOG] 2025-03-29T09:21:04.162Z: Client connected
+[LOG] 2025-03-29T09:21:04.210Z: Client connected
+[LOG] 2025-03-29T09:21:06.293Z: Client connected
+[LOG] 2025-03-29T09:21:06.294Z: Client connected
+[LOG] 2025-03-29T09:21:11.339Z: Client connected
+[LOG] 2025-03-29T09:21:11.344Z: Client connected
+[LOG] 2025-03-29T09:21:43.292Z: Client connected
+[LOG] 2025-03-29T09:21:43.297Z: Client connected
+[LOG] 2025-03-29T09:21:47.184Z: Client connected
+[LOG] 2025-03-29T09:21:47.186Z: Client connected
+[LOG] 2025-03-29T09:21:53.348Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:21:53.354Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:22:09.621Z: Обработка модели "10", размера "41" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T09:22:09.621Z: Обработка модели "10", размера "42" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T09:22:09.621Z: Обработка модели "10", размера "43" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T09:22:09.622Z: Обработка модели "10", размера "44" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T09:22:09.623Z: Обработка модели "10", размера "45" для бренда "Best26". Требуется: 45. tableName: delivery_test
+[LOG] 2025-03-29T09:22:10.450Z: 45
+[LOG] 2025-03-29T09:22:10.521Z: 45
+[LOG] 2025-03-29T09:22:10.575Z: 45
+[LOG] 2025-03-29T09:22:11.292Z: Недостаточно записей для модели "10", размера "41". Требуется: 45, доступно: 0
+[LOG] 2025-03-29T09:22:11.292Z: Недостаточно записей для модели "10", размера "43". Требуется: 45, доступно: 0
+[LOG] 2025-03-29T09:22:12.157Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.22.11merged.pdf
+[LOG] 2025-03-29T09:22:12.157Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.22.11merged.pdf" "ChestiZnak" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.22.11merged.pdf
+[LOG] 2025-03-29T09:22:27.751Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:22:27.753Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:22:32.887Z: delivery_test Best26 Тест 2025-03-29 12:22:10 Администратор 10 42
+[LOG] 2025-03-29T09:23:13.327Z: Client connected
+[LOG] 2025-03-29T09:23:13.390Z: Client connected
+[LOG] 2025-03-29T09:23:16.749Z: delivery_test Best26 Тест 2025-03-29 12:22:10 Администратор 10 45
+[LOG] 2025-03-29T09:23:21.088Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:23:21.093Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:23:22.288Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:23:22.293Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:23:34.695Z: Обработка модели "10", размера "41" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:23:34.696Z: Обработка модели "10", размера "42" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:23:34.696Z: Обработка модели "10", размера "43" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:23:34.696Z: Обработка модели "10", размера "44" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:23:34.696Z: Обработка модели "10", размера "45" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:23:35.233Z: 15
+[LOG] 2025-03-29T09:23:35.337Z: 15
+[LOG] 2025-03-29T09:23:41.427Z: Недостаточно записей для модели "10", размера "41". Требуется: 15, доступно: 0
+[LOG] 2025-03-29T09:23:41.427Z: Недостаточно записей для модели "10", размера "44". Требуется: 15, доступно: 0
+[LOG] 2025-03-29T09:23:41.428Z: Недостаточно записей для модели "10", размера "43". Требуется: 15, доступно: 0
+[LOG] 2025-03-29T09:23:41.717Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.23.41merged.pdf
+[LOG] 2025-03-29T09:23:41.718Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.23.41merged.pdf" "ChestiZnak" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.23.41merged.pdf
+[LOG] 2025-03-29T09:23:49.390Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:23:49.396Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:23:51.127Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:23:51.133Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:23:55.231Z: delivery_test Best26 Тест 2025-03-29 12:22:10 Администратор 10 44
+[LOG] 2025-03-29T09:24:00.422Z: delivery_test Best26 Тест 2025-03-29 12:23:35 Администратор 10 45
+[LOG] 2025-03-29T09:24:04.181Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:24:04.187Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:24:06.762Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:24:06.768Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:24:07.949Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:24:07.950Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:24:08.373Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:24:08.378Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:24:08.538Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:24:08.544Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:24:08.703Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:24:08.709Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:24:12.477Z: selectedPlace: Лермонтово selectedBrand: undefined
+[LOG] 2025-03-29T09:24:12.482Z: Лермонтово Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:24:14.118Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:24:14.129Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:25:06.244Z: Обработка модели "065", размера "40" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.244Z: Обработка модели "065", размера "41" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.245Z: Обработка модели "065", размера "42" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.245Z: Обработка модели "065", размера "43" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.245Z: Обработка модели "065", размера "44" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.245Z: Обработка модели "065", размера "45" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.245Z: Обработка модели "065-2", размера "40" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.246Z: Обработка модели "065-2", размера "41" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.247Z: Обработка модели "065-2", размера "42" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.248Z: Обработка модели "065-2", размера "43" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.248Z: Обработка модели "065-2", размера "44" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.249Z: Обработка модели "065-2", размера "45" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.249Z: Обработка модели "065-3", размера "40" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.249Z: Обработка модели "065-3", размера "41" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.249Z: Обработка модели "065-3", размера "42" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.249Z: Обработка модели "065-3", размера "43" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.249Z: Обработка модели "065-3", размера "44" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.249Z: Обработка модели "065-3", размера "45" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.249Z: Обработка модели "065-1", размера "40" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.250Z: Обработка модели "065-1", размера "41" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.250Z: Обработка модели "065-1", размера "42" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.250Z: Обработка модели "065-1", размера "43" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.250Z: Обработка модели "065-1", размера "44" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.250Z: Обработка модели "065-1", размера "45" для бренда "Armbest". Требуется: 20. tableName: armbest_men
+[LOG] 2025-03-29T09:25:06.447Z: 20
+[LOG] 2025-03-29T09:25:06.600Z: Недостаточно записей для модели "065", размера "44". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.601Z: Недостаточно записей для модели "065", размера "41". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.601Z: Недостаточно записей для модели "065-2", размера "43". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.601Z: Недостаточно записей для модели "065-2", размера "41". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.602Z: Недостаточно записей для модели "065-2", размера "40". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.602Z: Недостаточно записей для модели "065-2", размера "42". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.602Z: Недостаточно записей для модели "065-2", размера "44". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.633Z: Недостаточно записей для модели "065-2", размера "45". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.634Z: Недостаточно записей для модели "065-3", размера "41". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.634Z: Недостаточно записей для модели "065-3", размера "40". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.634Z: Недостаточно записей для модели "065-3", размера "44". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.635Z: Недостаточно записей для модели "065-3", размера "42". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.635Z: Недостаточно записей для модели "065-3", размера "45". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.666Z: Недостаточно записей для модели "065-1", размера "40". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.667Z: Недостаточно записей для модели "065-1", размера "41". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.667Z: Недостаточно записей для модели "065-1", размера "42". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.667Z: Недостаточно записей для модели "065-1", размера "43". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.667Z: Недостаточно записей для модели "065-1", размера "44". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.668Z: Недостаточно записей для модели "065-1", размера "45". Требуется: 20, доступно: 0
+[LOG] 2025-03-29T09:25:06.801Z: 20
+[LOG] 2025-03-29T09:25:06.860Z: 20
+[LOG] 2025-03-29T09:25:07.353Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.25.07merged.pdf
+[LOG] 2025-03-29T09:25:07.353Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.25.07merged.pdf" "ChestiZnak" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.25.07merged.pdf
+[LOG] 2025-03-29T09:25:18.826Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:25:18.832Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:25:22.642Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:25:22.648Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:25:30.223Z: Client connected
+[LOG] 2025-03-29T09:25:37.974Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:25:37.980Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:25:40.481Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:25:40.487Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:25:42.654Z: Armbest_men Armbest Пятигорск 2025-03-29 12:25:06 Администратор 065 45
+[LOG] 2025-03-29T09:25:44.678Z: Armbest_men Armbest Пятигорск 2025-03-29 12:25:06 Администратор 065 43
+[LOG] 2025-03-29T09:25:45.999Z: Armbest_men Armbest Пятигорск 2025-03-29 12:25:06 Администратор 065 40
+[LOG] 2025-03-29T09:25:48.538Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:25:48.540Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:25:50.130Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:25:50.137Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:25:51.352Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:25:51.359Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:25:53.243Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:25:53.249Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:26:49.225Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:26:49.227Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:26:52.232Z: selectedPlace: Лермонтово selectedBrand: undefined
+[LOG] 2025-03-29T09:26:52.234Z: Лермонтово Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:26:53.730Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:26:53.732Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:27:03.602Z: Client connected
+[LOG] 2025-03-29T09:27:06.416Z: Client connected
+[LOG] 2025-03-29T09:27:08.104Z: Client connected
+[LOG] 2025-03-29T09:27:10.723Z: delivery_test Best26 Тест 2025-03-29 12:23:35 Администратор 10 42
+[LOG] 2025-03-29T09:27:10.882Z: Client connected
+[LOG] 2025-03-29T09:27:10.889Z: Client connected
+[LOG] 2025-03-29T09:27:10.899Z: Client connected
+[LOG] 2025-03-29T09:27:14.714Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:27:14.715Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:27:27.398Z: Обработка модели "10", размера "41" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:27:27.398Z: Обработка модели "10", размера "42" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:27:27.398Z: Обработка модели "10", размера "43" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:27:27.399Z: Обработка модели "10", размера "44" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:27:27.399Z: Обработка модели "10", размера "45" для бренда "Best26". Требуется: 15. tableName: delivery_test
+[LOG] 2025-03-29T09:27:28.413Z: 15
+[LOG] 2025-03-29T09:27:28.505Z: 15
+[LOG] 2025-03-29T09:27:28.531Z: 15
+[LOG] 2025-03-29T09:27:33.575Z: Недостаточно записей для модели "10", размера "43". Требуется: 15, доступно: 0
+[LOG] 2025-03-29T09:27:33.575Z: Недостаточно записей для модели "10", размера "41". Требуется: 15, доступно: 0
+[LOG] 2025-03-29T09:27:33.834Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.27.33merged.pdf
+[LOG] 2025-03-29T09:27:33.834Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.27.33merged.pdf" "ChestiZnak" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\29.03.25.12.27.33merged.pdf
+[LOG] 2025-03-29T09:27:40.361Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:27:40.362Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:27:43.673Z: delivery_test Best26 Тест 2025-03-29 12:27:28 Администратор 10 44
+[LOG] 2025-03-29T09:27:51.763Z: Client connected
+[LOG] 2025-03-29T09:27:51.764Z: Client connected
+[LOG] 2025-03-29T09:27:54.996Z: delivery_test Best26 Тест 2025-03-29 12:27:28 Администратор 10 45
+[LOG] 2025-03-29T09:28:00.560Z: delivery_test Best26 Тест 2025-03-29 12:27:28 Администратор 10 42
+[LOG] 2025-03-29T09:37:04.560Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:37:04.565Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:37:06.827Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:37:06.828Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:37:08.759Z: selectedPlace: Лермонтово selectedBrand: undefined
+[LOG] 2025-03-29T09:37:08.761Z: Лермонтово Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:37:10.499Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-29T09:37:10.500Z: Тест Запрос на получение данных о печати чз из базы
+[ERROR] 2025-03-29T09:38:19.521Z: Error processing file: TypeError: Cannot read properties of undefined (reading 'length')
+[LOG] 2025-03-29T09:39:46.032Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T09:39:46.034Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T09:39:46.575Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T09:39:46.575Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T09:39:46.780Z: Client connected
+[LOG] 2025-03-29T09:39:46.781Z: Client connected
+[LOG] 2025-03-29T09:39:46.783Z: Client connected
+[LOG] 2025-03-29T09:39:46.787Z: Client connected
+[LOG] 2025-03-29T09:39:47.449Z: Client connected
+[LOG] 2025-03-29T09:39:52.406Z: undefined
+[ERROR] 2025-03-29T09:39:52.407Z: Error processing file: TypeError: Cannot read properties of undefined (reading 'length')
+[LOG] 2025-03-29T09:42:09.919Z: Client connected
+[LOG] 2025-03-29T09:42:09.920Z: Client connected
+[LOG] 2025-03-29T09:42:09.924Z: Client connected
+[LOG] 2025-03-29T09:42:09.925Z: Client connected
+[LOG] 2025-03-29T09:42:09.927Z: Client connected
+[LOG] 2025-03-29T09:45:59.413Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T09:45:59.414Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T09:45:59.432Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T09:45:59.433Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T09:45:59.529Z: Client connected
+[LOG] 2025-03-29T09:45:59.530Z: Client connected
+[LOG] 2025-03-29T09:45:59.532Z: Client connected
+[LOG] 2025-03-29T09:45:59.535Z: Client connected
+[LOG] 2025-03-29T09:45:59.538Z: Client connected
+[LOG] 2025-03-29T09:46:09.757Z: undefined
+[ERROR] 2025-03-29T09:46:09.757Z: Error processing file: TypeError: Cannot read properties of undefined (reading 'length')
+[LOG] 2025-03-29T09:53:15.959Z: selectedPlace: Тест selectedBrand: undefined
+[ERROR] 2025-03-29T09:53:15.961Z: Ошибка при получении категорий из базы данных: pool is not defined
+[LOG] 2025-03-29T09:53:23.392Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T09:53:23.394Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T09:53:23.414Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T09:53:23.414Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T09:53:23.513Z: Client connected
+[LOG] 2025-03-29T09:53:37.984Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T09:53:37.985Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T09:53:38.001Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T09:53:38.002Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T09:53:38.098Z: Client connected
+[LOG] 2025-03-29T09:53:38.103Z: Client connected
+[LOG] 2025-03-29T09:53:38.105Z: Client connected
+[LOG] 2025-03-29T09:53:39.733Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:56:11.905Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-29T09:56:11.907Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-29T09:56:11.924Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-29T09:56:11.925Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-29T09:56:12.059Z: Client connected
+[LOG] 2025-03-29T09:56:12.060Z: Client connected
+[LOG] 2025-03-29T09:56:12.783Z: Client connected
+[LOG] 2025-03-29T09:56:13.391Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-29T09:56:13.400Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-29T09:56:13.717Z: Client connected
+[LOG] 2025-03-29T09:56:16.084Z: Client connected

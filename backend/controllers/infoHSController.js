@@ -1,24 +1,11 @@
 const { pool } = require('../config/connectdb');
-const { getTableName } = require('./models.js');
-
-// Функция для получения всех категорий из базы данных
-async function fetchCategoriesFromDB() {
-  try {
-    const [rows] = await pool.query(`
-      SELECT DISTINCT category FROM model_categories
-    `);
-    return rows.map(row => row.category);
-  } catch (error) {
-    console.error("Ошибка при получении категорий из базы данных:", error.message);
-    throw error;
-  }
-}
+const { getCategoryByModel, getTableName } = require('./models.js');
 
 const getInfoAboutAllHonestSign = async (req, res) => {
   const selectedPlace = req.query.placePrint;
 
   const brands = ["armbest", "bestshoes", "best26"];
-  const categories = await fetchCategoriesFromDB();
+  const categories = await getCategoryByModel();
 
   const places = {
     Лермонтово: "lermontovo",

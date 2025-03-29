@@ -392,6 +392,28 @@
     width: 500px;
 }
 
+/* Базовый стиль для строки */
+.fade-out-row {
+    transition: background-color 0.5s ease, opacity 0.5s ease;
+    background-color: transparent;
+    opacity: 1;
+}
+
+/* Класс для изменения фона на красный */
+.highlight-red {
+    background-color: red !important;
+}
+
+/* Класс для исчезновения (opacity) */
+.fade-out {
+    opacity: 0;
+}
+
+/* Скрываем элемент после завершения анимации */
+.hidden {
+    display: none;
+}
+
 /* Анимация появления */
 @keyframes fadeIn {
     from {

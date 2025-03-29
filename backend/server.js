@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 const portExpress = 6501;
 // const portExpress = process.env.PORT || 6501;
-
 const portSocket = 6502;
 const fs = require('fs');
 const cors = require('cors');
@@ -12,7 +11,7 @@ const multer = require('multer');
 const path = require('path');
 // const os = require('os');
 const { processPDF } = require('./utils/pdfProcessor.js');
-const { exec } = require('child_process');
+// const { exec } = require('child_process');
 const { PDFDocument } = require('pdf-lib');
 const { pool, userPool } = require('./config/connectdb.js');
 // const stringSimilarity = require('string-similarity');
@@ -31,9 +30,12 @@ const initializeLogger = require('./controllers/logStream.js');
 
 app.use(cors());
 app.use(express.json());
+
+// ПОДКЛЮЧЕНИЕ ЛОГГЕРА
 initializeLogger();
-const util = require('util');
-const execCommand = util.promisify(exec);
+
+// const util = require('util');
+// const execCommand = util.promisify(exec);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend/build')));
@@ -227,61 +229,15 @@ app.put('/api/returnKyz', async (req, res) => {
     Size,
   } = req.body;
 
-  let mainBrand;
   let tableName;
+    
+  const category = getCategoryByModel(Model);
+  tableName = getTableName(Brand, category);
   
   if (placePrint == 'Тест') {
     tableName = 'delivery_test';
-  } else if (Brand === 'Ozon (Armbest)' || Brand == 'Ozon Armbest') {
-    Brand = 'Ozon Armbest';
-    mainBrand = 'ARMBEST';
-
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_armbest_ozon_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_armbest_ozon_lermontovo';
-    }
-
-  } else if (Brand == 'Ozon (BestShoes)' || Brand == 'Ozon BestShoes') {
-    Brand = 'OZON';
-    mainBrand = 'BESTSHOES';
-
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_bestshoes_ozon_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_bestshoes_ozon_lermontovo';
-    }
-
-  } else if (Brand == 'Armbest (Новая)' || Brand == 'Armbest') {
-    tableName = 'delivery_armbest_pyatigorsk';
-    Brand = 'Armbest';
-
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_armbest_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_armbest_lermontovo';
-    }
-
-  } else if (Brand == 'BestShoes (Старая)' || Brand == 'BestShoes') {
-    Brand = 'BestShoes';
-
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_bestshoes_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_bestshoes_lermontovo';
-    }
-
-  } else if (Brand == 'Best26 (Арташ)' || Brand == 'Best26') {
-    Brand = 'Best26';
-
-    if (placePrint == 'Пятигорск') {
-      tableName = 'delivery_best26_pyatigorsk';
-    } else if (placePrint == 'Лермонтово') {
-      tableName = 'delivery_best26_lermontovo';
-    }
-  };
-
-
+  } 
+    
   const serverDate = convertDateToServerFormat(date);
   console.log(tableName, Brand, placePrint, serverDate, user, Model, Size);
 
@@ -577,16 +533,16 @@ async function printPDF(filePath, type, placePrint) {
   } else if (type == 'honestSign') {
     command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
   }
-  
-  try {
-    const { stdout, stderr } = await execCommand(command);
-    if (stderr) {
-      console.warn('Предупреждение при печати:', stderr);
-    }
-    console.log('Печать завершена успешно');
-  } catch (err) {
-    console.error('Произошла ошибка, но она игнорируется, так как печать завершена');
-  }
+
+//   try {
+//     const { stdout, stderr } = await execCommand(command);
+//     if (stderr) {
+//       console.warn('Предупреждение при печати:', stderr);
+//     }
+//     console.log('Печать завершена успешно');
+//   } catch (err) {
+//     console.error('Произошла ошибка, но она игнорируется, так как печать завершена');
+//   }
 
 }
 

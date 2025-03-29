@@ -288,14 +288,12 @@ const AdminPanel = () => {
         setprinterForHonestSign(event.target.value);
     };
 
-    const handleRowButtonClick = async (item) => {
+    const handleRowButtonClick = async (item, index) => {
         const conf = confirm("Вы точно хотите вернуть ЧЗ: ", item);
         if (!conf) {
             return;
         }
-        console.log("Данные строки:", item);
         const { Brand, user, Model, Size, date } = item;
-        console.log(item);
         try {
             const response = await fetch(`http://localhost:6501/api/returnKyz`, {
                 method: 'PUT',
@@ -313,8 +311,25 @@ const AdminPanel = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                console.log('Ответ от сервера:', data);
-                setFilteredItems((prevItems) => prevItems.filter((row) => row !== item));
+                const row = document.getElementById(`row-${index}`);
+                if (row) {
+                    // Шаг 1: Подсветить строку красным
+                    row.classList.add("highlight-red");
+        
+                    // Шаг 2: Через 500 мс начать исчезновение
+                    setTimeout(() => {
+                        row.classList.add("fade-out");
+                    }, 500);
+        
+                    // Шаг 3: Через 1000 мс полностью скрыть строку и удалить из состояния
+                    setTimeout(() => {
+                        row.classList.add("hidden");
+        
+                        // Удаляем элемент из массива
+                        // const updatedItems = filteredItems.filter((_, i) => i !== index);
+                        // setFilteredItems(updatedItems);
+                    }, 1000);
+                }        
             } else {
                 console.error('Ошибка обновления:', data.message);
             }
@@ -711,7 +726,11 @@ const AdminPanel = () => {
                             </thead>
                             <tbody>
                                 {filteredItems.map((item, index) => (
-                                    <tr key={index}>
+                                    <tr
+                                        key={index}
+                                        id={`row-${index}`}
+                                        className="fade-out-row"
+                                        >
                                         <td style={tableCellStyle}>{item.Brand}</td>
                                         <td style={tableCellStyle}>{item.Model}</td>
                                         <td style={tableCellStyle}>{item.Size}</td>
@@ -721,7 +740,7 @@ const AdminPanel = () => {
                                         <td style={tableCellStyle}>
                                             <button
                                                 className="buttonReturnSign"
-                                                onClick={() => handleRowButtonClick(item)}
+                                                onClick={() => handleRowButtonClick(item, index)}
                                             >
                                                 X
                                             </button>

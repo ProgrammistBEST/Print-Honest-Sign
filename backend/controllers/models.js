@@ -1,47 +1,50 @@
-function getCategoryByModel(model) {
-    const modelMapping = {
-      men: ["065", "067", "080", "086"],
-      women_slippers: ["072", "079", "073", "077", "075", "0076"],
-      kids_crocs: ["084", "085", "094", "095"],
-      women_crocs: ["090", "093", "096", "097", "098"],
-      crocs_1: ["030", "031", "032", "033", "034", "035", "036"],
-      crocs_2: ["040", "041"],
-      winter_1: ["60", "61", "62", "63"],
-      winter_2: ["90", "91", "70", "71", "72", "73"],
-      winter_3: ["100", "110", "180", "380", "102", "103", "105"],
-      winter_4: ["401", "402", "400", "411", "412", "410", "10", "32", "34", "36", "37", "80"],
-      winter_5: ["81", "82", "83", "84"],
-      general: ["ЭВА"],
-    };
-  
-    for (const [category, models] of Object.entries(modelMapping)) {
-      if (models.includes(model)) {
-        return category;
-      }
+const { pool } = require('../config/connectdb');
+
+// Функция для получения всех категорий из базы данных
+async function getCategoryByModel() {
+    try {
+      const [rows] = await pool.query(`
+        SELECT DISTINCT category FROM model_categories
+      `);
+      return rows.map(row => row.category);
+    } catch (error) {
+      console.error("Ошибка при получении категорий из базы данных:", error.message);
+      throw error;
     }
-  
-    return 'not_defined';
 }
   
-// Определение имени таблицы на основе категории
 function getTableName(brand, category) {
-  const tableMapping = {
-    men: `${brand}_men`,
-    women_slippers: `${brand}_women_slippers`,
-    kids_crocs: `${brand}_kids_crocs`,
-    women_crocs: `${brand}_women_crocs`,
-    crocs_1: `${brand}_crocs_1`,
-    crocs_2: `${brand}_crocs_2`,
-    winter_1: `${brand}_winter_1`,
-    winter_2: `${brand}_winter_2`,
-    winter_3: `${brand}_winter_3`,
-    winter_4: `${brand}_winter_4`,
-    winter_5: `${brand}_winter_5`,
-    general: `${brand}_general`,
-    not_defined: `${brand}_not_defined`,
-  };
-
-  return tableMapping[category] || null;
-}  
+    const tableMapping = {
+      men_1: `${brand}_men_1`,
+      men_2: `${brand}_men_2`,
+      women_slippers_1: `${brand}_women_slippers_1`,
+      women_slippers_2: `${brand}_women_slippers_2`,
+      kids_crocs_1: `${brand}_kids_crocs_1`,
+      kids_crocs_2: `${brand}_kids_crocs_2`,
+      women_crocs_1: `${brand}_women_crocs_1`,
+      women_crocs_2: `${brand}_women_crocs_2`,
+      crocs_1: `${brand}_crocs_1`,
+      crocs_2: `${brand}_crocs_2`,
+      crocs_3: `${brand}_crocs_3`,
+      crocs_4: `${brand}_crocs_4`,
+      winter_1: `${brand}_winter_1`,
+      winter_2: `${brand}_winter_2`,
+      winter_3: `${brand}_winter_3`,
+      winter_4: `${brand}_winter_4`,
+      winter_5: `${brand}_winter_5`,
+      winter_6: `${brand}_winter_6`,
+      winter_7: `${brand}_winter_7`,
+      winter_8: `${brand}_winter_8`,
+      winter_9: `${brand}_winter_9`,
+      winter_10: `${brand}_winter_10`,
+      general_2: `${brand}_general_2`,
+      general_3: `${brand}_general_3`,
+      general_4: `${brand}_general_4`,
+      not_defined: `${brand}_not_defined`,
+    };
+  
+    return tableMapping[category] || `${brand}_not_defined`;
+  }
+  
 
 module.exports = { getCategoryByModel, getTableName };
