@@ -523,25 +523,27 @@ app.post('/kyz', async (req, res) => {
 
 // Функция для печати PDF файла
 async function printPDF(filePath, type, placePrint) {
-
-  const resolvedPath = path.resolve(filePath);
-  console.log(`"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`, filePath);
-  let command = '';
-  if (type == 'barcode') {
-    command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
-  } else if (type == 'honestSign') {
-    command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
-  }
-
-  try {
-    const { stdout, stderr } = await execCommand(command);
-    if (stderr) {
-      console.warn('Предупреждение при печати:', stderr);
+    if (!placePrint) {
+        console.error('Ошибка: Не указан принтер!');
+        return;
     }
-    console.log('Печать завершена успешно');
-  } catch (err) {
-    console.error('Произошла ошибка, но она игнорируется, так как печать завершена');
-  }
+    const resolvedPath = path.resolve(filePath);
+    let command = '';
+    if (type == 'barcode') {
+      command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
+    } else if (type == 'honestSign') {
+      command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
+      }
+      
+    try {
+      const { stdout, stderr } = await execCommand(command);
+      if (stderr) {
+        console.warn('Предупреждение при печати:', stderr);
+      }
+      console.log('Печать завершена успешно');
+    } catch (err) {
+      console.error('Произошла ошибка, но она игнорируется, так как печать завершена');
+    }
 
 }
 
