@@ -60,7 +60,7 @@ const getPrintedHonestSign = async (req, res) => {
       // Формируем запросы для всех комбинаций брендов и категорий
       for (const brand of brands) {
         for (const category of categories) {
-          const tableName = getTableName(brand, category);
+          const tableName = `${brand.toLowerCase()}_${category}`;
           if (!tableName) continue;
           queryParts.push(`
             SELECT Brand, Model, Size, COUNT(*) AS quantity,

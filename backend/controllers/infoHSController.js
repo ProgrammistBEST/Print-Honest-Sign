@@ -37,7 +37,7 @@ const getInfoAboutAllHonestSign = async (req, res) => {
 
     for (const brand of brands) {
         for (const category of categories) {
-          const tableName = getTableName(brand, category);
+          const tableName = `${brand.toLowerCase()}_${category}`;
           if (!tableName) continue;
 
           const fullTableName = `${brand}_${category}`;

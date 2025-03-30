@@ -122,7 +122,7 @@ async function saveAllDataToDB(connection, pageDataList, brandData, placePrint) 
     }
 
     let category = getCategoryByModel(Model.split(/[-/]/)[0].trim());
-    let tableName = getTableName(Brand, category);
+    let tableName = `${Brand.toLowerCase()}_${category}`;
     if (!category && placePrint != 'Тест') {
         console.error(`Ошибка: Не удалось определить категорию для модели "${Model}".`);
         continue;

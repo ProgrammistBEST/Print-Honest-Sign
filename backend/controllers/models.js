@@ -1,18 +1,25 @@
 const { pool } = require('../config/connectdb');
 
 // Функция для получения всех категорий из базы данных
-async function getCategoryByModel() {
+async function getCategoryByModel(model) {
+    model = model.split(/[-/]/)[0].trim();
     try {
-      const [rows] = await pool.query(`
-        SELECT DISTINCT category FROM model_categories
-      `);
-      return rows.map(row => row.category);
-    } catch (error) {
-      console.error("Ошибка при получении категорий из базы данных:", error.message);
-      throw error;
-    }
-}
+        const [rows] = await pool.query(`
+          SELECT DISTINCT category FROM model_categories WHERE model = ?
+        `, (model));
+          console.log(rows);
   
+          if (rows.length === 0) {
+              return 'not_defined';
+          } else {
+              return rows.map(row => row.category);
+          }      
+      } catch (error) {
+        console.error("Ошибка при получении категорий из базы данных:", error.message);
+        throw error;
+      }
+}
+
 function getTableName(brand, category) {
     const tableMapping = {
       men_1: `${brand}_men_1`,
