@@ -560,3 +560,11 @@
 [LOG] 2025-03-30T10:32:19.729Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\30.03.25.13.32.19merged.pdf
 [LOG] 2025-03-30T10:32:19.730Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\30.03.25.13.32.19merged.pdf" "EPSON2AF3CE (L3250 Series)" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\30.03.25.13.32.19merged.pdf
 [ERROR] 2025-03-30T10:32:19.730Z: Произошла ошибка, но она игнорируется, так как печать завершена
+[LOG] 2025-03-30T10:48:32.406Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-30T10:48:32.408Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-30T10:48:32.426Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-30T10:48:32.426Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-30T10:48:32.625Z: Client connected
+[LOG] 2025-03-30T10:48:32.743Z: Client connected
+[LOG] 2025-03-30T10:48:38.934Z: Client connected
+[LOG] 2025-03-30T10:48:41.689Z: Client connected
