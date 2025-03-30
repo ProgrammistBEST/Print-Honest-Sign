@@ -619,7 +619,7 @@ const AdminPanel = () => {
                     >
                     <option value="Баркод">Баркод</option>
                     <option value="EPSON2AF3CE (L3250 Series)">EPSON2AF3CE (L3250 Series)</option>
-                    <option value="ChestiZnak">ChestiZnak</option>
+                    <option value="ChestniZnak">ChestniZnak</option>
                     </select>
                     {printerForHonestSign && <p style={{ color: 'green', marginTop: '-10px' }}>Вы выбрали: {printerForHonestSign}</p>}
 

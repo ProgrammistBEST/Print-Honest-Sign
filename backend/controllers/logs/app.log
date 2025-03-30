@@ -545,3 +545,18 @@
 [LOG] 2025-03-30T10:31:10.080Z: Пятигорск Запрос на получение данных о печати чз из базы
 [LOG] 2025-03-30T10:31:14.111Z: armbest_[object Promise] Armbest Пятигорск 2025-03-30 13:22:33 Администратор 065 40
 [ERROR] 2025-03-30T10:31:14.113Z: Error during update: Error: Table 'storagesigns.armbest_[object promise]' doesn't exist
+[LOG] 2025-03-30T10:32:09.712Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-30T10:32:09.714Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-30T10:32:09.731Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-30T10:32:09.732Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-30T10:32:09.864Z: Client connected
+[LOG] 2025-03-30T10:32:09.904Z: Client connected
+[LOG] 2025-03-30T10:32:11.722Z: armbest_men_1 Armbest Пятигорск 2025-03-30 13:22:33 Администратор 065 40
+[LOG] 2025-03-30T10:32:14.596Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-30T10:32:14.603Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-30T10:32:19.665Z: armbest
+[LOG] 2025-03-30T10:32:19.666Z: Обработка модели "065", размера "40" для бренда "Armbest". Требуется: 1. tableName: armbest_men_1
+[LOG] 2025-03-30T10:32:19.691Z: 1
+[LOG] 2025-03-30T10:32:19.729Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\30.03.25.13.32.19merged.pdf
+[LOG] 2025-03-30T10:32:19.730Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\30.03.25.13.32.19merged.pdf" "EPSON2AF3CE (L3250 Series)" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\30.03.25.13.32.19merged.pdf
+[ERROR] 2025-03-30T10:32:19.730Z: Произошла ошибка, но она игнорируется, так как печать завершена
