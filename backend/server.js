@@ -534,15 +534,15 @@ async function printPDF(filePath, type, placePrint) {
     command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
   }
 
-//   try {
-//     const { stdout, stderr } = await execCommand(command);
-//     if (stderr) {
-//       console.warn('Предупреждение при печати:', stderr);
-//     }
-//     console.log('Печать завершена успешно');
-//   } catch (err) {
-//     console.error('Произошла ошибка, но она игнорируется, так как печать завершена');
-//   }
+  try {
+    const { stdout, stderr } = await execCommand(command);
+    if (stderr) {
+      console.warn('Предупреждение при печати:', stderr);
+    }
+    console.log('Печать завершена успешно');
+  } catch (err) {
+    console.error('Произошла ошибка, но она игнорируется, так как печать завершена');
+  }
 
 }
 
