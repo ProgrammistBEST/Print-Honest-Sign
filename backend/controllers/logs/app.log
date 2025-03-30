@@ -469,3 +469,11 @@
 [LOG] 2025-03-29T09:56:13.400Z: Пятигорск Запрос на получение данных о печати чз из базы
 [LOG] 2025-03-29T09:56:13.717Z: Client connected
 [LOG] 2025-03-29T09:56:16.084Z: Client connected
+[LOG] 2025-03-30T09:50:52.321Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-30T09:50:52.322Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-30T09:50:52.593Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-30T09:50:52.594Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-30T09:51:30.635Z: Client connected
+[LOG] 2025-03-30T09:52:03.130Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-30T09:52:03.135Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-30T09:52:16.323Z: Client connected
