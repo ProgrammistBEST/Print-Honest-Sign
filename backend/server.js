@@ -411,18 +411,18 @@ app.post('/kyz', async (req, res) => {
   
     const brandDetails = brands[selectedBrand];
     let tableName;
+    const normalizedBrand = selectedBrand.split(' ')[0];
 
     if (placePrint === 'Тест') {
         tableName = placeMappings['Тест'];
     } else {
+        console.log(brandDetails, normalizedBrand)
         const category = getCategoryByModel(filledInputs[0]?.model); // Определяем категорию первой модели
-        tableName = `${brandDetails.toLowerCase()}_${category}`;
+        tableName = `${normalizedBrand.toLowerCase()}_${category}`;
         if (!tableName) {
             return res.status(400).json({ error: 'Не удалось определить таблицу для данной модели.' });
         }
-        tableName = `${tableName}`;
     }
-    const normalizedBrand = selectedBrand.split(' ')[0];
     
     if (!tableName || !normalizedBrand) {
       return res.status(400).json({ error: 'Некорректные данные о бренде или месте печати.' });
