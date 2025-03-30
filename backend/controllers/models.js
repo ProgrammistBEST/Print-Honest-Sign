@@ -2,12 +2,18 @@ const { pool } = require('../config/connectdb');
 
 // Функция для получения всех категорий из базы данных
 async function getCategoryByModel(model) {
-    model = model.split(/[-/]/)[0].trim();
+    let sql;
+    let params = [];
+    if (model === undefined || model === null) {
+        sql = "SELECT DISTINCT category FROM model_categories";
+    } else {
+        model = model.split(/[-/]/)[0].trim();
+        sql = "SELECT DISTINCT category FROM model_categories WHERE model = ?";
+        params.push(model);
+    }
+
     try {
-        const [rows] = await pool.query(`
-          SELECT DISTINCT category FROM model_categories WHERE model = ?
-        `, (model));
-          console.log(rows);
+        const [rows] = await pool.query(sql, params);
   
           if (rows.length === 0) {
               return 'not_defined';

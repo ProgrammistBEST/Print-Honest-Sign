@@ -477,3 +477,71 @@
 [LOG] 2025-03-30T09:52:03.130Z: selectedPlace: Пятигорск selectedBrand: undefined
 [LOG] 2025-03-30T09:52:03.135Z: Пятигорск Запрос на получение данных о печати чз из базы
 [LOG] 2025-03-30T09:52:16.323Z: Client connected
+[LOG] 2025-03-30T10:20:12.212Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-30T10:20:12.213Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-30T10:20:12.239Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-30T10:20:12.240Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-30T10:20:12.248Z: Client connected
+[LOG] 2025-03-30T10:20:19.518Z: Client connected
+[LOG] 2025-03-30T10:20:37.320Z: Обработка модели "065", размера "40" для бренда "Armbest". Требуется: 1. tableName: delivery_test
+[LOG] 2025-03-30T10:20:39.086Z: Недостаточно записей для модели "065", размера "40". Требуется: 1, доступно: 0
+[LOG] 2025-03-30T10:21:40.614Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-30T10:21:40.616Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-30T10:21:40.634Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-30T10:21:40.635Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-30T10:21:40.734Z: Client connected
+[LOG] 2025-03-30T10:21:54.353Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-30T10:21:54.354Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-30T10:21:54.373Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-30T10:21:54.374Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-30T10:21:54.517Z: Client connected
+[LOG] 2025-03-30T10:21:55.929Z: Client connected
+[LOG] 2025-03-30T10:21:56.205Z: armbest
+[LOG] 2025-03-30T10:21:56.205Z: Модель:  065
+[LOG] 2025-03-30T10:21:56.206Z: Обработка модели "065", размера "40" для бренда "Armbest". Требуется: 1. tableName: armbest_[object Promise]
+[LOG] 2025-03-30T10:21:56.209Z: [object Object]
+[ERROR] 2025-03-30T10:21:56.212Z: Произошла ошибка: Error: Table 'storagesigns.armbest_[object promise]' doesn't exist
+[LOG] 2025-03-30T10:22:31.484Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-30T10:22:31.485Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-30T10:22:31.503Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-30T10:22:31.503Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-30T10:22:31.597Z: Client connected
+[LOG] 2025-03-30T10:22:31.598Z: Client connected
+[LOG] 2025-03-30T10:22:33.647Z: armbest
+[LOG] 2025-03-30T10:22:33.647Z: Модель:  065
+[LOG] 2025-03-30T10:22:33.650Z: [object Object]
+[LOG] 2025-03-30T10:22:33.651Z: Обработка модели "065", размера "40" для бренда "Armbest". Требуется: 1. tableName: armbest_men_1
+[LOG] 2025-03-30T10:22:33.677Z: 1
+[LOG] 2025-03-30T10:22:33.713Z: D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\30.03.25.13.22.33merged.pdf
+[LOG] 2025-03-30T10:22:33.713Z: "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe" /h /t "D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\30.03.25.13.22.33merged.pdf" "EPSON2AF3CE (L3250 Series)" "" "" D:\Desktop\Актуальная задача\Print-Honest-Sign\backend\30.03.25.13.22.33merged.pdf
+[ERROR] 2025-03-30T10:22:33.714Z: Произошла ошибка, но она игнорируется, так как печать завершена
+[LOG] 2025-03-30T10:22:39.322Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-30T10:22:39.328Z: Модель:  undefined
+[LOG] 2025-03-30T10:26:30.884Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-30T10:26:30.885Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-30T10:26:30.903Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-30T10:26:30.904Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-30T10:26:31.416Z: Client connected
+[LOG] 2025-03-30T10:26:31.673Z: Client connected
+[LOG] 2025-03-30T10:26:36.164Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-30T10:26:36.166Z: Модель:  undefined
+[LOG] 2025-03-30T10:26:36.172Z: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
+[LOG] 2025-03-30T10:26:36.173Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-30T10:26:50.189Z: Модель:  065
+[LOG] 2025-03-30T10:26:50.189Z: armbest_[object Promise] Armbest Пятигорск 2025-03-30 13:22:33 Администратор 065 40
+[LOG] 2025-03-30T10:26:50.191Z: [object Object]
+[ERROR] 2025-03-30T10:26:50.192Z: Error during update: Error: Table 'storagesigns.armbest_[object promise]' doesn't exist
+[LOG] 2025-03-30T10:30:59.479Z: Express is running on port https://localhost:6501
+[LOG] 2025-03-30T10:30:59.480Z: WebSocket is running on port https://localhost:6502
+[LOG] 2025-03-30T10:30:59.499Z: connectdb - Успешное подключение к базе данных MySQL: storagesigns
+[LOG] 2025-03-30T10:30:59.500Z: Успешное подключение к базе данных MySQL: bestserver
+[LOG] 2025-03-30T10:30:59.594Z: Client connected
+[LOG] 2025-03-30T10:30:59.729Z: Client connected
+[LOG] 2025-03-30T10:31:03.367Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-30T10:31:03.375Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-30T10:31:07.638Z: selectedPlace: Тест selectedBrand: undefined
+[LOG] 2025-03-30T10:31:07.640Z: Тест Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-30T10:31:10.078Z: selectedPlace: Пятигорск selectedBrand: undefined
+[LOG] 2025-03-30T10:31:10.080Z: Пятигорск Запрос на получение данных о печати чз из базы
+[LOG] 2025-03-30T10:31:14.111Z: armbest_[object Promise] Armbest Пятигорск 2025-03-30 13:22:33 Администратор 065 40
+[ERROR] 2025-03-30T10:31:14.113Z: Error during update: Error: Table 'storagesigns.armbest_[object promise]' doesn't exist

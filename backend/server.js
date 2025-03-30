@@ -231,7 +231,7 @@ app.put('/api/returnKyz', async (req, res) => {
 
   let tableName;
     
-  const category = getCategoryByModel(Model);
+  const category = await getCategoryByModel(Model);
   tableName = `${Brand.toLowerCase()}_${category}`;
   
   if (placePrint == 'Тест') {
@@ -416,8 +416,8 @@ app.post('/kyz', async (req, res) => {
     if (placePrint === 'Тест') {
         tableName = placeMappings['Тест'];
     } else {
-        console.log(`${normalizedBrand.toLowerCase()}_${category}`)
-        const category = getCategoryByModel(filledInputs[0]?.model); // Определяем категорию первой модели
+        console.log(normalizedBrand.toLowerCase())
+        const category =await getCategoryByModel(filledInputs[0]?.model); // Определяем категорию первой модели
         tableName = `${normalizedBrand.toLowerCase()}_${category}`;
         if (!tableName) {
             return res.status(400).json({ error: 'Не удалось определить таблицу для данной модели.' });

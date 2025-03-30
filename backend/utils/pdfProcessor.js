@@ -121,7 +121,7 @@ async function saveAllDataToDB(connection, pageDataList, brandData, placePrint) 
       Color = 'Multicolor';
     }
 
-    let category = getCategoryByModel(Model.split(/[-/]/)[0].trim());
+    let category = await getCategoryByModel(Model.split(/[-/]/)[0].trim());
     let tableName = `${Brand.toLowerCase()}_${category}`;
     if (!category && placePrint != 'Тест') {
         console.error(`Ошибка: Не удалось определить категорию для модели "${Model}".`);
