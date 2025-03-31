@@ -34,7 +34,7 @@ app.use(express.json());
 // ПОДКЛЮЧЕНИЕ ЛОГГЕРА
 initializeLogger();
 
-// const util = require('util');
+const util = require('util');
 const execCommand = util.promisify(exec);
 
 if (process.env.NODE_ENV === 'production') {
