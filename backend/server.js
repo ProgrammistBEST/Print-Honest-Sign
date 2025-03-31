@@ -35,7 +35,7 @@ app.use(express.json());
 initializeLogger();
 
 // const util = require('util');
-// const execCommand = util.promisify(exec);
+const execCommand = util.promisify(exec);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend/build')));
