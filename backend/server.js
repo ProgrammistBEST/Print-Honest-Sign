@@ -533,7 +533,7 @@ async function printPDF(filePath, type, placePrint) {
     }
     const resolvedPath = path.resolve(filePath);
     let command = '';
-    command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" "${resolvedPath}" "${placePrint}" "" ""`;
+    command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
     console.log('Выполняемая команда:', command);
     try {
         const { stdout, stderr } = await execCommand(command);
