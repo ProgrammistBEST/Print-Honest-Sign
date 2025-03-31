@@ -271,7 +271,7 @@ async function splitPDFIntoChunks(pdfBytes, chunkSize = 500) {
     chunks.push(chunkBytes);
   }
 
-  return chunks, totalPages;
+  return {chunks, totalPages};
 }
 
 // Загрузка нового киза
@@ -289,7 +289,7 @@ app.post('/uploadNewKyz', upload.single('file'), async (req, res) => {
     
     const pdfBytes = new Uint8Array(fileBuffer);
     const { chunks, totalPages } = await splitPDFIntoChunks(pdfBytes, 500);
-
+    console.log('chunks.length: ', chunks.length)
     for (let i = 0; i < chunks.length; i++) {
       const chunkBytes = chunks[i];
       console.log(`Обработка части ${i + 1} из ${chunks.length}`);
