@@ -478,7 +478,10 @@ app.post('/kyz', async (req, res) => {
         await Promise.all(allPromises);
         pdfPaths.sort((a, b) => extractSizeFromPath(a) - extractSizeFromPath(b));
         const mergedPdfPath = await mergePDFs(pdfPaths);
+        console.log('Проверка 0: ', mergedPdfPath, printerForHonestSign)
+
         printPDF(mergedPdfPath, 'honestSign', printerForHonestSign);
+        console.log("Все закончилось!")
         res.json({ success: true, data: { successfulSign, shortageInfo } });
       } else {
         res.json({ success: false, data: { successfulSign, shortageInfo } });
@@ -523,6 +526,7 @@ app.post('/kyz', async (req, res) => {
 
 // Функция для печати PDF файла
 async function printPDF(filePath, type, placePrint) {
+    console.log('Проверка 1: ', filePath, type, placePrint)
     if (!placePrint) {
         console.error('Ошибка: Не указан принтер!');
         return;
@@ -537,14 +541,16 @@ async function printPDF(filePath, type, placePrint) {
       
     try {
       const { stdout, stderr } = await execCommand(command);
+      console.log('Проверка 1: ', stdout, stderr, command)
+
       if (stderr) {
         console.warn('Предупреждение при печати:', stderr);
       }
       console.log('Печать завершена успешно');
+    
     } catch (err) {
       console.error('Произошла ошибка, но она игнорируется, так как печать завершена');
     }
-
 }
 
 // app.get('/getApiById', async (req, res) => {
