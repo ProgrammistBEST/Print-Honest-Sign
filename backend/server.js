@@ -322,7 +322,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/getBrandsData', async (req, res) => {
+app.get('/  ', async (req, res) => {
 
   const queries = [
     { brand: 'Armbest (Новая)', table: 'product_sizesbestshoes' },
@@ -367,14 +367,13 @@ app.get('/getBrandsData', async (req, res) => {
 
 const writePDFs = async (rows) => {
     const writePromises = rows
-      .filter(row => row.PDF)
-      .map(async (row) => {
-        const randomNumbers = Math.floor(1000 + Math.random() * 9000);
-        const pdfPath = path.join(__dirname, `output${row.id}-${row.Model}[${randomNumbers}]${row.Size}.pdf`);
-        await fs.promises.writeFile(pdfPath, row.PDF);
-        return pdfPath;
-      });
-  
+    .filter(row => row.PDF)
+    .map(async (row) => {
+      const randomNumbers = Math.floor(1000 + Math.random() * 9000);
+      const pdfPath = path.join(__dirname, `output${row.id}-${row.Model}[${randomNumbers}]${row.Size}.pdf`);
+      await fs.promises.writeFile(pdfPath, row.PDF);
+      return pdfPath;
+    });
     return Promise.all(writePromises);
   };
 

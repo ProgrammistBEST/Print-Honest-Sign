@@ -130,7 +130,7 @@ async function saveAllDataToDB(connection, pageDataList, brandData, placePrint) 
         console.error(`Ошибка: Не удалось определить таблицу для категории "${category}".`);
         continue;
     } else if (category == 'not_defined' && placePrint != 'Тест') {
-        console.error(`Ошибка: Не удалось определить таблицу для категории "${Model.split(/[-/]/)[0].trim()}".`);
+        console.error(`Ошибка: Не удалось определить таблицу для модели "${Model.split(/[-/]/)[0].trim()}".`);
     }
       
     if (placePrint == 'Тест') {
@@ -217,6 +217,7 @@ async function processPDF(fileBuffer, brandData, placePrint, io, MultiModel, tot
         let Crypto = linesArray.filter(line => line.startsWith('(01)')).join('\n');
         let Size = '';
         let Model = '';
+        
         const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
         io.emit('upload_status', { progress, message: `Загружено ${startPage} из ${totalPages}` });
 
@@ -263,6 +264,10 @@ async function processPDF(fileBuffer, brandData, placePrint, io, MultiModel, tot
           }
         }
 
+        if (MultiModel === true) {
+            Model = 'ЭВА';
+        } 
+        console.log(Model, MultiModel)
         // Создаем новый PDF-документ с одной страницей
         const pageBytes = await createSinglePagePDF(pdfBytes, startPage + pageIndex);
         return { pageData: pageBytes, pageNumber: startPage + pageIndex + 1, Crypto, Size, Model };
