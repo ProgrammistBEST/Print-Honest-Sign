@@ -231,7 +231,7 @@ app.put('/api/returnKyz', async (req, res) => {
 
   let tableName;
     
-  const category = await getCategoryByModel(Model);
+  const category = await getCategoryByModel(Model, Size);
   tableName = `${Brand.toLowerCase()}_${category}`;
   
   if (placePrint == 'Тест') {
@@ -412,19 +412,6 @@ app.post('/kyz', async (req, res) => {
     let tableName;
     const normalizedBrand = selectedBrand.split(' ')[0];
 
-    if (placePrint === 'Тест') {
-        tableName = placeMappings['Тест'];
-    } else {
-        console.log(normalizedBrand.toLowerCase())
-        const category =await getCategoryByModel(filledInputs[0]?.model); // Определяем категорию первой модели
-        tableName = `${normalizedBrand.toLowerCase()}_${category}`;
-        if (!tableName) {
-            return res.status(400).json({ error: 'Не удалось определить таблицу для данной модели.' });
-        }
-    }
-    if (!tableName || !normalizedBrand) {
-      return res.status(400).json({ error: 'Некорректные данные о бренде или месте печати.' });
-    }
   
     const shortageInfo = [];
     const successfulSign = [];
@@ -436,7 +423,20 @@ app.post('/kyz', async (req, res) => {
           const count = Number(value);
           if (isNaN(count) || count <= 0) {
             console.error(`Некорректное значение "value" для модели "${model}", размера "${size}".`);
-        }
+          }
+            if (placePrint === 'Тест') {
+                tableName = placeMappings['Тест'];
+                } else {
+                    console.log(normalizedBrand.toLowerCase())
+                    const category =await getCategoryByModel(filledInputs[0]?.model, size); // Определяем категорию первой модели
+                    tableName = `${normalizedBrand.toLowerCase()}_${category}`;
+                    if (!tableName) {
+                        return res.status(400).json({ error: 'Не удалось определить таблицу для данной модели.' });
+                    }
+                }
+                if (!tableName || !normalizedBrand) {
+                return res.status(400).json({ error: 'Некорректные данные о бренде или месте печати.' });
+            }
           // const formattedModel = ['Armbest'].includes(normalizedBrand) ? 'ЭВА' : model;
           console.log(`Обработка модели "${model}", размера "${size}" для бренда "${normalizedBrand}". Требуется: ${count}. tableName: ${tableName}`);
     

@@ -1,9 +1,12 @@
 const { pool } = require('../config/connectdb');
 
 // Функция для получения всех категорий из базы данных
-async function getCategoryByModel(model) {
+async function getCategoryByModel(model, Size) {
     let sql;
     let params = [];
+
+    if (model == 'ЭВА') model = Size.charAt(0);
+
     if (model === undefined || model === null) {
         sql = "SELECT DISTINCT category FROM model_categories";
     } else {
