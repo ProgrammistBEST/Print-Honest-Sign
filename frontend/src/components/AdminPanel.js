@@ -522,7 +522,6 @@ const AdminPanel = () => {
                                                         <li key={index}>
                                                             <span>{model.model}</span>
                                                             <span>{model.size}</span>
-                                                            <span>{model.deliverynumber} пос.</span>
                                                             <span>{model.quantity} шт.</span>
                                                         </li>
                                                     ))}

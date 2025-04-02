@@ -25,11 +25,11 @@ const getInfoAboutAllHonestSign = async (req, res) => {
   if (selectedPlace === "Тест") {
     // Если место - Тест, используем одну таблицу
     query = `
-      SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
+      SELECT Brand, Model, Size, COUNT(*) AS quantity
       FROM delivery_test
       WHERE Status = 'Waiting'
         AND Locked = 0
-      GROUP BY Model, Size, deliverynumber
+      GROUP BY Brand, Model, Size
     `;
   } else {
     // Формируем часть запроса для остальных мест
@@ -42,11 +42,11 @@ const getInfoAboutAllHonestSign = async (req, res) => {
 
           const fullTableName = `${brand}_${category}`;
           queryParts.push(`
-            SELECT Brand, Model, Size, deliverynumber, COUNT(*) AS quantity
+            SELECT Brand, Model, Size, COUNT(*) AS quantity
             FROM ${fullTableName}
             WHERE Status = 'Waiting'
               AND Locked = 0
-            GROUP BY Model, Size, deliverynumber
+            GROUP BY Brand, Model, Size
           `);
         }
     }

@@ -322,7 +322,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/  ', async (req, res) => {
+app.get('/getBrandsData', async (req, res) => {
 
   const queries = [
     { brand: 'Armbest (Новая)', table: 'product_sizesbestshoes' },
