@@ -5,8 +5,9 @@ async function getCategoryByModel(model, Size) {
     let sql;
     let params = [];
 
-    if (model == 'ЭВА') model = Size.charAt(0);
-
+    if (model === 'ЭВА') {
+        model = (typeof Size === 'string' && Size.charAt(0)) || model;
+    }
     if (model === undefined || model === null) {
         sql = "SELECT DISTINCT category FROM model_categories";
     } else {

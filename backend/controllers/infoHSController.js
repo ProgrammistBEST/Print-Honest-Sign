@@ -1,5 +1,5 @@
-const { pool } = require('../config/connectdb');
-const { getCategoryByModel, getTableName } = require('./models.js');
+const { pool } = require("../config/connectdb");
+const { getCategoryByModel, getTableName } = require("./models.js");
 
 const getInfoAboutAllHonestSign = async (req, res) => {
   const selectedPlace = req.query.placePrint;
@@ -12,13 +12,13 @@ const getInfoAboutAllHonestSign = async (req, res) => {
     Пятигорск: "pyatigorsk",
     Тест: "test",
   };
-    
+
   // Проверка на валидность местоположения
   if (!places[selectedPlace]) {
     return res.status(400).json({ error: "Неизвестное место" });
   }
 
-  console.log(selectedPlace, 'Запрос на получение данных о печати чз из базы');
+  console.log(selectedPlace, "Запрос на получение данных о печати чз из базы");
 
   let query;
 
@@ -36,19 +36,19 @@ const getInfoAboutAllHonestSign = async (req, res) => {
     const queryParts = [];
 
     for (const brand of brands) {
-        for (const category of categories) {
-          const tableName = `${brand.toLowerCase()}_${category}`;
-          if (!tableName) continue;
+      for (const category of categories) {
+        const tableName = `${brand.toLowerCase()}_${category}`;
+        if (!tableName) continue;
 
-          const fullTableName = `${brand}_${category}`;
-          queryParts.push(`
+        const fullTableName = `${brand}_${category}`;
+        queryParts.push(`
             SELECT Brand, Model, Size, COUNT(*) AS quantity
             FROM ${fullTableName}
             WHERE Status = 'Waiting'
               AND Locked = 0
             GROUP BY Brand, Model, Size
           `);
-        }
+      }
     }
     query = queryParts.join(" UNION ALL ");
   }

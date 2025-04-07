@@ -121,8 +121,9 @@ async function saveAllDataToDB(connection, pageDataList, brandData, placePrint) 
       Color = 'Multicolor';
     }
 
-    let category = await getCategoryByModel(Model.split(/[-/]/)[0].trim());
+    let category = await getCategoryByModel(Model.split(/[-/]/)[0].trim(), Size);
     let tableName = `${Brand.toLowerCase()}_${category}`;
+
     if (!category && placePrint != 'Тест') {
         console.error(`Ошибка: Не удалось определить категорию для модели "${Model}".`);
         continue;
@@ -177,25 +178,8 @@ async function createSinglePagePDF(pdfBytes, pageIndex) {
   return await newPdfDoc.save();
 }
 
-async function splitPDFIntoChunks(pdfBytes, chunkSize = 500) {
-  const pdfDoc = await PDFDocument.load(pdfBytes);
-  const totalPages = pdfDoc.getPageCount();
-  const chunks = [];
-
-  for (let startPage = 0; startPage < totalPages; startPage += chunkSize) {
-    const endPage = Math.min(startPage + chunkSize, totalPages);
-    const newPdfDoc = await PDFDocument.create();
-    const copiedPages = await newPdfDoc.copyPages(pdfDoc, Array.from({ length: endPage - startPage }, (_, i) => startPage + i));
-    copiedPages.forEach(page => newPdfDoc.addPage(page));
-    const chunkBytes = await newPdfDoc.save();
-    chunks.push(chunkBytes);
-  }
-
-  return chunks;
-}
-let pageForLoadingHonestSign = 0;
 // Функция обработки PDF
-async function processPDF(fileBuffer, brandData, placePrint, io, MultiModel, totalPages) {
+async function processPDF(fileBuffer, brandData, placePrint, io, MultiModel, totalPages, countLoad) {
   try {
     const data = new Uint8Array(fileBuffer);
     const { extractedTexts } = await extractTextFromPDF(data);
@@ -207,18 +191,17 @@ async function processPDF(fileBuffer, brandData, placePrint, io, MultiModel, tot
     // });
 
     const pdfBytes = new Uint8Array(fileBuffer);
-    const pageSize = 50;
+    const pageSize = 250;
     let startPage = 0;
 
     while (startPage < extractedTexts.length) {
-      pageForLoadingHonestSign += 1;
       const pageDataList = await Promise.all(extractedTexts.slice(startPage, startPage + pageSize).map(async (text, pageIndex) => {
         const linesArray = text.split('\n');
         let Crypto = linesArray.filter(line => line.startsWith('(01)')).join('\n');
         let Size = '';
         let Model = '';
-        
-        const progress = Math.round(((startPage + pageSize) / extractedTexts.length) * 100);
+        // console.log('Переменные: ',extractedTexts.length, startPage, pageSize, countLoad, Math.round(((startPage + pageSize) / countLoad) * 100))
+        const progress = Math.round(((startPage + pageSize) / totalPages) * 100);
         io.emit('upload_status', { progress, message: `Загружено ${startPage} из ${totalPages}` });
 
         if (linesArray.length > 1 && brandData == 'Armbest') {
@@ -267,7 +250,9 @@ async function processPDF(fileBuffer, brandData, placePrint, io, MultiModel, tot
         if (MultiModel === true) {
             Model = 'ЭВА';
         } 
-        console.log(Model, MultiModel)
+        
+        console.log(brandData, Model, Size, Crypto);
+        
         // Создаем новый PDF-документ с одной страницей
         const pageBytes = await createSinglePagePDF(pdfBytes, startPage + pageIndex);
         return { pageData: pageBytes, pageNumber: startPage + pageIndex + 1, Crypto, Size, Model };

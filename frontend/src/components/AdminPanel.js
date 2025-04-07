@@ -204,6 +204,7 @@ const AdminPanel = () => {
         .then((data) => {
             const brandGet = {};
             data.forEach(item => {
+                console.log(item)
                 if (!brandGet[item.Brand]) {
                     brandGet[item.Brand] = { totalQuantity: 0, models: [] };
                 }
