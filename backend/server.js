@@ -585,18 +585,6 @@ async function printPDF(filePath, type, placePrint) {
     console.error(
       "Произошла ошибка, но она игнорируется, так как печать завершена"
     );
-    try {
-      console.log(resolvedPath, filePath);
-      if (fs.existsSync(filePath)) {
-        // Проверка существования
-        fs.unlinkSync(filePath); // Удаление
-        console.log(`Файл удален: ${filePath}`);
-      } else {
-        console.error(`Файл не существует: ${filePath}`);
-      }
-    } catch (err) {
-      console.error(`Ошибка при удалении файла: ${err.message}`);
-    }
   }
 }
 
