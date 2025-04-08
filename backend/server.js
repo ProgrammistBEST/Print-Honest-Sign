@@ -28,16 +28,12 @@ const {
 } = require("./controllers/printedHSController.js");
 const { getCategoryByModel, getTableName } = require("./controllers/models.js");
 const { compareFiles } = require("./utils/compareFiles.js");
-const initializeLogger = require("./controllers/logStream.js");
 
 // const { general_article, get_article } = require('./models/scriptsArticles.js');
 // const { kyz } = require('./controllers/kyzController.js');
 
 app.use(cors());
 app.use(express.json());
-
-// ПОДКЛЮЧЕНИЕ ЛОГГЕРА
-initializeLogger();
 
 const util = require("util");
 const execCommand = util.promisify(exec);
@@ -234,24 +230,24 @@ function convertDateToServerFormat(clientDate) {
 
 // Обновление статуса киза
 app.put("/api/returnKyz", async (req, res) => {
-  let { Brand, user, placePrint, date, Model, Size } = req.body;
+  let { brand, user, placePrint, date, model, size } = req.body;
 
   let tableName;
 
-  const category = await getCategoryByModel(Model, Size);
-  tableName = `${Brand.toLowerCase()}_${category}`;
+  const category = await getCategoryByModel(model, size);
+  tableName = `${brand.toLowerCase()}_${category}`;
 
   if (placePrint == "Тест") {
     tableName = "delivery_test";
   }
 
   const serverDate = convertDateToServerFormat(date);
-  console.log(tableName, Brand, placePrint, serverDate, user, Model, Size);
+  console.log(tableName, brand, placePrint, serverDate, user, model, size);
 
   try {
     const [result] = await pool.query(
-      `UPDATE \`${tableName}\` SET Status = 'Waiting', Locked = 0 WHERE Date = ? AND Brand = ? AND user = ? AND Model = ? AND Size = ?`,
-      [serverDate, Brand, user, Model, Size]
+      `UPDATE \`${tableName}\` SET status = 'Waiting', locked = 0 WHERE date_upload = ? AND brand = ? AND user = ? AND model = ? AND size = ?`,
+      [serverDate, brand, user, model, size]
     );
     res.json({
       message: "Status updated successfully",
@@ -313,7 +309,7 @@ app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
         countLoad
       );
     }
-
+    io.emit("upload_status", { progress: 100, message: "Загрузка завершена!" });
     res.status(200).send({ message: "Файл успешно загружен." });
   } catch (err) {
     console.error("Error processing file:", err);
@@ -387,14 +383,14 @@ app.get("/getBrandsData", async (req, res) => {
 
 const writePDFs = async (rows) => {
   const writePromises = rows
-    .filter((row) => row.PDF)
+    .filter((row) => row.pdf)
     .map(async (row) => {
       const randomNumbers = Math.floor(1000 + Math.random() * 9000);
       const pdfPath = path.join(
         __dirname,
-        `output${row.id}-${row.Model}[${randomNumbers}]${row.Size}.pdf`
+        `output${row.id}-${row.model}[${randomNumbers}]${row.size}.pdf`
       );
-      await fs.promises.writeFile(pdfPath, row.PDF);
+      await fs.promises.writeFile(pdfPath, row.pdf);
       return pdfPath;
     });
   return Promise.all(writePromises);
@@ -473,9 +469,9 @@ app.post("/kyz", async (req, res) => {
 
       // Запрос к базе данных для текущего размера
       const [waitingRows] = await pool.query(
-        `SELECT PDF, id, Model, Size, Crypto FROM \`${tableName}\` 
-              WHERE \`Size\` = ? AND \`Brand\` = ? AND \`Status\` = 'Waiting'
-              AND \`Model\` = ? AND \`Locked\` = 0
+        `SELECT pdf, id, model, size, crypto FROM \`${tableName}\` 
+              WHERE \`size\` = ? AND \`brand\` = ? AND \`status\` IN ('Waiting', 'Comeback')
+              AND \`model\` = ? AND \`locked\` = 0
               LIMIT ?`,
         [size, normalizedBrand, model, count]
       );
@@ -508,8 +504,8 @@ app.post("/kyz", async (req, res) => {
         // Обновление статуса
         await pool.query(
           `UPDATE \`${tableName}\`
-                  SET \`Locked\` = 1, \`Status\` = ?, \`Date\` = ?, \`user\` = ?
-                  WHERE \`id\` IN (?) AND \`Status\` = "Waiting" AND \`Locked\` = 0`,
+                  SET \`locked\` = 1, \`status\` = ?, \`date_used\` = ?, \`user\` = ?
+                  WHERE \`id\` IN (?) AND \`status\` = "Waiting" AND \`locked\` = 0`,
           ["Used", getFormattedDateTime(), user, rowIds.flat()]
         );
       }
@@ -589,6 +585,18 @@ async function printPDF(filePath, type, placePrint) {
     console.error(
       "Произошла ошибка, но она игнорируется, так как печать завершена"
     );
+    try {
+      console.log(resolvedPath, filePath);
+      if (fs.existsSync(filePath)) {
+        // Проверка существования
+        fs.unlinkSync(filePath); // Удаление
+        console.log(`Файл удален: ${filePath}`);
+      } else {
+        console.error(`Файл не существует: ${filePath}`);
+      }
+    } catch (err) {
+      console.error(`Ошибка при удалении файла: ${err.message}`);
+    }
   }
 }
 
@@ -692,11 +700,11 @@ app.get("/api/report", async (req, res) => {
 
     const fullTableName = `${brand}_${category}`;
     queryParts.push(`
-            SELECT Brand, Model, Size, COUNT(*) AS Quantity
+            SELECT brand, model, size, COUNT(*) AS Quantity
             FROM ${fullTableName}
-            WHERE Status = 'Waiting'
-              AND Locked = 0
-            GROUP BY Brand, Model, Size
+            WHERE status = 'Waiting'
+              AND locked = 0
+            GROUP BY brand, model, size
           `);
   }
 

@@ -171,12 +171,12 @@ async function getDataFromDB(brand) {
     const fullTableName = `${brand.toLowerCase()}_${category}`;
     queryParts.push(`
     SELECT 
-        Model,
-        Size, 
+        model,
+        size, 
         COUNT(*) as Quantity
     FROM ${fullTableName}
-    WHERE Status = 'Waiting'
-    GROUP BY Size, Model
+    WHERE status = 'Waiting'
+    GROUP BY size, model
     `);
   }
 
