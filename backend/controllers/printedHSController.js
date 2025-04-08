@@ -46,7 +46,7 @@ const getPrintedHonestSign = async (req, res) => {
       // Для места "Тест" используем одну таблицу
       query = `
         SELECT brand, model, size, COUNT(*) AS quantity,
-               DATE_FORMAT(date_upload, '%d.%m %H:%i:%s') AS date, user
+               DATE_FORMAT(date_used, '%d.%m %H:%i:%s') AS date, user
         FROM delivery_test
         WHERE status = 'Used' 
           AND locked = 1 
@@ -63,7 +63,7 @@ const getPrintedHonestSign = async (req, res) => {
           if (!tableName) continue;
           queryParts.push(`
             SELECT brand, model, size, COUNT(*) AS quantity,
-                   DATE_FORMAT(date_upload, '%d.%m %H:%i:%s') AS date, user
+                   DATE_FORMAT(date_used, '%d.%m %H:%i:%s') AS date, user
             FROM ${tableName}
             WHERE status = 'Used' 
               AND locked = 1 

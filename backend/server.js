@@ -246,7 +246,7 @@ app.put("/api/returnKyz", async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      `UPDATE \`${tableName}\` SET status = 'Waiting', locked = 0 WHERE date_upload = ? AND brand = ? AND user = ? AND model = ? AND size = ?`,
+      `UPDATE \`${tableName}\` SET status = 'Waiting', locked = 0 WHERE date_used = ? AND brand = ? AND status = 'Used' AND locked = 1 AND user = ? AND model = ? AND size = ?`,
       [serverDate, brand, user, model, size]
     );
     res.json({
@@ -283,6 +283,9 @@ async function splitPDFIntoChunks(pdfBytes, chunkSize = 500) {
 // Загрузка нового киза
 app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
   try {
+    const arrayAddingModels = {};
+    let countPages = 0;
+
     if (!req.file) {
       return res.status(400).send({ message: "Файл не загружен." });
     }
@@ -291,13 +294,11 @@ app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
     const brandData = JSON.parse(req.body.brandData);
     const placePrint = JSON.parse(req.body.placePrint);
     const MultiModel = JSON.parse(req.body.MultiModel);
-    let countLoad = 0;
     const pdfBytes = new Uint8Array(fileBuffer);
     const { chunks, totalPages } = await splitPDFIntoChunks(pdfBytes, 500);
     console.log("chunks.length: ", chunks.length);
     for (let i = 0; i < chunks.length; i++) {
       const chunkBytes = chunks[i];
-      countLoad += chunks.length;
       console.log(`Обработка части ${i + 1} из ${chunks.length}`);
       await processPDF(
         chunkBytes,
@@ -306,10 +307,12 @@ app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
         io,
         MultiModel,
         totalPages,
-        countLoad
+        countPages,
+        arrayAddingModels
       );
     }
-    io.emit("upload_status", { progress: 100, message: "Загрузка завершена!" });
+
+    countPages += 100;
     res.status(200).send({ message: "Файл успешно загружен." });
   } catch (err) {
     console.error("Error processing file:", err);
@@ -519,7 +522,7 @@ app.post("/kyz", async (req, res) => {
       const mergedPdfPath = await mergePDFs(pdfPaths);
       console.log("Проверка 0: ", mergedPdfPath, printerForHonestSign);
 
-      printPDF(mergedPdfPath, "honestSign", printerForHonestSign);
+      printPDF(mergedPdfPath, "honestSign", printerForHonestSign, placePrint);
       console.log("Все закончилось!");
       res.json({ success: true, data: { successfulSign, shortageInfo } });
     } else {
@@ -566,15 +569,23 @@ app.post("/kyz", async (req, res) => {
 // });
 
 // Функция для печати PDF файла
-async function printPDF(filePath, type, placePrint) {
-  console.log("Проверка 1: ", filePath, type, placePrint);
-  if (!placePrint) {
+async function printPDF(filePath, type, printer, placePrint) {
+  if (!printer) {
     console.error("Ошибка: Не указан принтер!");
-    return;
+    return false;
   }
+  console.log(placePrint, printer);
   const resolvedPath = path.resolve(filePath);
+
+  if (placePrint === "Тест") {
+    console.error(
+      `Тестовый контур выдал положительный ответ: путь файла - ${resolvedPath}, печать для ${printer}`
+    );
+    return false;
+  }
+
   let command = "";
-  command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${placePrint}" "" ""`;
+  command = `"C:\\Program Files\\Adobe\\Acrobat DC\\Acrobat\\Acrobat.exe" /h /t "${resolvedPath}" "${printer}" "" ""`;
   console.log("Выполняемая команда:", command);
   try {
     const { stdout, stderr } = await execCommand(command);

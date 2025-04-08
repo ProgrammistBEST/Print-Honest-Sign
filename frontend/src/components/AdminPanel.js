@@ -52,6 +52,7 @@ const AdminPanel = () => {
   const [brandFilter, setBrandFilter] = useState("");
   const [modelFilter, setModelFilter] = useState("");
   const [sizeFilter, setSizeFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
 
   // Статус загрузки честного знака
   const [statusUploadSign, setStatusUploadSign] = useState("");
@@ -152,7 +153,8 @@ const AdminPanel = () => {
       const isSizeMatch =
         !sizeFilter ||
         item.size.toLowerCase().includes(sizeFilter.toLowerCase());
-      return isBrandMatch && isModelMatch && isSizeMatch;
+      const isDateMatch = !dateFilter || item.date.includes(dateFilter);
+      return isBrandMatch && isModelMatch && isSizeMatch && isDateMatch;
     })
     .sort((a, b) => {
       const parseDate = (dateString) => {
@@ -379,7 +381,6 @@ const AdminPanel = () => {
   // Фильтрация не напечатанных знаков
   const [modelFilterWaiting, setModelFilterWaiting] = useState("");
   const [sizeFilterWaiting, setSizeFilterWaiting] = useState("");
-  const [deliveryNumberWaiting, setdeliveryNumberWaiting] = useState();
 
   const filteredDataWaiting = Object.entries(InfoAboutHonestSing).reduce(
     (acc, [brand, data]) => {
@@ -390,13 +391,7 @@ const AdminPanel = () => {
               .toLowerCase()
               .includes(modelFilterWaiting.toLowerCase())) &&
           (!sizeFilterWaiting ||
-            model.size
-              .toLowerCase()
-              .includes(sizeFilterWaiting.toLowerCase())) &&
-          (!deliveryNumberWaiting ||
-            model.deliverynumber
-              ?.toLowerCase()
-              .includes(deliveryNumberWaiting.toLowerCase()))
+            model.size.toLowerCase().includes(sizeFilterWaiting.toLowerCase()))
       );
 
       if (filteredModelsWaiting.length > 0) {
@@ -534,22 +529,6 @@ const AdminPanel = () => {
                     placeholder="Размер"
                     value={sizeFilterWaiting}
                     onChange={(e) => setSizeFilterWaiting(e.target.value)}
-                    style={{
-                      padding: "8px 12px",
-                      borderRadius: "5px",
-                      border: "1px solid #ccc",
-                      boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-                      width: "100px",
-                      fontSize: "14px",
-                      outline: "none",
-                      transition: "border-color 0.2s ease-in-out",
-                    }}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Поставка"
-                    value={deliveryNumberWaiting}
-                    onChange={(e) => setdeliveryNumberWaiting(e.target.value)}
                     style={{
                       padding: "8px 12px",
                       borderRadius: "5px",

@@ -205,7 +205,6 @@ async function saveAllDataToDB(
     }
   }
 }
-
 // Создание нового PDF-документа
 async function createSinglePagePDF(pdfBytes, pageIndex) {
   const pdfDoc = await PDFDocument.load(pdfBytes);
@@ -216,7 +215,6 @@ async function createSinglePagePDF(pdfBytes, pageIndex) {
 }
 
 // Функция обработки PDF
-let countPages = 0;
 async function processPDF(
   fileBuffer,
   brandData,
@@ -224,7 +222,8 @@ async function processPDF(
   io,
   MultiModel,
   totalPages,
-  countLoad
+  countPages,
+  arrayAddingModels
 ) {
   try {
     const data = new Uint8Array(fileBuffer);
@@ -251,12 +250,6 @@ async function processPDF(
               .join("\n");
             let Size = "";
             let Model = "";
-            // console.log('Переменные: ',extractedTexts.length, startPage, pageSize, countLoad, Math.round(((startPage + pageSize) / countLoad) * 100))
-            const progress = Math.round((countPages / totalPages) * 100);
-            io.emit("upload_status", {
-              progress,
-              message: `Загружено ${countPages} из ${totalPages}`,
-            });
 
             if (linesArray.length > 1 && brandData == "Armbest") {
               const secondLine = linesArray[4] || "";
@@ -312,23 +305,44 @@ async function processPDF(
               pdfBytes,
               startPage + pageIndex
             );
+
+            if (!arrayAddingModels[Model]) {
+              arrayAddingModels[Model] = { count: 0, sizes: {} };
+            }
+
+            arrayAddingModels[Model].count += 1;
+
+            if (!arrayAddingModels[Model].sizes[Size]) {
+              arrayAddingModels[Model].sizes[Size] = 0;
+            }
+
+            arrayAddingModels[Model].sizes[Size] += 1;
+
+            const progress = Math.round((countPages / totalPages) * 100);
+            io.emit("upload_status", {
+              progress,
+              message: `Загружено ${countPages} из ${totalPages}`,
+              placePrint,
+              arrayAddingModels,
+            });
+
             return {
               pageData: pageBytes,
               pageNumber: startPage + pageIndex + 1,
               Crypto,
               Size,
               Model,
+              arrayAddingModels,
+              countPages,
             };
           })
       );
-
-      countPages += pageSize;
 
       // Записываем данные в базу данных
       await saveAllDataToDB(pool, pageDataList, brandData, placePrint);
       // Перемещаемся к следующей порции страниц
       startPage += pageSize;
-      console.log(startPage);
+      console.log("startPage: ", startPage);
     }
     // subscribers.forEach(chatId => {
     //   let message = `Для ${brandData} добавлено ${extractedTexts.length} шт. честного знака.`;
