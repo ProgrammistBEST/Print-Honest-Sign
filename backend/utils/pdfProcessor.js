@@ -45,7 +45,7 @@ async function saveAllDataToDB(
   placePrint
 ) {
   let Brand = brandData;
-  let Color;
+  let Color = "Multicolor";
 
   console.log("Brand, placePrint: ", Brand, placePrint);
   let DateNow = new Date();
@@ -128,9 +128,10 @@ async function saveAllDataToDB(
 
   for (let { pageData, Crypto, Size, Model } of pageDataList) {
     if (Model === "" || Model === " ") {
-      Model = "Multimodel";
+      Model = "ЭВА";
       Color = "Multicolor";
-    } else {
+    } else if (Model == "Обувь ЭВА") {
+      Model = "ЭВА";
       Color = "Multicolor";
     }
 
@@ -178,7 +179,6 @@ async function saveAllDataToDB(
     try {
       const insertQuery = `INSERT INTO ${tableName} (model, color, pdf, size, crypto, brand, date_upload, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
       const checkQuery = `SELECT 1 FROM ${tableName} WHERE model = ? AND color = ? AND size = ? AND crypto = ? AND brand = ?`;
-
       const [rows] = await connection.execute(checkQuery, [
         Model,
         Color,
@@ -205,6 +205,7 @@ async function saveAllDataToDB(
     }
   }
 }
+
 // Создание нового PDF-документа
 async function createSinglePagePDF(pdfBytes, pageIndex) {
   const pdfDoc = await PDFDocument.load(pdfBytes);

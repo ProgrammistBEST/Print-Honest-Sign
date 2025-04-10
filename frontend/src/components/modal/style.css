@@ -203,13 +203,15 @@
   transition: 0.3s;
   cursor: pointer;
   border-radius: 10px;
+  position: relative;
+  border: 2px solid #94949400;
 }
 .model-element:hover {
   transition: 0.3s;
   background-color: #c2c2c2;
   border: 2px solid #949494;
   transform: scale(1.2);
-  position: relative; /* scale(1.2) */
+  z-index: 1000;
 }
 
 .close-button-modal {
@@ -233,14 +235,35 @@
 }
 
 .model-element:hover {
-  animation: rotate 0.1s infinite;
+  animation: rotate 0.1s infinite, colorChange 0.5s infinite;
+  background-color: red;
 }
 
 @keyframes rotate {
   from {
     transform: rotate(0deg);
+    background-color: red;
   }
   to {
     transform: rotate(360deg);
+    background-color: rgb(255, 255, 255);
+  }
+}
+
+@keyframes colorChange {
+  0% {
+    background-color: rgb(255, 0, 0);
+  }
+  25% {
+    background-color: rgb(0, 255, 0);
+  }
+  50% {
+    background-color: blue;
+  }
+  75% {
+    background-color: rgb(255, 230, 0);
+  }
+  100% {
+    background-color: rgb(255, 0, 0);
   }
 }
