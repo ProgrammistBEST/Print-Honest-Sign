@@ -432,7 +432,6 @@ app.post("/kyz", async (req, res) => {
   };
 
   const brandDetails = brands[selectedBrand];
-  let tableName;
   const normalizedBrand = selectedBrand.split(" ")[0];
 
   const shortageInfo = [];
@@ -441,6 +440,8 @@ app.post("/kyz", async (req, res) => {
 
   try {
     const allPromises = await filledInputs.map(async (input) => {
+      let tableName;
+
       const { size, model, value } = input;
       const count = Number(value);
       if (isNaN(count) || count <= 0) {
@@ -502,7 +503,7 @@ app.post("/kyz", async (req, res) => {
         // Запись PDF
         const newPdfPaths = await writePDFs(waitingRows.slice(0, count));
         pdfPaths.push(...newPdfPaths);
-        console.log(waitingRows.length);
+        console.log(user, rowIds, tableName);
 
         // Обновление статуса
         await pool.query(
