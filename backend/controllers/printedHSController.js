@@ -45,7 +45,7 @@ const getPrintedHonestSign = async (req, res) => {
     if (selectedPlace === "Тест") {
       // Для места "Тест" используем одну таблицу
       query = `
-        SELECT brand, model, size, COUNT(*) AS quantity,
+        SELECT id, brand, model, size, COUNT(*) AS quantity,
                DATE_FORMAT(date_used, '%d.%m %H:%i:%s') AS date, user
         FROM delivery_test
         WHERE status = 'Used' 
@@ -62,7 +62,7 @@ const getPrintedHonestSign = async (req, res) => {
           const tableName = `${brand.toLowerCase()}_${category}`;
           if (!tableName) continue;
           queryParts.push(`
-            SELECT brand, model, size, COUNT(*) AS quantity,
+            SELECT id, brand, model, size, COUNT(*) AS quantity,
                    DATE_FORMAT(date_used, '%d.%m %H:%i:%s') AS date, user
             FROM ${tableName}
             WHERE status = 'Used' 

@@ -230,7 +230,7 @@ function convertDateToServerFormat(clientDate) {
 
 // Обновление статуса киза
 app.put("/api/returnKyz", async (req, res) => {
-  let { brand, user, placePrint, date, model, size } = req.body;
+  let { id, brand, user, placePrint, date, model, size } = req.body;
 
   let tableName;
 
@@ -246,8 +246,8 @@ app.put("/api/returnKyz", async (req, res) => {
 
   try {
     const [result] = await pool.query(
-      `UPDATE \`${tableName}\` SET status = 'Waiting', locked = 0 WHERE date_used = ? AND brand = ? AND status = 'Used' AND locked = 1 AND user = ? AND model = ? AND size = ?`,
-      [serverDate, brand, user, model, size]
+      `UPDATE \`${tableName}\` SET status = 'Waiting', locked = 0 WHERE id = ? AND model = ?`,
+      [id, model]
     );
     res.json({
       message: "Status updated successfully",
@@ -402,20 +402,6 @@ const writePDFs = async (rows) => {
 app.post("/kyz", async (req, res) => {
   let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign } =
     req.body;
-  // const brandMappings = {
-  //   'Ozon (Armbest)': { name: 'Ozon Armbest', table: 'delivery_armbest_ozon_' },
-  //   'Ozon (BestShoes)': { name: 'Ozon BestShoes', table: 'delivery_bestshoes_ozon_' },
-  //   'Armbest (Новая)': { name: 'Armbest', table: 'delivery_armbest_' },
-  //   'BestShoes (Старая)': { name: 'BestShoes', table: 'delivery_bestshoes_' },
-  //   'BestShoes': { name: 'BestShoes', table: 'delivery_bestshoes_' },
-  //   'Best26 (Арташ)': { name: 'Best26', table: 'delivery_best26_' },
-  // };
-
-  // const placeMappings = {
-  //   'Тест': 'delivery_test',
-  //   'Пятигорск': 'pyatigorsk',
-  //   'Лермонтово': 'lermontovo',
-  // };
 
   const placeMappings = {
     Тест: "delivery_test",
@@ -439,7 +425,7 @@ app.post("/kyz", async (req, res) => {
   const pdfPaths = [];
 
   try {
-    const allPromises = await filledInputs.map(async (input) => {
+    const allPromises = await filledInputs.map(async (input, index) => {
       let tableName;
 
       const { size, model, value } = input;
@@ -453,7 +439,12 @@ app.post("/kyz", async (req, res) => {
         tableName = placeMappings["Тест"];
       } else {
         console.log(normalizedBrand.toLowerCase());
-        const category = await getCategoryByModel(filledInputs[0]?.model, size); // Определяем категорию первой модели
+        console.log(`${filledInputs[index]?.model}, ${size}`);
+
+        const category = await getCategoryByModel(
+          filledInputs[index]?.model,
+          size
+        );
         tableName = `${normalizedBrand.toLowerCase()}_${category}`;
         if (!tableName) {
           return res.status(400).json({
@@ -762,4 +753,29 @@ app.listen(portExpress, () => {
 
 server.listen(portSocket, () => {
   console.log(`WebSocket is running on port https://localhost:${portSocket}`);
+});
+
+// Закрытие подключения к базе данных при завершении работы сервера
+process.on("SIGINT", async () => {
+  try {
+    await pool.end();
+    await userPool.end();
+    console.log("Closed the database connection.");
+    process.exit(0);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+});
+
+process.on("SIGTERM", async () => {
+  try {
+    await pool.end();
+    await userPool.end();
+    console.log("Closed the database connection.");
+    process.exit(0);
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
 });

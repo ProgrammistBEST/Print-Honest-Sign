@@ -325,7 +325,8 @@ const AdminPanel = () => {
     if (!conf) {
       return;
     }
-    const { brand, user, model, size, date } = item;
+    const { id, brand, user, model, size, date } = item;
+
     try {
       const response = await fetch(`http://localhost:6501/api/returnKyz`, {
         method: "PUT",
@@ -333,6 +334,7 @@ const AdminPanel = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          id,
           brand,
           user,
           placePrint,
