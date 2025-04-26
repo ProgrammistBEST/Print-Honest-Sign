@@ -700,7 +700,7 @@ const AdminPanel = () => {
             <option value="EPSON2AF3CE (L3250 Series)">
               EPSON2AF3CE (L3250 Series)
             </option>
-            <option value="ChestniZnak">ChestniZnak</option>
+            <option value="Godex ZX420i+ (копия 1)">ChestniZnak</option>
           </select>
           {printerForHonestSign && (
             <p style={{ color: "green", marginTop: "-10px" }}>
