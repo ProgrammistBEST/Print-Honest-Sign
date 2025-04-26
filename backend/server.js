@@ -68,7 +68,9 @@ const upload = multer({ storage: storage });
 app.get("/api/printers", async (req, res) => {
   try {
     const printers = await getPrinters();
-    res.json(printers);
+    console.log(printers);
+    const printersNames = printers.map((printer) => printer.name);
+    res.json(printersNames);
   } catch (error) {
     res.status(500).json({ error: "Не удалось получить список принтеров" });
   }

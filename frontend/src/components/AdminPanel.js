@@ -34,6 +34,12 @@ const AdminPanel = () => {
   const [addMultiModel, setAddMultiModel] = useState(false);
   const location = useLocation();
   let [filteredItems, setFilteredItems] = useState([]);
+  const [customPrinter, setCustomPrinter] = useState("");
+  const [printers, setPrinters] = useState([
+    "Баркод",
+    "EPSON2AF3CE (L3250 Series)",
+    "ChestniZnak",
+  ]);
   useEffect(() => {
     if (location.pathname === "/admin") {
       setWindowAdmin(true);
@@ -76,6 +82,13 @@ const AdminPanel = () => {
     setModels(updatedModels);
   };
 
+  const handleAddCustomPrinter = () => {
+    if (customPrinter.trim() && !printers.includes(customPrinter)) {
+      setPrinters([...printers, customPrinter]);
+      setCustomPrinter("");
+    }
+  };
+
   // Добавление нового элемента в список
   const addModel = () => {
     setModels([...models, { article: "", size: "", brand: "bestshoes" }]);
@@ -90,6 +103,23 @@ const AdminPanel = () => {
     const updatedModels = models.filter((_, i) => i !== index);
     setModels(updatedModels);
   };
+
+  useEffect(() => {
+    const fetchPrinters = async () => {
+      try {
+        const response = await fetch("http://localhost:6501/api/printers");
+        if (!response.ok) {
+          throw new Error("Не удалось получить список принтеров");
+        }
+        const data = await response.json();
+        if (data.length > 0) setPrinters(data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchPrinters();
+  }, []);
 
   // Отправка данных (например, сохранение в базу данных)
   const handleSubmit = async (e) => {
@@ -696,18 +726,45 @@ const AdminPanel = () => {
               cursor: "pointer",
             }}
           >
-            <option value="Баркод">Баркод</option>
-            <option value="EPSON2AF3CE (L3250 Series)">
-              EPSON2AF3CE (L3250 Series)
-            </option>
-            <option value="Godex ZX420i+ (копия 1)">ChestniZnak</option>
+            {printers.map((printer, index) => (
+              <option key={index} value={printer}>
+                {printer}
+              </option>
+            ))}
           </select>
           {printerForHonestSign && (
             <p style={{ color: "green", marginTop: "-10px" }}>
               Вы выбрали: {printerForHonestSign}
             </p>
           )}
-
+          {/* Input for adding a custom printer */}
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <input
+              type="text"
+              value={customPrinter}
+              onChange={(e) => setCustomPrinter(e.target.value)}
+              placeholder="Enter custom printer name"
+              style={{
+                flex: 1,
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ddd",
+              }}
+            />
+            <button
+              onClick={handleAddCustomPrinter}
+              style={{
+                padding: "8px 16px",
+                borderRadius: "4px",
+                border: "none",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              Добавить принтер
+            </button>
+          </div>
           {/* Фильтры */}
           <label
             htmlFor="placePrint"
