@@ -24,7 +24,7 @@ const socket = io(`http://localhost:6502`);
 
 const AdminPanel = () => {
   const [username, setUsernameAdminPanel] = useState("");
-  const [brend, setBrend] = useState("");
+  const [brand, setBrand] = useState("");
   const [printerForHonestSign, setprinterForHonestSign] = useState("");
   const [printerForBarcode, setPrinterForBarcode] = useState("");
   const [password, setPasswordAdminPanel] = useState("");
@@ -246,7 +246,7 @@ const AdminPanel = () => {
 
     const url = new URL(`http://localhost:6501/api/InfoAboutAllHonestSign`);
     url.searchParams.append("placePrint", localStorage.getItem("placePrint"));
-    url.searchParams.append("brand", brend);
+    url.searchParams.append("brand", brand);
 
     fetch(url)
       .then((response) => {
@@ -288,14 +288,15 @@ const AdminPanel = () => {
     setError("");
     let question;
     if (
-      brend === "Armbest" ||
-      brend === "BestShoes" ||
-      brend === "Best26" ||
-      brend === "OZON"
+      brand === "Armbest" ||
+      brand === "Armb2" ||
+      brand === "BestShoes" ||
+      brand === "Best26" ||
+      brand === "OZON"
     ) {
-      console.log("brend:", brend);
-      question = confirm(`Согласны добавить КИЗ на, ${brend}`); // , в поставку №, ${deliveryNumber}
-    } else if (brend == "") {
+      console.log("brand:", brand);
+      question = confirm(`Согласны добавить КИЗ на, ${brand}`); // , в поставку №, ${deliveryNumber}
+    } else if (brand == "") {
       alert(
         "Выберите фирму на которую хотите добавить честный знак и попробуйте еще раз."
       );
@@ -311,8 +312,8 @@ const AdminPanel = () => {
 
     const formData = new FormData();
     formData.append("file", pdfFile);
-    console.log(brend);
-    formData.append("brandData", JSON.stringify(brend));
+    console.log(brand);
+    formData.append("brandData", JSON.stringify(brand));
     formData.append("placePrint", JSON.stringify(placePrint));
     formData.append("MultiModel", JSON.stringify(addMultiModel));
 
@@ -406,8 +407,8 @@ const AdminPanel = () => {
   const [InfoAboutHonestSing, setInfoAboutHonestSing] = useState([]);
   const [expandedBrand, setExpandedBrand] = useState(null);
 
-  const toggleBrand = (brend) => {
-    setExpandedBrand(expandedBrand === brend ? null : brend);
+  const toggleBrand = (brand) => {
+    setExpandedBrand(expandedBrand === brand ? null : brand);
   };
 
   // Фильтрация не напечатанных знаков
@@ -492,7 +493,7 @@ const AdminPanel = () => {
 
   const handleCompanySelection = (company) => {
     console.log(`[INFO] Выбрана компания: ${company}`);
-    setBrend(company); // Устанавливаем компанию в стейт родительского компонента
+    setBrand(company); // Устанавливаем компанию в стейт родительского компонента
   };
 
   return (
@@ -604,7 +605,7 @@ const AdminPanel = () => {
           onClose={handleCloseModalInfo}
           info={statusUploadSign}
           type={"statusUploadSigns"}
-          brand={brend}
+          brand={brand}
           placePrint={placePrint}
         />
 
@@ -1007,7 +1008,7 @@ const AdminPanel = () => {
                                             </button>
                                         )}   */}
                   <CompareFiles
-                    selectedCompany={brend}
+                    selectedCompany={brand}
                     placePrint={placePrint}
                   />
                 </article>
@@ -1081,6 +1082,7 @@ const AdminPanel = () => {
                   <MenuItem value="bestshoes">BestShoes</MenuItem>
                   <MenuItem value="best26">Best26</MenuItem>
                   <MenuItem value="armbest">Armbest</MenuItem>
+                  <MenuItem value="arm2">Arm2</MenuItem>
                 </Select>
                 <Button
                   variant="outlined"

@@ -229,6 +229,7 @@ async function processPDF(
   try {
     const data = new Uint8Array(fileBuffer);
     const { extractedTexts } = await extractTextFromPDF(data);
+    // console.log('extractedTexts', extractedTexts)
 
     // subscribers.forEach(chatId => {
     //   let message = `Запущена загрузка честного знака на ${brandData} в количестве ${extractedTexts.length} шт.`;
@@ -260,6 +261,16 @@ async function processPDF(
               } else {
                 Size = linesArray[2] || "";
                 Model = "Multimodel";
+              }
+            } else if (linesArray.length > 1 && brandData == "Arm2") {
+              const secondLine = linesArray[4] || "";
+              const oneLine = linesArray[2].replace('у', '') || "";
+              if (isValidSize(secondLine)) {
+                Size = secondLine;
+                Model = oneLine;
+              } else {
+                Size = linesArray[1] || "";
+                Model = oneLine;
               }
             } else if (linesArray.length > 1 && brandData == "Best26") {
               const secondLine = linesArray[4] || "";

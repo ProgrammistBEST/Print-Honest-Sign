@@ -190,6 +190,7 @@ const ReportGenerator = ({ setSelectedCompany }) => {
       <div className="button-group">
         {[
           "Armbest",
+          "Arm2",
           "BestShoes",
           "Best26",
           "Ozon Armbest",

@@ -4,7 +4,7 @@ const { getCategoryByModel, getTableName } = require("./models.js");
 const getInfoAboutAllHonestSign = async (req, res) => {
   const selectedPlace = req.query.placePrint;
 
-  const brands = ["armbest", "bestshoes", "best26"];
+  const brands = ["armbest", "bestshoes", "best26", "arm2"];
   const categories = await getCategoryByModel();
 
   const places = {
