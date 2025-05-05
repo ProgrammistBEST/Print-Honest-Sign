@@ -61,17 +61,17 @@ const ReportGenerator = ({ setSelectedCompany }) => {
       // Логика для добавления данных в листы и чередования цветов с границами
       data.forEach((row, rowIndex) => {
         const newRowData = {
-          Size: row.Size,
-          Model: row.Model,
-          Quantity: row.Quantity,
+          Size: row.size,
+          Model: row.model,
+          Quantity: row.quantity,
         };
 
         // Обрабатываем лист "Нехватка" (если количество меньше 10)
-        if (row.Quantity < 10) {
+        if (row.quantity < 10) {
           const newRow = worksheetShortage.addRow(newRowData);
 
           // Если количество меньше 5, выделяем строку красным цветом
-          if (row.Quantity < 5) {
+          if (row.quantity < 5) {
             newRow.eachCell((cell) => {
               cell.font = { bold: true };
               cell.fill = {

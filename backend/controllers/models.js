@@ -1,3 +1,4 @@
+const { error } = require('pdf-lib');
 const { pool } = require('../config/connectdb');
 
 // Функция для получения всех категорий из базы данных
@@ -30,38 +31,27 @@ async function getCategoryByModel(model, Size) {
       }
 }
 
-function getTableName(brand, category) {
-    const tableMapping = {
-      men_1: `${brand}_men_1`,
-      men_2: `${brand}_men_2`,
-      women_slippers_1: `${brand}_women_slippers_1`,
-      women_slippers_2: `${brand}_women_slippers_2`,
-      kids_crocs_1: `${brand}_kids_crocs_1`,
-      kids_crocs_2: `${brand}_kids_crocs_2`,
-      women_crocs_1: `${brand}_women_crocs_1`,
-      women_crocs_2: `${brand}_women_crocs_2`,
-      crocs_1: `${brand}_crocs_1`,
-      crocs_2: `${brand}_crocs_2`,
-      crocs_3: `${brand}_crocs_3`,
-      crocs_4: `${brand}_crocs_4`,
-      winter_1: `${brand}_winter_1`,
-      winter_2: `${brand}_winter_2`,
-      winter_3: `${brand}_winter_3`,
-      winter_4: `${brand}_winter_4`,
-      winter_5: `${brand}_winter_5`,
-      winter_6: `${brand}_winter_6`,
-      winter_7: `${brand}_winter_7`,
-      winter_8: `${brand}_winter_8`,
-      winter_9: `${brand}_winter_9`,
-      winter_10: `${brand}_winter_10`,
-      general_2: `${brand}_general_2`,
-      general_3: `${brand}_general_3`,
-      general_4: `${brand}_general_4`,
-      not_defined: `${brand}_not_defined`,
-    };
-  
-    return tableMapping[category] || `${brand}_not_defined`;
+async function getTablesName(brand) {
+  try {
+    if (!brand){
+      throw new Error('Brand is required')
+    } 
+
+    const query = `
+      SELECT DISTINCT category FROM model_categories;
+    `
+    const result = await pool.query(query);
+    if (result.length === 0 || !Array.isArray(result[0])) {
+      throw new Error('Invalid data from data base')
+    }
+    // Формируем массив объектов с префиксом бренда
+    const tablesName = result[0].map(row => `${brand}_${row.category}`);
+    return tablesName;
+  } catch (error) {
+    console.error('Error in getTablesName', error.message);
+    throw error;
   }
+}
   
 
-module.exports = { getCategoryByModel, getTableName };
+module.exports = { getCategoryByModel, getTablesName };

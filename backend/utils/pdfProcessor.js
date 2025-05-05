@@ -4,7 +4,7 @@ const pdfLib = require("pdf-lib");
 const { PDFDocument } = pdfLib;
 const {
   getCategoryByModel,
-  getTableName,
+  getTablesName,
 } = require("../controllers/models.js");
 
 // Настройки для подключения к базе данных

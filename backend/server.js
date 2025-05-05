@@ -26,7 +26,7 @@ const {
 const {
   getPrintedHonestSign,
 } = require("./controllers/printedHSController.js");
-const { getCategoryByModel, getTableName } = require("./controllers/models.js");
+const { getCategoryByModel, getTablesName } = require("./controllers/models.js");
 const { compareFiles } = require("./utils/compareFiles.js");
 
 // const { general_article, get_article } = require('./models/scriptsArticles.js');
@@ -593,138 +593,42 @@ async function printPDF(filePath, type, printer, placePrint) {
   }
 }
 
-// app.get('/getApiById', async (req, res) => {
-//   const { id, company_name, category } = req.query; // Извлечение параметров запроса
-
-//   try {
-//     const today = new Date(); // Текущая дата
-//     // Запрос для получения токена и даты истечения подписки
-//     const [rows] = await db.query(
-//       `SELECT token, expiration_date FROM apitokens
-//            WHERE id = ? AND company_name = ? AND category = ?`,
-//       [id, company_name, category]
-//     );
-
-//     if (rows.length > 0) {
-//       const { token, expiration_date } = rows[0];
-//       // Преобразуем expiration_date в объект Date
-//       const expirationDate = new Date(expiration_date);
-//       // Проверяем дату истечения подписки
-//       if (expirationDate > today) {
-//         res.json({ token });
-//       } else {
-//         res.status(404).json({ error: 'Подписка истекла' });
-//       }
-//     } else {
-//       res.status(404).json({ error: 'Информация не найдена' });
-//     }
-//   } catch (err) {
-//     console.error('Ошибка выполнения запроса:', err.message);
-//     res.status(500).json({ error: 'Ошибка выполнения запроса' });
-//   }
-// });
+const { getDataFromTable, getModelsForNull } = require('./utils/getDataHSUtils.js');
 
 app.get("/api/report", async (req, res) => {
-  const { brand } = req.query;
-
-  //   if (!brand) {
-  //     return res.status(400).json({ error: "Brand is required" });
-  //   }
-
-  //   // Сопоставление бренда с таблицей в базе данных
-  //   const tableName = getTableForBrand(brand);
-  //   if (!tableName) {
-  //     return res.status(400).json({ error: "Invalid brand" });
-  //   }
-
-  //   // Запрос, который учитывает доставку (delivery_number)
-  //   const query = `
-  //     SELECT
-  //       Size,
-  //       Model,
-  //       deliverynumber,
-  //       COUNT(*) as Quantity
-  //     FROM ${tableName}
-  //     WHERE Status = 'Waiting'
-  //     GROUP BY Size, Model, deliverynumber
-  //     ORDER BY Size, deliverynumber;
-  //   `;
-  //   console.log(query, tableName);
-  //   try {
-  //     // Выполнение запроса в пуле для выбранной базы данных
-  //     let rows = await pool.execute(query); // Запрос для базы данных
-  //     // Если данных нет
-  //     if (!rows[0].length) {
-  //       return res.status(404).json({ error: "No data found" });
-  //     }
-
-  //     res.json(rows[0]); // Отправка данных
-  //   } catch (err) {
-  //     console.error("[ERROR] Ошибка при выполнении запроса:", err.message);
-  //     return res.status(500).json({ error: "Internal Server Error" });
-  //   }
-
-  //   const selectedPlace = req.query.placePrint;
-
-  //   const brands = ["armbest", "bestshoes", "best26"];
-  const categories = await getCategoryByModel();
-
-  //   const places = {
-  //     Лермонтово: "lermontovo",
-  //     Пятигорск: "pyatigorsk",
-  //     Тест: "test",
-  //   };
-
-  // Проверка на валидность местоположения
-  //   if (!places[selectedPlace]) {
-  //     return res.status(400).json({ error: "Неизвестное место" });
-  //   }
-
-  //   console.log(selectedPlace, "Запрос на получение данных о печати чз из базы");
-
-  let query;
-
-  // Формируем часть запроса для остальных мест
-  const queryParts = [];
-
-  for (const category of categories) {
-    const tableName = `${brand.toLowerCase()}_${category}`;
-    if (!tableName) continue;
-
-    const fullTableName = `${brand}_${category}`;
-    queryParts.push(`
-            SELECT brand, model, size, COUNT(*) AS Quantity
-            FROM ${fullTableName}
-            WHERE status = 'Waiting'
-              AND locked = 0
-            GROUP BY brand, model, size
-          `);
-  }
-
-  query = queryParts.join(" UNION ALL ");
   try {
-    const [waitingRows] = await pool.query(query);
-    res.json(waitingRows);
+    const { brand } = req.query;
+
+    if (!brand || typeof brand !== 'string') {
+      return res.status(400).json({ error: 'Parameter "brand" is required and must be a string' });
+    }
+
+    const tablesName = await getTablesName(brand.toLowerCase());
+
+    if (!Array.isArray(tablesName) || !tablesName.every(table => typeof table === 'string')) {
+      return res.status(500).json({ error: 'Invalid table names' });
+    }
+
+    const data = await Promise.all(
+      tablesName.map(async (table) => {
+        try {
+          return await getDataFromTable(table);
+        } catch (error) {
+          console.error(`Error processing table for report ${table}:`, error.message);
+          return [];
+        }
+      })
+    );
+
+    const flattenedData = data.flat();
+    const allData = await getModelsForNull(flattenedData);
+
+    res.json(allData);
   } catch (error) {
-    console.error("Ошибка запроса:", error);
-    res.status(500).json({
-      error: "Ошибка сервера",
-      details: error.message,
-    });
+    console.error("Error in /api/report:", error.message);
+    res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 });
-
-// Функция для сопоставления бренда с таблицей в базе данных
-const getTableForBrand = (brand) => {
-  const tableMap = {
-    Armbest: "delivery_armbest_ozon_pyatigorsk", // Пример сопоставления для Armbest
-    BestShoes: "delivery_bestshoes_pyatigorsk",
-    Best26: "delivery_best26_pyatigorsk",
-    "Ozon Armbest": "delivery_armbest_ozon_pyatigorsk",
-    "Ozon BestShoes": "delivery_bestshoes_ozon_pyatigorsk",
-  };
-  return tableMap[brand];
-};
 
 function getFormattedDateTime() {
   const date = new Date();

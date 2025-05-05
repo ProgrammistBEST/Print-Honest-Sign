@@ -1,5 +1,5 @@
 const { pool } = require("../config/connectdb");
-const { getTableName } = require("./models.js");
+const { getTablesName } = require("./models.js");
 
 // Функция для получения всех категорий из базы данных
 async function fetchCategoriesFromDB() {
