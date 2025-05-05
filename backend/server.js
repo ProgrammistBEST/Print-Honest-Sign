@@ -621,7 +621,7 @@ app.get("/api/report", async (req, res) => {
     );
 
     const flattenedData = data.flat();
-    const allData = await getModelsForNull(flattenedData);
+    const allData = await getModelsForNull(flattenedData, brand);
 
     res.json(allData);
   } catch (error) {

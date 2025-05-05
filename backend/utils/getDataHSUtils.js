@@ -39,16 +39,17 @@ async function getDataFromTable(tableName) {
     }
   }
   
-  async function getModelsForNull(dataHS) {
+  async function getModelsForNull(dataHS, brand) {
     try {
       const query = `
         SELECT COALESCE(articles.article_association, articles.article) AS model, sizes.size AS size
         FROM models
         JOIN articles ON models.article_id = articles.article_id
         JOIN sizes ON models.size_id = sizes.size_id
-        WHERE models.is_deleted = 0 AND models.categories != 'Украшения для обуви'
+        JOIN brands ON models.brand_id = brands.brand_id
+        WHERE models.is_deleted = 0 AND models.categories != 'Украшения для обуви' AND brands.brand = ?
       `;
-      const [rowsModels] = await pool.query(query);
+      const [rowsModels] = await pool.query(query, [brand]);
       return addMissingModels(dataHS, rowsModels);
     } catch (error) {
       console.error('Error getting models for null:', error.message);
