@@ -28,7 +28,7 @@ const getPrintedHonestSign = async (req, res) => {
     Тест: "test",
   };
 
-  const brands = ["armbest", "bestshoes", "best26"];
+  const brands = ["armbest", "bestshoes", "best26", "arm2"];
 
   const categories = await fetchCategoriesFromDB();
 

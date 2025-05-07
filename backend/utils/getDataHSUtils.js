@@ -47,7 +47,7 @@ async function getDataFromTable(tableName) {
         JOIN articles ON models.article_id = articles.article_id
         JOIN sizes ON models.size_id = sizes.size_id
         JOIN brands ON models.brand_id = brands.brand_id
-        WHERE models.is_deleted = 0 AND models.categories != 'Украшения для обуви' AND brands.brand = ?
+        WHERE models.is_deleted = 0 AND models.category != 'Украшения для обуви' AND brands.brand = ?
       `;
       const [rowsModels] = await pool.query(query, [brand]);
       return addMissingModels(dataHS, rowsModels);

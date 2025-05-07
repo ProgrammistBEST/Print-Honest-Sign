@@ -193,8 +193,6 @@ const ReportGenerator = ({ setSelectedCompany }) => {
           "Arm2",
           "BestShoes",
           "Best26",
-          "Ozon Armbest",
-          "Ozon BestShoes",
         ].map((company) => (
           <button
             key={company}

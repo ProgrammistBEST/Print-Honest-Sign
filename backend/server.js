@@ -342,44 +342,49 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/getBrandsData", async (req, res) => {
-  const queries = [
-    { brand: "Armbest (Новая)", table: "product_sizesbestshoes" },
-    { brand: "BestShoes (Старая)", table: "product_sizesbestshoes" },
-    { brand: "Best26 (Арташ)", table: "product_sizesbestshoes" },
-    { brand: "Ozon (Armbest)", table: "product_sizesbestshoes" },
-    { brand: "Ozon (BestShoes)", table: "product_sizesbestshoes" },
-  ];
-
+app.get("/getBrands", async (req, res) => {
   try {
-    const results = await Promise.all(
-      queries.map(async (query) => {
-        const sql = `SELECT DISTINCT article, GROUP_CONCAT(size) AS sizes FROM products GROUP BY article, company_name`;
-        const [rows] = await pool.query(sql);
+    const query = `
+      SELECT brand FROM brands
+    `;
+    const brands = await pool.query(query);
+    res.json(brands[0]); // Отправляем только массив данных
+  } catch (err) {
+    console.error("Ошибка получения данных:", err.message);
+    res.status(500).send("Ошибка получения данных: " + err.message); // Отправляем ошибку клиенту
+  }
+});
 
-        if (rows.length === 0) {
-          console.log(`Нет данных для таблицы: ${query.table}`);
-        }
+app.get("/getModels", async (req, res) => {
+  const { brand } = req.query;
+  try {
+    const query = `
+      SELECT article_association AS article, size FROM models
+      JOIN articles ON models.article_id = articles.article_id
+      JOIN sizes ON models.size_id = sizes.size_id
+      JOIN brands ON models.brand_id = brands.brand_id
+      WHERE brand = ? AND models.category != 'Украшения для обуви' 
+    `;
+    const models = await pool.query(query, [brand]);
 
-        // Преобразуем данные в нужный формат
-        const models = rows.map((row, index) => ({
-          name: row.article,
-          sizes: row.sizes.split(",").map((size) => {
-            if (size.includes("-")) {
-              return size;
-            } else {
-              return Number(size);
-            }
-          }),
-          id: index,
-          brand: query.brand,
-        }));
+    // Группируем данные по полю article
+    const groupedData = models[0].reduce((acc, item) => {
+      const existingArticle = acc.find(entry => entry.article === item.article);
+      if (existingArticle) {
+        // Если article уже существует, добавляем size в массив sizes
+        existingArticle.sizes = [...new Set([...existingArticle.sizes, item.size])];
+      } else {
+        // Если article новый, создаем новую запись
+        acc.push({ article: item.article, sizes: [item.size] });
+      }
+      return acc;
+    }, []).map(entry => {
+      entry.sizes.sort(); // Сортируем массив sizes
+      return entry;
+    });
 
-        return { nameBrand: query.brand, models };
-      })
-    );
-
-    res.json(results); // Отправляем результат клиенту
+    // Отправляем сгруппированные данные клиенту
+    res.json(groupedData);
   } catch (err) {
     console.error("Ошибка получения данных:", err.message);
     res.status(500).send("Ошибка получения данных: " + err.message); // Отправляем ошибку клиенту
@@ -402,25 +407,18 @@ const writePDFs = async (rows) => {
 };
 
 app.post("/kyz", async (req, res) => {
-  let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign } =
-    req.body;
-
+  let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign } = req.body;
+  console.log(selectedBrand, filledInputs, user, placePrint, printerForHonestSign)
+  if (!selectedBrand) {
+    console.error('Парметр бренд в /kyz:', selectedBrand)
+    res.status(404).json({error: 'Параметр бренд не передан'})
+    return
+  }
   const placeMappings = {
     Тест: "delivery_test",
     Пятигорск: "pyatigorsk",
     Лермонтово: "lermontovo",
   };
-
-  const brands = {
-    "Ozon (Armbest)": "armbest",
-    "Ozon (BestShoes)": "bestshoes",
-    "Armbest (Новая)": "armbest",
-    "BestShoes (Старая)": "bestshoes",
-    "Best26 (Арташ)": "best26",
-  };
-
-  const brandDetails = brands[selectedBrand];
-  const normalizedBrand = selectedBrand.split(" ")[0];
 
   const shortageInfo = [];
   const successfulSign = [];
@@ -440,28 +438,28 @@ app.post("/kyz", async (req, res) => {
       if (placePrint === "Тест") {
         tableName = placeMappings["Тест"];
       } else {
-        console.log(normalizedBrand.toLowerCase());
+        console.log(selectedBrand.toLowerCase());
         console.log(`${filledInputs[index]?.model}, ${size}`);
 
         const category = await getCategoryByModel(
           filledInputs[index]?.model,
           size
         );
-        tableName = `${normalizedBrand.toLowerCase()}_${category}`;
+        tableName = `${selectedBrand.toLowerCase()}_${category}`;
         if (!tableName) {
           return res.status(400).json({
             error: "Не удалось определить таблицу для данной модели.",
           });
         }
       }
-      if (!tableName || !normalizedBrand) {
+      if (!tableName || !selectedBrand) {
         return res
           .status(400)
           .json({ error: "Некорректные данные о бренде или месте печати." });
       }
-      // const formattedModel = ['Armbest'].includes(normalizedBrand) ? 'ЭВА' : model;
+      // const formattedModel = ['Armbest'].includes(selectedBrand) ? 'ЭВА' : model;
       console.log(
-        `Обработка модели "${model}", размера "${size}" для бренда "${normalizedBrand}". Требуется: ${count}. tableName: ${tableName}`
+        `Обработка модели "${model}", размера "${size}" для бренда "${selectedBrand}". Требуется: ${count}. tableName: ${tableName}`
       );
 
       // Запрос к базе данных для текущего размера
@@ -470,13 +468,13 @@ app.post("/kyz", async (req, res) => {
               WHERE \`size\` = ? AND \`brand\` = ? AND \`status\` IN ('Waiting', 'Comeback')
               AND \`model\` = ? AND \`locked\` = 0
               LIMIT ?`,
-        [size, normalizedBrand, model, count]
+        [size, selectedBrand, model, count]
       );
       if (waitingRows.length <= 0) {
         shortageInfo.push({
           model,
           size,
-          brand: normalizedBrand,
+          brand: selectedBrand,
           required: count,
           available: waitingRows.length,
         });
@@ -487,7 +485,7 @@ app.post("/kyz", async (req, res) => {
         successfulSign.push({
           model,
           size,
-          brand: normalizedBrand,
+          brand: selectedBrand,
           required: count,
           available: waitingRows.length,
         });

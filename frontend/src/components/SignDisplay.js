@@ -5,6 +5,7 @@ import Modal from "./modal/modal.js";
 const SignDisplay = () => {
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedModels, setSelectedModels] = useState([]);
+  // const [combinedData, setCombinedData] = useState([]);
   const [showSizes, setShowSizes] = useState(false);
   const [brands, setBrands] = useState([]);
   const [query, setQuery] = useState("");
@@ -24,7 +25,7 @@ const SignDisplay = () => {
     if (!isDataFetched.current) {
       const password = prompt("Введите пароль администратора");
       if (password == "15793") {
-        fetchInitialData();
+        fetchAndCombineData();
         isDataFetched.current = true;
       } else {
         return;
@@ -32,41 +33,67 @@ const SignDisplay = () => {
     }
   }, []);
 
-  const fetchInitialData = async () => {
-    try {
-      const [brandsResponse, deliveriesResponse] = await Promise.all([
-        fetch(`http://localhost:6501/getBrandsData`),
-        // fetch(`http://${window.location.hostname}:6501/getNumbersDeliveries`)
-      ]);
-      const brandsData = await brandsResponse.json();
-      setBrands(brandsData);
-      // setNumbersDeliveries(deliveriesData.map(item => Number(item.deliverynumber)));
-    } catch (error) {
-      console.error("Ошибка получения данных:", error);
-    }
-  };
+  // Загрузка данных
+const fetchAndCombineData = async () => {
+  try {
+    // Шаг 1: Получаем список брендов
+    const brandsResponse = await fetch(`http://localhost:6501/getBrands`);
+    const brandsData = await brandsResponse.json();
 
-  // Выбор бренда
-  const chooseBrand = (brandName) => {
-    const brand = brands.find((b) => b.nameBrand === brandName);
-    if (brand) {
-      setSelectedBrand(brand);
-      setSelectedModels([]);
-      setShowSizes(false);
-    }
-  };
+    // Преобразуем бренды в нужную структуру
+    const formattedBrands = await Promise.all(
+      brandsData.map(async (brand) => {
+        const modelsResponse = await fetch(
+          `http://localhost:6501/getModels?brand=${encodeURIComponent(brand.brand)}`
+        );
+        const modelsData = await modelsResponse.json();
+
+        // Форматируем модели
+        const formattedModels = modelsData.map((model, index) => ({
+          name: model.article,
+          sizes: model.sizes.map(String),
+          id: index,
+          brand: brand.brand
+        }));
+
+        return {
+          nameBrand: brand.brand,
+          models: formattedModels
+        };
+      })
+    );
+
+    // Устанавливаем бренды в состояние
+    setBrands(formattedBrands);
+  } catch (error) {
+    console.error("Ошибка получения данных:", error);
+  }
+};
+
+// Выбор бренда
+const chooseBrand = (brandName) => {
+  const brand = brands.find((b) => b.nameBrand === brandName);
+  if (brand) {
+    setSelectedBrand(brand); // Устанавливаем выбранный бренд
+    setSelectedModels([]); // Очищаем выбранные модели
+    setShowSizes(false); // Скрываем размеры
+  }
+};
 
   // Изменение чекбоксов моделей
   const handleCheckboxChange = (modelId) => {
     setSelectedModels((prevSelectedModels) => {
-      if (prevSelectedModels.includes(modelId)) {
-        return prevSelectedModels.filter((id) => id !== modelId);
+      const safePrevSelectedModels = Array.isArray(prevSelectedModels)
+        ? prevSelectedModels
+        : [];
+  
+      if (safePrevSelectedModels.includes(modelId)) {
+        return safePrevSelectedModels.filter((id) => id !== modelId);
       } else {
-        return [...prevSelectedModels, modelId];
+        return [...safePrevSelectedModels, modelId];
       }
     });
   };
-
   const exitUser = () => {
     setIsModalOpen(false);
     window.location.reload();
@@ -172,6 +199,8 @@ const SignDisplay = () => {
     console.log(document.querySelector(".placePrintValue").value);
 
     try {
+      console.log(selectedBrand);
+      
       const response = await fetch(`http://localhost:6501/kyz`, {
         method: "POST",
         headers: {
@@ -220,12 +249,11 @@ const SignDisplay = () => {
           "none";
       }, 2000);
     }
-  };
-  const filteredModels =
-    selectedBrand?.models.filter((model) =>
-      model.name.toLowerCase().startsWith(query.toLowerCase())
-    ) || [];
-
+  }
+// Фильтрация моделей
+const filteredModels = selectedBrand?.models.filter((model) =>
+  model.name.toLowerCase().startsWith(query.toLowerCase())
+) || [];
   return (
     <main>
       {isModalOpen && (
@@ -275,11 +303,9 @@ const SignDisplay = () => {
       <div className="brand-select">
         {brands.map((brand) => (
           <button
-            key={brand.nameBrand}
+            key={brand.nameBrand} // Используем nameBrand как уникальный ключ
             onClick={() => chooseBrand(brand.nameBrand)}
-            className={
-              selectedBrand?.nameBrand === brand.nameBrand ? "active-brand" : ""
-            }
+            className={selectedBrand?.nameBrand === brand.nameBrand ? "active-brand" : ""}
           >
             {brand.nameBrand}
           </button>
@@ -291,7 +317,7 @@ const SignDisplay = () => {
       {selectedBrand && (
         <div>
           <h3 className="headerForChooseSizeArea">
-            Выберите модели обуви из бренда {selectedBrand.nameBrand}
+            Выберите модели обуви из бренда {selectedBrand.brand}
           </h3>
           <input
             className="inputChooseModels"
