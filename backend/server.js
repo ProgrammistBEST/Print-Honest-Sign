@@ -26,7 +26,10 @@ const {
 const {
   getPrintedHonestSign,
 } = require("./controllers/printedHSController.js");
-const { getCategoryByModel, getTablesName } = require("./controllers/models.js");
+const {
+  getCategoryByModel,
+  getTablesName,
+} = require("./controllers/models.js");
 const { compareFiles } = require("./utils/compareFiles.js");
 
 // const { general_article, get_article } = require('./models/scriptsArticles.js');
@@ -282,8 +285,26 @@ async function splitPDFIntoChunks(pdfBytes, chunkSize = 500) {
   return { chunks, totalPages };
 }
 
+const stopFlags = new Map();
+
+io.on("connection", (socket) => {
+  console.log("Пользователь подключился:", socket.id);
+
+  socket.on("stopUpload", () => {
+    console.log("Пользователь хочет остановить загрузку:", socket.id);
+    stopFlags.set(socket.id, true);
+    socket.emit("uploadStopped", "Загрузка была остановлена.");
+  });
+
+  socket.on("disconnect", () => {
+    stopFlags.delete(socket.id); // очищаем при отключении
+  });
+});
+
 // Загрузка нового киза
 app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
+  const socketId = req.body.socketId;
+
   try {
     const arrayAddingModels = {};
     let countPages = 0;
@@ -300,6 +321,17 @@ app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
     const { chunks, totalPages } = await splitPDFIntoChunks(pdfBytes, 500);
     console.log("chunks.length: ", chunks.length);
     for (let i = 0; i < chunks.length; i++) {
+      if (stopFlags.get(socketId)) {
+        stopFlags.delete(socketId);
+        console.log("Пользователь остановил загрузку");
+        io.to(socketId).emit(
+          "uploadStopped",
+          "Пользователь остановил загрузку."
+        );
+        return res
+          .status(200)
+          .send({ message: "Пользователь остановил загрузку." });
+      }
       const chunkBytes = chunks[i];
       console.log(`Обработка части ${i + 1} из ${chunks.length}`);
       await processPDF(
@@ -310,7 +342,9 @@ app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
         MultiModel,
         totalPages,
         countPages,
-        arrayAddingModels
+        arrayAddingModels,
+        socketId,
+        stopFlags
       );
     }
 
@@ -368,20 +402,26 @@ app.get("/getModels", async (req, res) => {
     const models = await pool.query(query, [brand]);
 
     // Группируем данные по полю article
-    const groupedData = models[0].reduce((acc, item) => {
-      const existingArticle = acc.find(entry => entry.article === item.article);
-      if (existingArticle) {
-        // Если article уже существует, добавляем size в массив sizes
-        existingArticle.sizes = [...new Set([...existingArticle.sizes, item.size])];
-      } else {
-        // Если article новый, создаем новую запись
-        acc.push({ article: item.article, sizes: [item.size] });
-      }
-      return acc;
-    }, []).map(entry => {
-      entry.sizes.sort(); // Сортируем массив sizes
-      return entry;
-    });
+    const groupedData = models[0]
+      .reduce((acc, item) => {
+        const existingArticle = acc.find(
+          (entry) => entry.article === item.article
+        );
+        if (existingArticle) {
+          // Если article уже существует, добавляем size в массив sizes
+          existingArticle.sizes = [
+            ...new Set([...existingArticle.sizes, item.size]),
+          ];
+        } else {
+          // Если article новый, создаем новую запись
+          acc.push({ article: item.article, sizes: [item.size] });
+        }
+        return acc;
+      }, [])
+      .map((entry) => {
+        entry.sizes.sort(); // Сортируем массив sizes
+        return entry;
+      });
 
     // Отправляем сгруппированные данные клиенту
     res.json(groupedData);
@@ -407,12 +447,19 @@ const writePDFs = async (rows) => {
 };
 
 app.post("/kyz", async (req, res) => {
-  let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign } = req.body;
-  console.log(selectedBrand, filledInputs, user, placePrint, printerForHonestSign)
+  let { selectedBrand, filledInputs, user, placePrint, printerForHonestSign } =
+    req.body;
+  console.log(
+    selectedBrand,
+    filledInputs,
+    user,
+    placePrint,
+    printerForHonestSign
+  );
   if (!selectedBrand) {
-    console.error('Парметр бренд в /kyz:', selectedBrand)
-    res.status(404).json({error: 'Параметр бренд не передан'})
-    return
+    console.error("Парметр бренд в /kyz:", selectedBrand);
+    res.status(404).json({ error: "Параметр бренд не передан" });
+    return;
   }
   const placeMappings = {
     Тест: "delivery_test",
@@ -591,20 +638,28 @@ async function printPDF(filePath, type, printer, placePrint) {
   }
 }
 
-const { getDataFromTable, getModelsForNull } = require('./utils/getDataHSUtils.js');
+const {
+  getDataFromTable,
+  getModelsForNull,
+} = require("./utils/getDataHSUtils.js");
 
 app.get("/api/report", async (req, res) => {
   try {
     const { brand } = req.query;
 
-    if (!brand || typeof brand !== 'string') {
-      return res.status(400).json({ error: 'Parameter "brand" is required and must be a string' });
+    if (!brand || typeof brand !== "string") {
+      return res
+        .status(400)
+        .json({ error: 'Parameter "brand" is required and must be a string' });
     }
 
     const tablesName = await getTablesName(brand.toLowerCase());
 
-    if (!Array.isArray(tablesName) || !tablesName.every(table => typeof table === 'string')) {
-      return res.status(500).json({ error: 'Invalid table names' });
+    if (
+      !Array.isArray(tablesName) ||
+      !tablesName.every((table) => typeof table === "string")
+    ) {
+      return res.status(500).json({ error: "Invalid table names" });
     }
 
     const data = await Promise.all(
@@ -612,7 +667,10 @@ app.get("/api/report", async (req, res) => {
         try {
           return await getDataFromTable(table);
         } catch (error) {
-          console.error(`Error processing table for report ${table}:`, error.message);
+          console.error(
+            `Error processing table for report ${table}:`,
+            error.message
+          );
           return [];
         }
       })
@@ -624,7 +682,9 @@ app.get("/api/report", async (req, res) => {
     res.json(allData);
   } catch (error) {
     console.error("Error in /api/report:", error.message);
-    res.status(500).json({ error: 'Internal server error', message: error.message });
+    res
+      .status(500)
+      .json({ error: "Internal server error", message: error.message });
   }
 });
 

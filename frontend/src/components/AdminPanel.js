@@ -4,6 +4,8 @@ import ReportGenerator from "./ReportGenerator";
 import ModalPrint from "./modal/modal";
 import { useLocation } from "react-router-dom";
 import CompareFiles from "./CompareFiles";
+import socket from "./socket";
+
 import {
   Modal,
   Box,
@@ -18,9 +20,6 @@ import {
   Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
-// Socket
-const socket = io(`http://localhost:6502`);
 
 const AdminPanel = () => {
   const [username, setUsernameAdminPanel] = useState("");
@@ -316,6 +315,7 @@ const AdminPanel = () => {
     formData.append("brandData", JSON.stringify(brand));
     formData.append("placePrint", JSON.stringify(placePrint));
     formData.append("MultiModel", JSON.stringify(addMultiModel));
+    formData.append("socketId", socket.id);
 
     setIsModalInfoOpen(true);
 
@@ -324,11 +324,11 @@ const AdminPanel = () => {
         method: "POST",
         body: formData,
       });
-
+      const result = await response.json();
       if (response.ok) {
-        alert("PDF успешно загружен");
+        alert(result.message);
       } else {
-        alert("Ошибка при загрузке PDF");
+        alert(result.message || "Ошибка при загрузке PDF");
       }
     } catch (err) {
       console.error("Ошибка:", err);

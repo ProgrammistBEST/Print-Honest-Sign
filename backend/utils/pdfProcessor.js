@@ -198,7 +198,7 @@ async function saveAllDataToDB(
           "Waiting",
         ]);
       } else {
-        console.log("Найдено совпадение для:", Model, Size, Crypto, Brand);
+        // console.log("Найдено совпадение для:", Model, Size, Crypto, Brand);
       }
     } catch (error) {
       console.error("Ошибка при выполнении запроса:", error);
@@ -224,7 +224,9 @@ async function processPDF(
   MultiModel,
   totalPages,
   countPages,
-  arrayAddingModels
+  arrayAddingModels,
+  socketId,
+  stopFlags
 ) {
   try {
     const data = new Uint8Array(fileBuffer);
@@ -242,10 +244,15 @@ async function processPDF(
     let startPage = 0;
 
     while (startPage < extractedTexts.length) {
+      if (stopFlags.get(socketId)) {
+        console.log("Загрузка остановлена внутри processPDF");
+        return;
+      }
       const pageDataList = await Promise.all(
         extractedTexts
           .slice(startPage, startPage + pageSize)
           .map(async (text, pageIndex) => {
+            if (stopFlags.get(socketId)) return null;
             const linesArray = text.split("\n");
             let Crypto = linesArray
               .filter((line) => line.startsWith("(01)"))
@@ -257,14 +264,14 @@ async function processPDF(
               const secondLine = linesArray[4] || "";
               if (isValidSize(secondLine)) {
                 Size = secondLine;
-                Model = "Multimodel";
+                Model = linesArray[2] || "";
               } else {
                 Size = linesArray[2] || "";
                 Model = "Multimodel";
               }
             } else if (linesArray.length > 1 && brandData == "Arm2") {
               const secondLine = linesArray[4] || "";
-              const oneLine = linesArray[2].replace('у', '') || "";
+              const oneLine = linesArray[2].replace("у", "") || "";
               if (isValidSize(secondLine)) {
                 Size = secondLine;
                 Model = oneLine;
