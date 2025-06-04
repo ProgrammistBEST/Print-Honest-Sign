@@ -171,7 +171,6 @@ const AdminPanel = () => {
 
   filteredItems = printItems
     .filter((item) => {
-      console.log(item);
       // Проверка для каждого фильтра: если фильтр пустой или undefined, пропускаем его
       const isBrandMatch =
         !brandFilter ||
@@ -270,6 +269,20 @@ const AdminPanel = () => {
         setInfoAboutHonestSing(brandGet);
       })
       .catch((error) => console.error("Ошибка при получении данных:", error));
+
+    const url2 = new URL(`http://localhost:6501/api/info/v1/infoUpload`);
+
+    fetch(url2)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Ошибка сети");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setInfoUpload(data[0]);
+      })
+      .catch((error) => console.error("Ошибка при получении данных:", error));
   };
 
   const handleLogin = (e) => {
@@ -285,6 +298,7 @@ const AdminPanel = () => {
   const addNewKyz = async (e) => {
     e.preventDefault();
     setError("");
+    setStatusUploadSign("");
     let question;
     if (
       brand === "Armbest" ||
@@ -293,7 +307,6 @@ const AdminPanel = () => {
       brand === "Best26" ||
       brand === "OZON"
     ) {
-      console.log("brand:", brand);
       question = confirm(`Согласны добавить КИЗ на, ${brand}`); // , в поставку №, ${deliveryNumber}
     } else if (brand == "") {
       alert(
@@ -301,9 +314,7 @@ const AdminPanel = () => {
       );
       return;
     }
-    if (question == false) {
-      return;
-    }
+    if (question == false) return;
     if (!pdfFile) {
       setError("Пожалуйста, выберите PDF-файл");
       return;
@@ -311,7 +322,6 @@ const AdminPanel = () => {
 
     const formData = new FormData();
     formData.append("file", pdfFile);
-    console.log(brand);
     formData.append("brandData", JSON.stringify(brand));
     formData.append("placePrint", JSON.stringify(placePrint));
     formData.append("MultiModel", JSON.stringify(addMultiModel));
@@ -351,7 +361,6 @@ const AdminPanel = () => {
   };
 
   const handleRowButtonClick = async (item, index) => {
-    console.log(item);
     const conf = confirm("Вы точно хотите вернуть ЧЗ: ", item);
     if (!conf) {
       return;
@@ -406,6 +415,7 @@ const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("remaining-signs");
   const [InfoAboutHonestSing, setInfoAboutHonestSing] = useState([]);
   const [expandedBrand, setExpandedBrand] = useState(null);
+  const [infoUpload, setInfoUpload] = useState([]);
 
   const toggleBrand = (brand) => {
     setExpandedBrand(expandedBrand === brand ? null : brand);
@@ -491,10 +501,22 @@ const AdminPanel = () => {
   //     }
   // };
 
+  const formatDuration = (ms) => {
+    const totalMinutes = Math.floor(ms / 60000);
+    const minutes = totalMinutes % 60;
+    return `${minutes.toString()}`;
+  };
+
   const handleCompanySelection = (company) => {
     console.log(`[INFO] Выбрана компания: ${company}`);
     setBrand(company); // Устанавливаем компанию в стейт родительского компонента
   };
+
+  const groupedByBrand = infoUpload.reduce((acc, item) => {
+    if (!acc[item.brand]) acc[item.brand] = [];
+    acc[item.brand].push(item);
+    return acc;
+  }, {});
 
   return (
     <div className="admin-wrapper">
@@ -522,11 +544,18 @@ const AdminPanel = () => {
           <div className="category-block">
             <div className="tabs">
               <button
-                className={`tab-button active`}
+                className={`tab-button`}
                 onClick={() => setActiveTab("remaining-signs")}
               >
                 Количество оставшихся знаков
               </button>
+              <button
+                className={`tab-button active`}
+                onClick={() => setActiveTab("infoAboutUploadFiles")}
+              >
+                Логи
+              </button>
+
               <button
                 className={`tab-button`}
                 onClick={() => toggleBrandinfoaddreturn()}
@@ -593,6 +622,68 @@ const AdminPanel = () => {
                       )}
                     </li>
                   ))}
+                </ul>
+              </div>
+            )}
+
+            {activeTab === "infoAboutUploadFiles" && infoUpload && (
+              <div className="content">
+                <ul
+                  className="firm-list"
+                  style={{ listStyle: "none", padding: 0 }}
+                >
+                  {Object.entries(groupedByBrand).map(([brand, uploads]) => {
+                    return (
+                      <li key={brand} style={{ marginBottom: "10px" }}>
+                        <div
+                          onClick={() => toggleBrand(brand)}
+                          style={{
+                            cursor: "pointer",
+                            fontWeight: "bold",
+                            background: "#eee",
+                            padding: "8px",
+                            borderRadius: "6px",
+                          }}
+                        >
+                          {brand}
+                        </div>
+
+                        {expandedBrand === brand && (
+                          <ul
+                            className="model-list"
+                            style={{ paddingLeft: "20px", marginTop: "8px" }}
+                          >
+                            {uploads.map((info, index) => (
+                              <li
+                                key={index}
+                                style={{
+                                  padding: "6px 8px",
+                                  borderBottom: "1px solid #ddd",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  fontSize: "12px",
+                                }}
+                              >
+                                <span>{info.comment}</span>
+                                <span>
+                                  Время выполнения:{" "}
+                                  {formatDuration(info.duration_ms)} мин.
+                                </span>
+                                <span>Ошибки: {info.error_message || "-"}</span>
+                                {/* <span>{info.file_name}</span> */}
+                                <span>Кол-во: {info.models_uploaded}</span>
+                                <span>Статус: {info.status}</span>
+                                <span>
+                                  Время загрузки:{" "}
+                                  {new Date(info.timestamp).toLocaleString()}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             )}

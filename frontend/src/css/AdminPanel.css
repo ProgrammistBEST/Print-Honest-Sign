@@ -364,6 +364,12 @@
   justify-content: space-evenly;
 }
 
+.info-list {
+  padding: 4px 0;
+  font-size: 0.95em;
+  color: #4a5568; /* темно-серый цвет текста */
+}
+
 /* Анимация раскрытия */
 .firm-list li > .model-list {
   transition: 2s;

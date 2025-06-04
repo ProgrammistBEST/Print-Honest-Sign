@@ -1,5 +1,5 @@
 const { pool } = require("../config/connectdb");
-const { getCategoryByModel, getTablesName } = require("./models.js");
+const { getCategoryByModel } = require("./models.js");
 
 const getInfoAboutAllHonestSign = async (req, res) => {
   const selectedPlace = req.query.placePrint;

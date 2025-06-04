@@ -1,10 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import "./style.css";
 import socket from "../socket";
-const ModalPrint = ({ isOpen, onClose, info, type, brand, placePrint }) => {
+
+const ModalPrint = ({
+  isOpen,
+  onClose,
+  info,
+  type,
+  brand,
+  placePrint,
+  fileName,
+  onConfirm,
+}) => {
+  const [comment, setComment] = useState("");
+
   if (!isOpen) {
     return null;
+  }
+
+  // 🆕 Новый режим: Подтверждение загрузки
+  if (type === "confirmUpload") {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <h2>Подтвердите загрузку Честного Знака</h2>
+
+          <p>
+            <strong>Фирма:</strong> {brand}
+          </p>
+          <p>
+            <strong>Файл:</strong> {fileName}
+          </p>
+
+          <label htmlFor="comment">Комментарий:</label>
+          <textarea
+            id="comment"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Например: Армбест 04.06 Маркет"
+            rows={3}
+            style={{ width: "100%", marginTop: "0.5em", marginBottom: "1em" }}
+          />
+
+          <div className="modal-footer">
+            <button onClick={onClose} className="close-button-modal">
+              Отмена
+            </button>
+            <button
+              onClick={() => {
+                onConfirm(comment);
+                setComment("");
+              }}
+              className="confirm-button-modal"
+            >
+              Подтвердить
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (isOpen && type == "statusUploadSigns") {
@@ -118,6 +173,12 @@ const ModalPrint = ({ isOpen, onClose, info, type, brand, placePrint }) => {
 ModalPrint.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  info: PropTypes.object,
+  type: PropTypes.string.isRequired,
+  brand: PropTypes.string,
+  placePrint: PropTypes.string,
+  fileName: PropTypes.string,
+  onConfirm: PropTypes.func,
 };
 
 export default ModalPrint;

@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import "../css/CheckboxStyles.css";
 import Modal from "./modal/modal.js";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button,
+} from "@mui/material";
 
 const SignDisplay = () => {
   const [selectedBrand, setSelectedBrand] = useState(null);
@@ -20,65 +28,80 @@ const SignDisplay = () => {
   const handleCloseModalInfo = () => setIsModalInfoOpen(false);
   const isDataFetched = useRef(false);
   const [isAccess, setSetAccess] = useState(false);
+  const [accessGranted, setAccessGranted] = useState(false);
+  const [password, setPassword] = useState("");
+  const [open, setOpen] = useState(true);
 
-  useEffect(() => {
-    if (!isDataFetched.current) {
-      const password = prompt("Введите пароль администратора");
-      if (password == "15793") {
-        fetchAndCombineData();
-        isDataFetched.current = true;
-      } else {
-        return;
-      }
+  //   useEffect(() => {
+  //     if (!isDataFetched.current) {
+  //       const password = prompt("Введите пароль администратора");
+  //       if (password == "15793") {
+  //         fetchAndCombineData();
+  //         isDataFetched.current = true;
+  //       } else {
+  //         return;
+  //       }
+  //     }
+  //   }, []);
+
+  const handleConfirm = () => {
+    if (password === "15793") {
+      setAccessGranted(true);
+      setOpen(false);
+      fetchAndCombineData();
+    } else {
+      alert("Неверный пароль");
     }
-  }, []);
+  };
 
   // Загрузка данных
-const fetchAndCombineData = async () => {
-  try {
-    // Шаг 1: Получаем список брендов
-    const brandsResponse = await fetch(`http://localhost:6501/getBrands`);
-    const brandsData = await brandsResponse.json();
+  const fetchAndCombineData = async () => {
+    try {
+      // Шаг 1: Получаем список брендов
+      const brandsResponse = await fetch(`http://localhost:6501/getBrands`);
+      const brandsData = await brandsResponse.json();
 
-    // Преобразуем бренды в нужную структуру
-    const formattedBrands = await Promise.all(
-      brandsData.map(async (brand) => {
-        const modelsResponse = await fetch(
-          `http://localhost:6501/getModels?brand=${encodeURIComponent(brand.brand)}`
-        );
-        const modelsData = await modelsResponse.json();
+      // Преобразуем бренды в нужную структуру
+      const formattedBrands = await Promise.all(
+        brandsData.map(async (brand) => {
+          const modelsResponse = await fetch(
+            `http://localhost:6501/getModels?brand=${encodeURIComponent(
+              brand.brand
+            )}`
+          );
+          const modelsData = await modelsResponse.json();
 
-        // Форматируем модели
-        const formattedModels = modelsData.map((model, index) => ({
-          name: model.article,
-          sizes: model.sizes.map(String),
-          id: index,
-          brand: brand.brand
-        }));
+          // Форматируем модели
+          const formattedModels = modelsData.map((model, index) => ({
+            name: model.article,
+            sizes: model.sizes.map(String),
+            id: index,
+            brand: brand.brand,
+          }));
 
-        return {
-          nameBrand: brand.brand,
-          models: formattedModels
-        };
-      })
-    );
+          return {
+            nameBrand: brand.brand,
+            models: formattedModels,
+          };
+        })
+      );
 
-    // Устанавливаем бренды в состояние
-    setBrands(formattedBrands);
-  } catch (error) {
-    console.error("Ошибка получения данных:", error);
-  }
-};
+      // Устанавливаем бренды в состояние
+      setBrands(formattedBrands);
+    } catch (error) {
+      console.error("Ошибка получения данных:", error);
+    }
+  };
 
-// Выбор бренда
-const chooseBrand = (brandName) => {
-  const brand = brands.find((b) => b.nameBrand === brandName);
-  if (brand) {
-    setSelectedBrand(brand); // Устанавливаем выбранный бренд
-    setSelectedModels([]); // Очищаем выбранные модели
-    setShowSizes(false); // Скрываем размеры
-  }
-};
+  // Выбор бренда
+  const chooseBrand = (brandName) => {
+    const brand = brands.find((b) => b.nameBrand === brandName);
+    if (brand) {
+      setSelectedBrand(brand); // Устанавливаем выбранный бренд
+      setSelectedModels([]); // Очищаем выбранные модели
+      setShowSizes(false); // Скрываем размеры
+    }
+  };
 
   // Изменение чекбоксов моделей
   const handleCheckboxChange = (modelId) => {
@@ -86,7 +109,7 @@ const chooseBrand = (brandName) => {
       const safePrevSelectedModels = Array.isArray(prevSelectedModels)
         ? prevSelectedModels
         : [];
-  
+
       if (safePrevSelectedModels.includes(modelId)) {
         return safePrevSelectedModels.filter((id) => id !== modelId);
       } else {
@@ -187,20 +210,15 @@ const chooseBrand = (brandName) => {
       }
     });
 
-    console.log(filledInputs);
     sendRequest(filledInputs);
     setInputValues([]);
   };
 
   // Получение кизов
   const sendRequest = async (inputData) => {
-    console.log(document.querySelector(".printForBarcode").value);
-    console.log(document.querySelector(".printForHonestSign").value);
-    console.log(document.querySelector(".placePrintValue").value);
-
     try {
       console.log(selectedBrand);
-      
+
       const response = await fetch(`http://localhost:6501/kyz`, {
         method: "POST",
         headers: {
@@ -249,13 +267,45 @@ const chooseBrand = (brandName) => {
           "none";
       }, 2000);
     }
-  }
-// Фильтрация моделей
-const filteredModels = selectedBrand?.models.filter((model) =>
-  model.name.toLowerCase().startsWith(query.toLowerCase())
-) || [];
+  };
+  // Фильтрация моделей
+  const filteredModels =
+    selectedBrand?.models.filter((model) =>
+      model.name.toLowerCase().startsWith(query.toLowerCase())
+    ) || [];
   return (
     <main>
+      <form autoComplete="off">
+        <Dialog open={!accessGranted} disableEscapeKeyDown>
+          <DialogTitle>Введите пароль администратора</DialogTitle>
+          <DialogContent>
+            <input type="text" name="fakeuser" style={{ display: "none" }} />
+            <input
+              type="password"
+              name="fakepass"
+              style={{ display: "none" }}
+            />
+
+            <TextField
+              autoComplete="off"
+              autoFocus
+              margin="dense"
+              label="Пароль"
+              type="password"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleConfirm();
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleConfirm}>Войти</Button>
+          </DialogActions>
+        </Dialog>
+      </form>
+
       {isModalOpen && (
         <div style={modalOverlayStyle}>
           <div style={modalContentStyle}>
@@ -287,7 +337,6 @@ const filteredModels = selectedBrand?.models.filter((model) =>
           </div>
         </div>
       )}
-
       {/* Модуль вывода информации о печати честного знака */}
       <Modal
         isOpen={isModalInfoOpen}
@@ -295,17 +344,17 @@ const filteredModels = selectedBrand?.models.filter((model) =>
         info={isInfoPrintedSigns}
         type={"printedSigns"}
       />
-
       <h1>{user}</h1>
       {/* <h2>Номер поставки: {numberdelivery}</h2> */}
       <h2>Выберите бренд</h2>
-
       <div className="brand-select">
         {brands.map((brand) => (
           <button
             key={brand.nameBrand} // Используем nameBrand как уникальный ключ
             onClick={() => chooseBrand(brand.nameBrand)}
-            className={selectedBrand?.nameBrand === brand.nameBrand ? "active-brand" : ""}
+            className={
+              selectedBrand?.nameBrand === brand.nameBrand ? "active-brand" : ""
+            }
           >
             {brand.nameBrand}
           </button>

@@ -31,7 +31,7 @@ const {
   getTablesName,
 } = require("./controllers/models.js");
 const { compareFiles } = require("./utils/compareFiles.js");
-
+const { infoUploadFiles } = require("./utils/infoUpload.js");
 // const { general_article, get_article } = require('./models/scriptsArticles.js');
 // const { kyz } = require('./controllers/kyzController.js');
 
@@ -71,7 +71,6 @@ const upload = multer({ storage: storage });
 app.get("/api/printers", async (req, res) => {
   try {
     const printers = await getPrinters();
-    console.log(printers);
     const printersNames = printers.map((printer) => printer.name);
     res.json(printersNames);
   } catch (error) {
@@ -83,6 +82,7 @@ app.get("/api/printers", async (req, res) => {
 app.get("/api/printedHonestSign", getPrintedHonestSign);
 app.get("/api/InfoAboutAllHonestSign", getInfoAboutAllHonestSign);
 app.post("/api/compare", upload.single("file"), compareFiles);
+app.get("/api/info/v1/infoUpload", infoUploadFiles);
 
 // Добавление моделей
 app.post("/api/models/add", async (req, res) => {
@@ -304,10 +304,11 @@ io.on("connection", (socket) => {
 // Загрузка нового киза
 app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
   const socketId = req.body.socketId;
+  const startTime = Date.now();
 
   try {
     const arrayAddingModels = {};
-    let countPages = 0;
+    let countState = { countPages: 0 };
 
     if (!req.file) {
       return res.status(400).send({ message: "Файл не загружен." });
@@ -328,6 +329,16 @@ app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
           "uploadStopped",
           "Пользователь остановил загрузку."
         );
+
+        await logUpload({
+          brand: brandData || "-",
+          comment: `Загрузка чз`,
+          status: "Не завершено",
+          error_message: "Пользователь остановил загрузку",
+          models_uploaded: totalPages,
+          duration_ms: Date.now() - startTime,
+        });
+
         return res
           .status(200)
           .send({ message: "Пользователь остановил загрузку." });
@@ -341,17 +352,34 @@ app.post("/uploadNewKyz", upload.single("file"), async (req, res) => {
         io,
         MultiModel,
         totalPages,
-        countPages,
+        countState,
         arrayAddingModels,
         socketId,
         stopFlags
       );
     }
 
-    countPages += 100;
+    await logUpload({
+      brand: brandData || "-",
+      comment: `Загрузка чз`,
+      models_uploaded: totalPages,
+      status: "Успешно",
+      duration_ms: Date.now() - startTime,
+    });
+
     res.status(200).send({ message: "Файл успешно загружен." });
   } catch (err) {
     console.error("Error processing file:", err);
+
+    await logUpload({
+      brand: req.body?.brandData || "-",
+      comment: `Загрузка чз`,
+      status: "Ошибка",
+      models_uploaded: `${totalPages || 0}`,
+      error_message: `${err.message || err}`,
+      duration_ms: Date.now() - startTime,
+    });
+
     res.status(500).send({ message: "Ошибка загрузки файла." });
   }
 });
@@ -687,6 +715,35 @@ app.get("/api/report", async (req, res) => {
       .json({ error: "Internal server error", message: error.message });
   }
 });
+
+async function logUpload({
+  timestamp = getFormattedDateTime(),
+  user_id = 1,
+  brand = "-",
+  file_name = "-",
+  comment = "-",
+  status = "Неизвестно",
+  error_message = "",
+  models_uploaded = "-",
+  duration_ms = null,
+}) {
+  const query = `
+      INSERT INTO upload_logs 
+      (timestamp, user_id, brand, file_name, comment, status, error_message, models_uploaded, duration_ms)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+  await pool.query(query, [
+    timestamp,
+    user_id,
+    brand,
+    file_name,
+    comment,
+    status,
+    error_message,
+    models_uploaded,
+    duration_ms,
+  ]);
+}
 
 function getFormattedDateTime() {
   const date = new Date();

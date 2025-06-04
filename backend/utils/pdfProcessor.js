@@ -223,7 +223,7 @@ async function processPDF(
   io,
   MultiModel,
   totalPages,
-  countPages,
+  countState,
   arrayAddingModels,
   socketId,
   stopFlags
@@ -231,13 +231,6 @@ async function processPDF(
   try {
     const data = new Uint8Array(fileBuffer);
     const { extractedTexts } = await extractTextFromPDF(data);
-    // console.log('extractedTexts', extractedTexts)
-
-    // subscribers.forEach(chatId => {
-    //   let message = `Запущена загрузка честного знака на ${brandData} в количестве ${extractedTexts.length} шт.`;
-    //   // bot.telegram.sendMessage(chatId, message);
-    //   console.log(message)
-    // });
 
     const pdfBytes = new Uint8Array(fileBuffer);
     const pageSize = 100;
@@ -248,6 +241,12 @@ async function processPDF(
         console.log("Загрузка остановлена внутри processPDF");
         return;
       }
+      const currentBatch = extractedTexts.slice(
+        startPage,
+        startPage + pageSize
+      );
+      countState.countPages += currentBatch.length;
+
       const pageDataList = await Promise.all(
         extractedTexts
           .slice(startPage, startPage + pageSize)
@@ -337,10 +336,13 @@ async function processPDF(
 
             arrayAddingModels[Model].sizes[Size] += 1;
 
-            const progress = Math.round((countPages / totalPages) * 100);
+            const progress = Math.round(
+              (countState.countPages / totalPages) * 100
+            );
+
             io.emit("upload_status", {
               progress,
-              message: `Загружено ${countPages} из ${totalPages}`,
+              message: `Загружено ${countState.countPages} из ${totalPages}`,
               placePrint,
               arrayAddingModels,
             });
@@ -352,7 +354,7 @@ async function processPDF(
               Size,
               Model,
               arrayAddingModels,
-              countPages,
+              countState,
             };
           })
       );
