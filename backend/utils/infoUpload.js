@@ -1,7 +1,6 @@
 const { pool } = require("../config/connectdb");
 const infoUploadFiles = async (req, res) => {
   try {
-    console.log(req);
     const response = await pool.query("SELECT * FROM upload_logs LIMIT 10");
     res.json(response);
   } catch (error) {

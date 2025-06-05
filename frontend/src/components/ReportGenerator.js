@@ -22,9 +22,9 @@ const ReportGenerator = ({ setSelectedCompany }) => {
     );
     setIsLoading(true);
 
-    const url = `http://localhost:6501/api/report?brand=${encodeURIComponent(
-      selectedCompany
-    )}`;
+    const url = `http://${
+      window.location.hostname
+    }:6501/api/report?brand=${encodeURIComponent(selectedCompany)}`;
     console.log(`[INFO] Отправка запроса на сервер: ${url}`);
 
     try {
@@ -188,12 +188,7 @@ const ReportGenerator = ({ setSelectedCompany }) => {
   return (
     <div>
       <div className="button-group">
-        {[
-          "Armbest",
-          "Arm2",
-          "BestShoes",
-          "Best26",
-        ].map((company) => (
+        {["Armbest", "Arm2", "BestShoes", "Best26"].map((company) => (
           <button
             key={company}
             onClick={() => handleCompanySelection(company)}

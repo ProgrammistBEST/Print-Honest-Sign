@@ -20,6 +20,7 @@ import {
   Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { green } from "@mui/material/colors";
 
 const AdminPanel = () => {
   const [username, setUsernameAdminPanel] = useState("");
@@ -106,7 +107,9 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchPrinters = async () => {
       try {
-        const response = await fetch("http://localhost:6501/api/printers");
+        const response = await fetch(
+          `http://${window.location.hostname}:6501/api/printers`
+        );
         if (!response.ok) {
           throw new Error("Не удалось получить список принтеров");
         }
@@ -125,13 +128,16 @@ const AdminPanel = () => {
     e.preventDefault();
     try {
       // Эмуляция отправки данных на сервер
-      const response = await fetch("http://localhost:6501/api/models/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(models),
-      });
+      const response = await fetch(
+        `http://${window.location.hostname}:6501/api/models/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(models),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Ошибка при добавлении моделей");
@@ -228,7 +234,9 @@ const AdminPanel = () => {
   };
 
   const toggleBrandinfoaddreturn = () => {
-    const url1 = new URL(`http://localhost:6501/api/printedHonestSign`);
+    const url1 = new URL(
+      `http://${window.location.hostname}:6501/api/printedHonestSign`
+    );
     url1.searchParams.append("placePrint", localStorage.getItem("placePrint"));
     fetch(url1)
       .then((response) => {
@@ -242,7 +250,9 @@ const AdminPanel = () => {
       })
       .catch((error) => console.error("Ошибка при получении данных:", error));
 
-    const url = new URL(`http://localhost:6501/api/InfoAboutAllHonestSign`);
+    const url = new URL(
+      `http://${window.location.hostname}:6501/api/InfoAboutAllHonestSign`
+    );
     url.searchParams.append("placePrint", localStorage.getItem("placePrint"));
     url.searchParams.append("brand", brand);
 
@@ -270,7 +280,9 @@ const AdminPanel = () => {
       })
       .catch((error) => console.error("Ошибка при получении данных:", error));
 
-    const url2 = new URL(`http://localhost:6501/api/info/v1/infoUpload`);
+    const url2 = new URL(
+      `http://${window.location.hostname}:6501/api/info/v1/infoUpload`
+    );
 
     fetch(url2)
       .then((response) => {
@@ -330,10 +342,13 @@ const AdminPanel = () => {
     setIsModalInfoOpen(true);
 
     try {
-      const response = await fetch(`http://localhost:6501/uploadNewKyz`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `http://${window.location.hostname}:6501/uploadNewKyz`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const result = await response.json();
       if (response.ok) {
         alert(result.message);
@@ -368,21 +383,24 @@ const AdminPanel = () => {
     const { id, brand, user, model, size, date } = item;
 
     try {
-      const response = await fetch(`http://localhost:6501/api/returnKyz`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          brand,
-          user,
-          placePrint,
-          date,
-          model,
-          size,
-        }),
-      });
+      const response = await fetch(
+        `http://${window.location.hostname}:6501/api/returnKyz`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id,
+            brand,
+            user,
+            placePrint,
+            date,
+            model,
+            size,
+          }),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
         const row = document.getElementById(`row-${index}`);
@@ -672,7 +690,12 @@ const AdminPanel = () => {
                                 <span>Ошибки: {info.error_message || "-"}</span>
                                 {/* <span>{info.file_name}</span> */}
                                 <span>Кол-во: {info.models_uploaded}</span>
-                                <span>Статус: {info.status}</span>
+                                <span
+                                    sx={{
+                                        backgroundColor: info.status === "Успешно" ? green : red,
+                                    }}
+                                > Статус: {info.status}
+                                </span>
                                 <span>
                                   Время загрузки:{" "}
                                   {new Date(info.timestamp).toLocaleString()}

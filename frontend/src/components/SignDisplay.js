@@ -58,16 +58,18 @@ const SignDisplay = () => {
   const fetchAndCombineData = async () => {
     try {
       // Шаг 1: Получаем список брендов
-      const brandsResponse = await fetch(`http://localhost:6501/getBrands`);
+      const brandsResponse = await fetch(
+        `http://${window.location.hostname}:6501/getBrands`
+      );
       const brandsData = await brandsResponse.json();
 
       // Преобразуем бренды в нужную структуру
       const formattedBrands = await Promise.all(
         brandsData.map(async (brand) => {
           const modelsResponse = await fetch(
-            `http://localhost:6501/getModels?brand=${encodeURIComponent(
-              brand.brand
-            )}`
+            `http://${
+              window.location.hostname
+            }:6501/getModels?brand=${encodeURIComponent(brand.brand)}`
           );
           const modelsData = await modelsResponse.json();
 
@@ -131,16 +133,19 @@ const SignDisplay = () => {
       // }
       setWarning("");
       try {
-        const response = await fetch(`http://localhost:6501/api/CheckUser`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user: user,
-            // numberdelivery: numberdelivery
-          }),
-        });
+        const response = await fetch(
+          `http://${window.location.hostname}:6501/api/CheckUser`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user: user,
+              // numberdelivery: numberdelivery
+            }),
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -219,23 +224,26 @@ const SignDisplay = () => {
     try {
       console.log(selectedBrand);
 
-      const response = await fetch(`http://localhost:6501/kyz`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          selectedBrand: selectedBrand.nameBrand,
-          selectedModels: selectedModels,
-          filledInputs: inputData,
-          user: user,
-          placePrint: document.querySelector(".placePrintValue").value,
-          printerForHonestSign: document.querySelector(".printForHonestSign")
-            .value,
-          printerForBarcode: document.querySelector(".printForBarcode").value,
-          // numberdelivery: numberdelivery,
-        }),
-      });
+      const response = await fetch(
+        `http://${window.location.hostname}:6501/kyz`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            selectedBrand: selectedBrand.nameBrand,
+            selectedModels: selectedModels,
+            filledInputs: inputData,
+            user: user,
+            placePrint: document.querySelector(".placePrintValue").value,
+            printerForHonestSign: document.querySelector(".printForHonestSign")
+              .value,
+            printerForBarcode: document.querySelector(".printForBarcode").value,
+            // numberdelivery: numberdelivery,
+          }),
+        }
+      );
       console.log("Статус ответа:", response.status);
 
       // Ответ с результатом запроса на печать честных знаков.
