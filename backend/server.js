@@ -421,7 +421,7 @@ app.get("/getModels", async (req, res) => {
   const { brand } = req.query;
   try {
     const query = `
-      SELECT article_association AS article, size FROM models
+      SELECT article, size FROM models
       JOIN articles ON models.article_id = articles.article_id
       JOIN sizes ON models.size_id = sizes.size_id
       JOIN brands ON models.brand_id = brands.brand_id
