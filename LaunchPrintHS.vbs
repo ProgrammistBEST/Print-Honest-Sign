@@ -22,17 +22,11 @@ End Function
 port6501InUse = IsPortInUse(6501)
 port6502InUse = IsPortInUse(6502)
 
-' If port6501InUse Then
-'     WScript.Echo "Порт 6501 zanyat."
-' Else
-'     WScript.Echo "Порт 6501 svoboden."
-' End If
+If Not port6501InUse Then
+    WshShell.Run "cmd.exe /c """ & currentDir & "\Start.bat""", 0, False
+End If
 
-' If port6502InUse Then
-'     WScript.Echo "Порт 6502 zanyat."
-' Else
-'     WScript.Echo "Порт 6502 svoboden."
-' End If
+WshShell.Run "http://localhost:6501", 1, False
 
 ' Запуск Start.bat в скрытом режиме
 WshShell.Run "cmd.exe /c """ & currentDir & "\Start.bat""", 0, False
