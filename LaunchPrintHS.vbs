@@ -27,9 +27,3 @@ If Not port6501InUse Then
 End If
 
 WshShell.Run "http://localhost:6501", 1, False
-
-' Запуск Start.bat в скрытом режиме
-WshShell.Run "cmd.exe /c """ & currentDir & "\Start.bat""", 0, False
-
-' Открываем браузер с localhost:6501 (независимо от состояния портов)
-WshShell.Run "http://localhost:6501", 1, False
