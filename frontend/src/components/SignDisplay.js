@@ -32,20 +32,8 @@ const SignDisplay = () => {
   const [password, setPassword] = useState("");
   const [open, setOpen] = useState(true);
 
-  //   useEffect(() => {
-  //     if (!isDataFetched.current) {
-  //       const password = prompt("Введите пароль администратора");
-  //       if (password == "15793") {
-  //         fetchAndCombineData();
-  //         isDataFetched.current = true;
-  //       } else {
-  //         return;
-  //       }
-  //     }
-  //   }, []);
-
   const handleConfirm = () => {
-    if (password === "15793") {
+    if (password === "354655") {
       setAccessGranted(true);
       setOpen(false);
       fetchAndCombineData();
